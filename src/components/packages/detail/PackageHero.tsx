@@ -80,15 +80,15 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
       : 'Srinagar ➔ Gulmarg ➔ Pahalgam ➔ Srinagar';
 
   return (
-    <section className="relative text-[#0B1F2A] pt-94px] sm:pt-[99px] pb-4 sm:pb-6">
-      {/* Pull the layout from global (.container-custom) & fix to landing height */}
-      <div className="container-custom flex flex-col h-[calc(100dvh-135px)] max-h-[540px] min-h-[440px]">
+    <section className="relative text-[#0B1F2A] pt-[76px] sm:pt-[99px] pb-4 sm:pb-6">
+      {/* Container: Natural breathing room on mobile, exact fixed landing height on desktop */}
+      <div className="container-custom flex flex-col h-auto sm:h-[calc(100dvh-135px)] sm:max-h-[540px] sm:min-h-[440px]">
         
-        {/* ── HERO CONTAINER (Sketch: Contain landing height, space not too much) ── */}
-        <div className="flex-1 min-h-0 w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-lg overflow-hidden flex flex-col transition-all duration-300">
+        {/* ── HERO CONTAINER (Desktop: fixed contained height, Mobile: natural card) ── */}
+        <div className="w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white shadow-lg overflow-hidden flex flex-col sm:flex-1 sm:min-h-0 transition-all duration-300">
           
-          {/* ── TOP HALF: Media Player / Photo Showcase & H1 ── */}
-          <div className="relative flex-1 min-h-0 bg-slate-950 overflow-hidden group">
+          {/* ── TOP HALF: Media Player / Photo Showcase & H1 (Fixed generous 260px height on mobile) ── */}
+          <div className="relative w-full h-[260px] sm:h-auto sm:flex-1 sm:min-h-0 bg-slate-950 overflow-hidden group">
             {/* Active Media: Video vs Image */}
             {mediaMode === 'video' && pkg.videoUrl ? (
               <div className="absolute inset-0 w-full h-full bg-black">
@@ -192,7 +192,7 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
             )}
 
             {/* Thumbnail & Media Switcher Strip (bottom right corner of media container) */}
-            <div className="absolute bottom-12 sm:bottom-14 right-3 sm:right-4 z-10 flex items-center gap-1.5 bg-black/50 backdrop-blur-md p-1 rounded-lg border border-white/20">
+            <div className="absolute bottom-16 sm:bottom-14 right-3 sm:right-4 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-md p-1 rounded-lg border border-white/20">
               {/* Video button tab if package has a video walkthrough */}
               {pkg.videoUrl && (
                 <button
@@ -350,9 +350,10 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                       source: `package_detail_hero_${pkg.slug}`,
                     })
                   }
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl bg-saffron hover:bg-amber-500 px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-midnight shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl bg-saffron hover:bg-amber-500 px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-midnight shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer"
                 >
-                  <span>Book / Enquire • Starting ₹{pkg.startingPrice.toLocaleString('en-IN')}</span>
+                  <span className="sm:hidden">Book / Enquire</span>
+                  <span className="hidden sm:inline">Book / Enquire • Starting ₹{pkg.startingPrice.toLocaleString('en-IN')}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
