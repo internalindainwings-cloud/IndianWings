@@ -1,0 +1,7 @@
+{
+  "planning": {
+    "commit_docs": true,
+    "search_gitignored": false,
+    "mode": "interactive"
+  }
+}

@@ -1,26 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Merienda:wght@300..900&family=Manrope:wght@200..800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+  --color-saffron: #F59E0B;
+  --color-midnight: #0F4C54;
+}
+
+/* Global slight mobile font size increase (not too much, just enough for crisp readability) */
+@media (max-width: 640px) {
+  html {
+    font-size: 16.75px;
+  }
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #1A1A1A;
+  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+}
+
+/* Global Typography: Berkshire Swash with Manrope fallback applied to h1-h6, p, ul, li, etc. */
+h1, h2, h3, h4, h5, h6,
+p,
+ul, ol, li,
+button, input, select, textarea, a, span, label, blockquote {
+  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+}
+
+/* ── Admin Portal Typography & Scoping: Pure Sans-Serif (No cursive in admin) ── */
+.admin-scope,
+.admin-scope h1,
+.admin-scope h2,
+.admin-scope h3,
+.admin-scope h4,
+.admin-scope h5,
+.admin-scope h6,
+.admin-scope p,
+.admin-scope ul,
+.admin-scope ol,
+.admin-scope li,
+.admin-scope button,
+.admin-scope input,
+.admin-scope select,
+.admin-scope textarea,
+.admin-scope a,
+.admin-scope span,
+.admin-scope label,
+.admin-scope blockquote,
+.admin-scope table,
+.admin-scope th,
+.admin-scope td {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* ── Admin Portal: Clean Sans-Serif Font & Main Global Midnight Brand Palette ── */
+.admin-scope {
+  background-color: #081E23 !important;
+  color: #FFFFFF !important;
+}
+
+.admin-scope a,
+.admin-scope button,
+.admin-scope span,
+.admin-scope p,
+.admin-scope h1,
+.admin-scope h2,
+.admin-scope h3,
+.admin-scope h4,
+.admin-scope h5,
+.admin-scope h6,
+.admin-scope label {
+  /* Ensure text remains crisp white and high contrast */
+  color: inherit;
 }
 
 @theme inline {
+  --color-midnight: var(--color-midnight, #0F4C54);
+  --color-saffron: var(--color-saffron, #F59E0B);
+  --color-sand: #FFFFFF;
+  --color-slate: #64748B;
+  --color-charcoal: #222222;
+  --color-warm-white: #F8F6F0;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* Client-Chosen Typography System: Berkshire Swash with Manrope fallback globally */
+  --font-sans: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+  --font-display: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+  --font-berkshire: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+  --font-serif: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-playfair: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-cormorant: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-jakarta: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+  --font-manrope: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+
+  /* ── Marquee animations (Brands Section) ─────────────────── */
+  --animate-marquee-ltr: marquee-ltr 30s linear infinite;
+  --animate-marquee-rtl: marquee-rtl 38s linear infinite;
+
+  @keyframes marquee-ltr {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-rtl {
+    from { transform: translateX(-50%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* ── Continuous Laser Orbit for Cards ──────────────────── */
+  --animate-laser-orbit: laser-orbit 4.8s linear infinite;
+
+  @keyframes laser-orbit {
+    from { stroke-dashoffset: 100; }
+    to   { stroke-dashoffset: 0; }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Global Layout Containers ────────────────────────────── */
+.container-custom {
+  width: 100%;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
+}
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@keyframes laser-orbit {
+  from { stroke-dashoffset: 100; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.animate-laser-orbit {
+  animation: laser-orbit 4.8s linear infinite;
+}
+
+/* ── Falling Hearts Animation for Honeymoon Card ──────────── */
+@keyframes heart-rain {
+  0% {
+    transform: translateY(-24px) scale(0.6) rotate(-12deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(185px) scale(1.1) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+.animate-heart-rain {
+  animation: heart-rain linear infinite;
+}
+
+/* ── Falling Snow Animation for Winter Card ──────────── */
+@keyframes snow-fall {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateY(85px) translateX(8px) rotate(45deg);
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(185px) translateX(-6px) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes snow-fall-drift {
+  0% {
+    transform: translateY(-20px) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  55% {
+    transform: translateY(90px) translateX(-8px) scale(1.05);
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(185px) translateX(7px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.animate-snow-fall {
+  animation: snow-fall linear infinite;
+}
+
+.animate-snow-drift {
+  animation: snow-fall-drift linear infinite;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  overflow-x: hidden;
+}
+
+/* Headings: Clean, Modern, Authoritative Manrope without curly serifs or faux italics */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  letter-spacing: -0.025em;
+  text-rendering: optimizeLegibility;
+}
+
+/* Pure clean non-italic classes */
+.manrope,
+.font-manrope {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.font-playfair,
+.font-serif,
+.font-cormorant,
+.font-editorial {
+  font-family: var(--font-manrope), "Manrope", sans-serif;
+  font-style: normal;
+}
+
+.tracking-luxury {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Respect reduced-motion preference for marquee rows */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-ltr,
+  .animate-marquee-rtl {
+    animation: none;
+  }
+}
+
+/* ── Universal Real-Time Theme Bindings ───────────────────────────── */
+:root {
+  --color-saffron: #F59E0B;
+  --color-midnight: #0F4C54;
+}
+
+.text-saffron {
+  color: var(--color-saffron) !important;
+}
+.bg-saffron {
+  background-color: var(--color-saffron) !important;
+}
+.border-saffron {
+  border-color: var(--color-saffron) !important;
+}
+.fill-saffron {
+  fill: var(--color-saffron) !important;
+}
+.stroke-saffron {
+  stroke: var(--color-saffron) !important;
+}
+
+.text-midnight {
+  color: var(--color-midnight) !important;
+}
+.bg-midnight {
+  background-color: var(--color-midnight) !important;
+}
+.border-midnight {
+  border-color: var(--color-midnight) !important;
+}
+
+/* Custom Category-Themed Inclusions Scrollbars */
+.inclusion-scroll-family {
+  scrollbar-width: thin;
+  scrollbar-color: #F59E0B #F8FAFC;
+}
+.inclusion-scroll-family::-webkit-scrollbar {
+  width: 4px;
+}
+.inclusion-scroll-family::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+.inclusion-scroll-family::-webkit-scrollbar-thumb {
+  background: #F59E0B;
+  border-radius: 4px;
+}
+.inclusion-scroll-family::-webkit-scrollbar-thumb:hover {
+  background: #D97706;
+}
+
+.inclusion-scroll-honeymoon {
+  scrollbar-width: thin;
+  scrollbar-color: #F43F5E #F8FAFC;
+}
+.inclusion-scroll-honeymoon::-webkit-scrollbar {
+  width: 4px;
+}
+.inclusion-scroll-honeymoon::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+.inclusion-scroll-honeymoon::-webkit-scrollbar-thumb {
+  background: #F43F5E;
+  border-radius: 4px;
+}
+.inclusion-scroll-honeymoon::-webkit-scrollbar-thumb:hover {
+  background: #E11D48;
+}
+
+.inclusion-scroll-winter {
+  scrollbar-width: thin;
+  scrollbar-color: #0284C7 #F8FAFC;
+}
+.inclusion-scroll-winter::-webkit-scrollbar {
+  width: 4px;
+}
+.inclusion-scroll-winter::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 4px;
+}
+.inclusion-scroll-winter::-webkit-scrollbar-thumb {
+  background: #0284C7;
+  border-radius: 4px;
+}
+.inclusion-scroll-winter::-webkit-scrollbar-thumb:hover {
+  background: #0369A1;
+}
+
+/* Client-Chosen Display Font (Berkshire Swash with Manrope fallback) */
+.font-display,
+.font-berkshire {
+  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
 }

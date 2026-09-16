@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Indian Wings Company — Project Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 20mm 16mm;
+      @bottom-right {
+        content: "Page " counter(page);
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.6;
+      font-size: 10.5pt;
+      margin: 0;
+      padding: 0;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #0B1F2A 0%, #17384E 100%);
+      color: #ffffff;
+      padding: 32px 28px;
+      border-radius: 8px;
+      margin-bottom: 28px;
+      border-bottom: 4px solid #F97316;
+    }
+    .header-badge {
+      display: inline-block;
+      background-color: #F97316;
+      color: #ffffff;
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .header-title {
+      font-size: 24pt;
+      font-weight: 800;
+      margin: 0 0 6px 0;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    .header-subtitle {
+      font-size: 12pt;
+      color: #cbd5e1;
+      margin: 0;
+      font-weight: 400;
+    }
+    .header-meta {
+      margin-top: 16px;
+      font-size: 8.5pt;
+      color: #94a3b8;
+      display: flex;
+      gap: 20px;
+    }
+    h1.doc-title {
+      display: none; /* Replaced by header banner */
+    }
+    h2.section-title {
+      font-size: 15pt;
+      font-weight: 700;
+      color: #0B1F2A;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+      page-break-after: avoid;
+    }
+    h3.subsection-title {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #0369a1;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+    h4 {
+      font-size: 11pt;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 0 0 10px 0;
+      text-align: justify;
+    }
+    ul, ol {
+      margin: 0 0 12px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .inline-code {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 9pt;
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .code-block {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      padding: 14px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 12px 0;
+      page-break-inside: avoid;
+      border-left: 4px solid #F97316;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+    .data-table th {
+      background-color: #0B1F2A;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #1e293b;
+    }
+    .data-table td {
+      padding: 7px 10px;
+      border: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .data-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+    .callout {
+      background-color: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #e2e8f0;
+      margin: 24px 0;
+    }
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 8pt;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-banner">
+    <div class="header-badge">Official Technical Manual</div>
+    <h1 class="header-title">The Indian Wings Company</h1>
+    <p class="header-subtitle">Comprehensive Architectural, Engineering & Production Deployment Documentation</p>
+    <div class="header-meta">
+      <span><strong>Architecture:</strong> Next.js 16 + Express + Neon + Upstash</span>
+      <span><strong>Status:</strong> Production Ready</span>
+      <span><strong>Date:</strong> September 2026</span>
+    </div>
+  </div>
+
+  <h1 class="doc-title">The Indian Wings Company — Master Project Documentation</h1>
+<strong>Official Technical, Architectural &amp; Implementation Reference Manual</strong>
+
+<p><em>Version 2.0 | Production Release — September 2026</em></p>
+
+<hr class="divider"/>
+
+<h2 class="section-title">Table of Contents</h2>
+
+<p>1. [Executive Summary &amp; Project Vision](#1-executive-summary--project-vision)
+2. [Target Production Architecture](#2-target-production-architecture)
+3. [Design System &amp; Brand Identity](#3-design-system--brand-identity)
+4. [Data Architecture &amp; Schema Specifications](#4-data-architecture--schema-specifications)
+5. [Lead Engine &amp; Zero-Loss Resilience Pipeline](#5-lead-engine--zero-loss-resilience-pipeline)
+6. [MakeMyTrip (MMT) UI Placement &amp; Conversion Blueprint](#6-makemytrip-mmt-ui-placement--conversion-blueprint)
+7. [Admin Portal, Content Management &amp; Live Telemetry](#7-admin-portal-content-management--live-telemetry)
+8. [Google SEO Engine, Structured Data &amp; Sitemaps](#8-google-seo-engine-structured-data--sitemaps)
+9. [Media &amp; Cloud Delivery Specifications](#9-media--cloud-delivery-specifications)
+10. [Third-Party Services Directory](#10-third-party-services-directory)
+11. [Complete Implementation Roadmap (Phases 1–15)](#11-complete-implementation-roadmap-phases-115)
+12. [Production Deployment &amp; Infrastructure Runbook](#12-production-deployment--infrastructure-runbook)</p>
+
+<hr class="divider"/>
+
+<h2 class="section-title">1. Executive Summary &amp; Project Vision</h2>
+
+<h3 class="subsection-title">1.1 Project Purpose</h3>
+<strong>The Indian Wings Company</strong> is a premier luxury travel agency and destination management company specializing in the Kashmir Valley. The web platform delivers a cinematic, mobile-first booking experience tailored for high-intent domestic and international travelers seeking curated Kashmir holiday packages, luxury Dal Lake houseboats, Gulmarg ski retreats, Pahalgam alpine tours, and private chauffeured transport.
+
+<h3 class="subsection-title">1.2 Core Architectural Principles</h3>
+<ul><li><strong>Mobile-First &amp; High Performance</strong>: 75%+ of travel traffic originates from mobile devices; layouts, touch targets, and image payloads are rigorously optimized for cellular speeds.</li>
+<li><strong>Zero-Loss Lead Engine</strong>: No customer enquiry is ever lost due to network flickers, server outages, or spotty connectivity in mountain terrains. A 3-layer fallback system guarantees lead persistence.</li>
+<li><strong>Cinematic Visual Excellence</strong>: Deep Midnight Navy <code class="inline-code">#0B1F2A</code> paired with Kashmiri Saffron <code class="inline-code">#F97316</code> and Warm Sand <code class="inline-code">#F4EFE6</code>, enriched by smooth micro-animations and Cloudinary CDN-optimized 4K drone cinematography.</li>
+<li><strong>Complete Business Independence</strong>: A bespoke admin control suite empowers business owners to update packages, manage hero videos, review inbound leads, inspect UTM marketing campaigns, and edit site metadata without requiring developer intervention.</li></ul>
+
+<hr class="divider"/>
+
+<h2 class="section-title">2. Target Production Architecture</h2>
+
+<p>The system employs a decoupled, production-hardened micro-architecture:</p>
+
+<p>``<code class="inline-code">
+[ GoDaddy DNS ]
+theindianwings.com
+│
+┌────────────────┴────────────────┐
+▼                                 ▼
+[ Vercel ]                        [ Render ]
+Next.js 16 App Router             Express Node.js REST API
+(https://theindianwings.com)        (https://tiwc-api.onrender.com)
+│                                 │
+│                         ┌───────┴───────┐
+▼                         ▼               ▼
+[ Next.js Edge Cache ]        [ Neon DB ]    [ Upstash Redis ]
+Server-Side Rendering (SSR)   PostgreSQL 16    Distributed Rate
+Static Generation / ISR Cache  Pooled (pgbouncer)   Limiting
+</code>`<code class="inline-code"></p>
+
+<h3 class="subsection-title">2.1 Technology Stack Matrix</h3>
+<table class="data-table">
+<thead>
+<tr><th>Component</th><th>Technology</th><th>Role / Environment</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Frontend Framework</strong></td><td>Next.js 16 (App Router), React 19, TypeScript</td><td>Server-rendered pages, interactive client widgets, SEO head generation</td></tr>
+<tr><td><strong>Backend API Engine</strong></td><td>Node.js 22, Express 4.21, TypeScript</td><td>Standalone REST API with Helmet security, origin guards, and CRUD routing</td></tr>
+<tr><td><strong>Database</strong></td><td>PostgreSQL 16 (Neon Serverless)</td><td>Authoritative ACID data store with connection pooling (</code>pgbouncer<code class="inline-code">)</td></tr>
+<tr><td><strong>Data Access Layer</strong></td><td>Prisma ORM 7.10</td><td>Type-safe queries, migration lifecycle, and JSON column management</td></tr>
+<tr><td><strong>Distributed Cache &amp; Rate Limiting</strong></td><td>Upstash Redis (REST API)</td><td>Sliding-window DDoS mitigation &amp; burst traffic defense</td></tr>
+<tr><td><strong>Media Delivery</strong></td><td>Cloudinary CDN (</code>next-cloudinary<code class="inline-code">)</td><td>Adaptive bitrate video streaming, WebP/AVIF auto-formatting</td></tr>
+<tr><td><strong>Styling &amp; Animation</strong></td><td>Tailwind CSS 3.4, Framer Motion</td><td>Fluid responsive grids, bottom sheet springs, and hero fades</td></tr>
+<tr><td><strong>Validation &amp; Security</strong></td><td>Zod 3.25, React Hook Form</td><td>Strict schema validation, XSS input sanitization, and bot honeypot traps</td></tr>
+<tr><td><strong>Email Service</strong></td><td>Nodemailer with SMTP</td><td>Automated itinerary delivery and internal sales lead dispatch</td></tr>
+</tbody>
+</table>
+
+<hr class="divider"/>
+
+<h2 class="section-title">3. Design System &amp; Brand Identity</h2>
+
+<h3 class="subsection-title">3.1 Color Palette</h3>
+<ul><li><strong>Midnight Navy (</code>#0B1F2A<code class="inline-code">)</strong>: Primary luxury background and high-contrast typography base. Imparts elegance, night-sky alpine depth, and premium distinction.</li>
+<li><strong>Kashmiri Saffron (</code>#F97316<code class="inline-code"> / </code>#EA580C<code class="inline-code">)</strong>: High-converting accent tone used for Primary CTAs, price tags, interactive hover states, and discount badges.</li>
+<li><strong>Warm Sand (</code>#F4EFE6<code class="inline-code">)</strong>: Soft neutral foundation for background contrast, card backgrounds, and pill borders.</li>
+<li><strong>Forest Alpine Emerald (</code>#064E3B<code class="inline-code"> / </code>#059669<code class="inline-code">)</strong>: Trust indicators, WhatsApp actions, verified reviews, and seasonal badge highlights.</li></ul>
+
+<h3 class="subsection-title">3.2 Typography Hierarchy</h3>
+<ul><li><strong>Headlines</strong>: <em>Playfair Display</em> (Serif) — Evokes heritage, bespoke hospitality, and luxury vacation aesthetics.</li>
+<li><strong>Body &amp; Controls</strong>: <em>Manrope</em> (Sans-Serif) — Highly legible, contemporary geometric sans-serif optimized for mobile screens and data density.</li></ul>
+
+<h3 class="subsection-title">3.3 UI Components &amp; Micro-Interactions</h3>
+<ul><li><strong>Glassmorphic App Bars</strong>: Floating backdrop-filter navigation with dynamic scroll-depth tinting.</li>
+<li><strong>MakeMyTrip (MMT) Style Bottom Sheets</strong>: Spring-animated drawer sheets for zero-friction mobile lead submissions.</li>
+<li><strong>Interactive Badges</strong>: Real-time status indicators ("Instant Confirmation", "Best Seller", "Snow Season Special").</li></ul>
+
+<hr class="divider"/>
+
+<h2 class="section-title">4. Data Architecture &amp; Schema Specifications</h2>
+
+<p>The PostgreSQL database is organized into 11 interconnected relational models:</p>
+
+<p></code>`<code class="inline-code">mermaid
+erDiagram
+Enquiry ||--o| UserSession : "linked by visitorId"
+UserSession ||--o{ SessionEvent : "contains"
+PackageCategory ||--o{ Package : "categorizes"
+Package {
+string id PK
+string slug UK
+string title
+string duration
+int startingPrice
+json itinerary
+boolean isActive
+}
+Enquiry {
+string id PK
+string name
+string phone
+string travelDate
+string status
+string utmSource
+}
+UserSession {
+string id PK
+string visitorId
+boolean converted
+int durationSeconds
+}
+Destination {
+string id PK
+string slug UK
+string name
+string elevation
+string bestSeason
+}
+Activity {
+string id PK
+string slug UK
+string name
+string duration
+int priceFrom
+}
+TransportVehicle {
+string id PK
+string slug UK
+string name
+string seats
+int pricePerDay
+}
+TransportRoute {
+string id PK
+string routeTitle
+string distance
+int startingPrice
+}
+CustomerReview {
+string id PK
+string name
+string city
+int rating
+string review
+}
+SiteSetting {
+string id PK
+string siteTitle
+string phone
+string whatsapp
+json heroConfig
+}
+</code>`<code class="inline-code"></p>
+
+<h3 class="subsection-title">4.1 Schema Models Breakdown</h3>
+1. <strong></code>Enquiry<code class="inline-code"></strong>: Records all customer booking inquiries with UTM parameters (</code>utmSource<code class="inline-code">, </code>gclid<code class="inline-code">, </code>fbclid<code class="inline-code">), lead status lifecycle (</code>NEW<code class="inline-code">, </code>CONTACTED<code class="inline-code">, </code>QUOTED<code class="inline-code">, </code>WON<code class="inline-code">, </code>LOST<code class="inline-code">), and IP address.
+2. <strong></code>UserSession<code class="inline-code"></strong>: Captures visitor browser journeys, device types, screen resolution, referrers, and conversion flags.
+3. <strong></code>SessionEvent<code class="inline-code"></strong>: Micro-event tracking within sessions (scroll depth %, card clicks, modal triggers, dwell time).
+4. <strong></code>Package<code class="inline-code"> &amp; </code>PackageCategory<code class="inline-code"></strong>: Rich travel package listings with comprehensive day-by-day JSON itineraries, inclusions, exclusions, and SEO tags.
+5. <strong></code>Destination<code class="inline-code"></strong>: Kashmir valley hubs (Gulmarg, Pahalgam, Sonamarg, Dal Lake, Doodhpathri, Yusmarg) with elevation, distance from Srinagar, and seasonal guides.
+6. <strong></code>Activity<code class="inline-code"></strong>: Winter skiing, Dal Lake shikara rides, paragliding, river rafting, and pony trekking.
+7. <strong></code>TransportVehicle<code class="inline-code"> &amp; </code>TransportRoute<code class="inline-code"></strong>: Chauffeur fleet (Innova Crysta, Urbania, Tempo Traveller, 4x4 Thar) and intercity transfer routes.
+8. <strong></code>CustomerReview<code class="inline-code"></strong>: Verified traveler ratings, written testimonials, and video review links.
+9. <strong></code>SiteSetting<code class="inline-code"></strong>: Global site titles, announcements, phone/WhatsApp numbers, custom robots.txt, and homepage hero configuration.
+
+<hr class="divider"/>
+
+<h2 class="section-title">5. Lead Engine &amp; Zero-Loss Resilience Pipeline</h2>
+
+<p>To eliminate lost revenue from mobile network dropouts, the platform implements a <strong>Three-Layer Zero-Loss Pipeline</strong>:</p>
+
+<p></code>`<code class="inline-code">
+[ User Submits Enquiry ]
+│
+▼
+[ Layer 1: Client-Side Offline Queue (IndexedDB) ]
+Stores payload locally before dispatch.
+If device loses internet, retries automatically on reconnect.
+│
+▼
+[ Layer 2: Secure Express / Next.js REST API ]
+<ul><li>Bot Trap: Hidden honeypot field inspection.</li>
+<li>Upstash Rate Limit: 5 requests / 10 minutes.</li>
+<li>Idempotency: Duplicate check within 5 minutes.</li>
+<li>Atomic DB Write: Persisted into PostgreSQL.</li>
+<li>Email Service: Sends itinerary &amp; alerts sales desk.</li></ul>
+│ (If Server Errors / 500 Failure)
+▼
+[ Layer 3: Instant WhatsApp Fallback (</code>wa.me<code class="inline-code">) ]
+Redirects customer to pre-filled WhatsApp chat with Srinagar
+desk specialists. Zero lead attrition under any conditions.
+</code>`<code class="inline-code"></p>
+
+<hr class="divider"/>
+
+<h2 class="section-title">6. MakeMyTrip (MMT) UI Placement &amp; Conversion Blueprint</h2>
+
+<p>Drawing inspiration from India's highest-converting travel applications, conversion mechanisms are embedded at critical points:</p>
+
+<p>1. <strong>Sticky Bottom Mobile Bar</strong>: Persistent bottom action drawer on mobile viewports featuring "Get Instant Quote" and direct WhatsApp access.
+2. <strong>Inline Contextual Triggers</strong>: Dynamic package cards pass the package title, duration, and price directly into the enquiry modal.
+3. <strong>Instant Itinerary Gate</strong>: Customers can download comprehensive PDF-formatted itineraries by entering their phone/email, capturing high-intent leads earlier in the research phase.</p>
+
+<hr class="divider"/>
+
+<h2 class="section-title">7. Admin Portal, Content Management &amp; Live Telemetry</h2>
+
+<p>An isolated administration console is accessible at </code>/admin<code class="inline-code">:</p>
+
+<p></code>`<code class="inline-code">
+Admin Portal Dashboard
+├── Overview &amp; Metrics (Total Leads, Leads Today, Conversion %, Average Dwell Time)
+├── Inbound Leads Inbox (Status workflow: NEW → CONTACTED → WON)
+├── Marketing Campaigns (UTM clicks, conversion rates per Google/Meta campaign)
+├── Homepage Hero Editor (Change headline, badge, video URL, slides &amp; trust pills)
+├── Tour Packages Manager (Full CRUD with visual day-by-day itinerary builder)
+├── Destinations &amp; Activities (Add seasonal spots, change pricing &amp; photos)
+├── Transport Fleet &amp; Routes (Manage vehicle fleet and route rates)
+├── Customer Reviews (Manage written testimonials and video reviews)
+└── SEO &amp; Settings (Edit site title, meta description, contact info &amp; robots.txt)
+</code>`<code class="inline-code"></p>
+
+<h3 class="subsection-title">7.1 Security Architecture</h3>
+<ul><li><strong>Cryptographic Session Cookies</strong>: HMAC-SHA256 authenticated </code>tiwc_admin_session<code class="inline-code"> cookie.</li>
+<li><strong>Cross-Origin Compatibility</strong>: Set with </code>SameSite=None; Secure<code class="inline-code"> so the Vercel-hosted admin interface securely queries the Render backend API.</li>
+<li><strong>Timing-Safe Password Verification</strong>: Protects against side-channel timing attacks.</li>
+<li><strong>Distributed Rate Limiting</strong>: Upstash Redis throttles failed login attempts (5 attempts per 15 minutes).</li></ul>
+
+<hr class="divider"/>
+
+<h2 class="section-title">8. Google SEO Engine, Structured Data &amp; Sitemaps</h2>
+
+<h3 class="subsection-title">8.1 On-Page Optimization</h3>
+<ul><li><strong>Single </code>&lt;h1&gt;<code class="inline-code"> Hierarchy</strong>: Validated semantic HTML on all landing pages and dynamic package routes.</li>
+<li><strong>OpenGraph &amp; Twitter Cards</strong>: High-res Cloudinary preview banners with optimized titles and descriptions.</li>
+<li><strong>Dynamic </code>sitemap.xml<code class="inline-code"></strong>: Automatically pulls active packages and destinations from the database, updating in real time.</li>
+<li><strong>Dynamic </code>robots.txt<code class="inline-code"></strong>: Served directly from database </code>SiteSetting.robotsTxtCustom<code class="inline-code"> with sensible crawl fallbacks.</li></ul>
+
+<h3 class="subsection-title">8.2 JSON-LD Structured Data</h3>
+All package detail routes output Google-compliant </code>Product<code class="inline-code"> and </code>TouristTrip<code class="inline-code"> structured schemas:
+</code>`<code class="inline-code">json
+{
+"@context": "https://schema.org",
+"@type": "TouristTrip",
+"name": "Kashmir Honeymoon Special",
+"description": "Romantic 6-day Kashmir package with private houseboat stay.",
+"offers": {
+"@type": "Offer",
+"price": "24999",
+"priceCurrency": "INR",
+"availability": "https://schema.org/InStock"
+}
+}
+</code>`<code class="inline-code">
+
+<hr class="divider"/>
+
+<h2 class="section-title">9. Media &amp; Cloud Delivery Specifications</h2>
+
+<h3 class="subsection-title">9.1 Video &amp; Photography Optimization</h3>
+<ul><li>All visual assets are stored on <strong>Cloudinary CDN</strong>.</li>
+<li>Desktop hero background uses high-bitrate MP4 with </code>f_auto,q_auto,ac_none<code class="inline-code"> transformations.</li>
+<li>Images utilize dynamic Next.js image loaders, delivering WebP format on Chrome/Android and AVIF on iOS/macOS.</li>
+<li>First contentful paint (FCP) is prioritized with preloaded poster stills (</code>so_0,f_auto,q_auto<code class="inline-code">).</li></ul>
+
+<hr class="divider"/>
+
+<h2 class="section-title">10. Third-Party Services Directory</h2>
+
+<table class="data-table">
+<thead>
+<tr><th>Provider</th><th>Purpose</th><th>Environment Variable</th><th>Criticality</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Neon</strong></td><td>Serverless PostgreSQL Database</td><td></code>DATABASE_URL<code class="inline-code"></td><td>Critical</td></tr>
+<tr><td><strong>Upstash</strong></td><td>Distributed Redis Rate Limiting</td><td></code>UPSTASH_REDIS_REST_URL<code class="inline-code">, </code>..._TOKEN<code class="inline-code"></td><td>High</td></tr>
+<tr><td><strong>Render</strong></td><td>Node.js Express REST API Hosting</td><td></code>PORT<code class="inline-code">, </code>NODE_ENV<code class="inline-code"></td><td>Critical</td></tr>
+<tr><td><strong>Vercel</strong></td><td>Next.js Frontend App Hosting</td><td></code>NEXT_PUBLIC_SITE_URL<code class="inline-code">, </code>NEXT_PUBLIC_BACKEND_URL<code class="inline-code"></td><td>Critical</td></tr>
+<tr><td><strong>Cloudinary</strong></td><td>Global Media CDN &amp; Video Engine</td><td>Asset URLs (pre-configured)</td><td>High</td></tr>
+<tr><td><strong>Microsoft Clarity</strong></td><td>Session Recordings &amp; Heatmaps</td><td></code>NEXT_PUBLIC_CLARITY_ID<code class="inline-code"></td><td>Optional</td></tr>
+<tr><td><strong>Google Analytics 4</strong></td><td>Visitor Funnel &amp; Ad Tracking</td><td></code>NEXT_PUBLIC_GA_MEASUREMENT_ID<code class="inline-code"></td><td>Optional</td></tr>
+<tr><td><strong>GoDaddy</strong></td><td>Primary Domain Registration &amp; DNS</td><td>A &amp; CNAME records</td><td>Critical</td></tr>
+</tbody>
+</table>
+
+<hr class="divider"/>
+
+<h2 class="section-title">11. Complete Implementation Roadmap (Phases 1–15)</h2>
+
+<ul><li><strong>Phase 01</strong>: Project foundation, Tailwind design system, and TypeScript strict setup.</li>
+<li><strong>Phase 02–02C</strong>: Glassmorphic Navbar, video hero with poster fallbacks, and inline lead forms.</li>
+<li><strong>Phase 03–03D</strong>: Trust signals ("Why Travel With Us"), destination detail pages, and itinerary guides.</li>
+<li><strong>Phase 04</strong>: Tour packages listing engine with category filtering (Featured, Honeymoon, Family).</li>
+<li><strong>Phase 07A</strong>: Global floating quick-action contact widgets (WhatsApp &amp; Phone).</li>
+<li><strong>Phase 08</strong>: Trusted hotel partners and Kashmir tourism collaborator marquee.</li>
+<li><strong>Phase 09</strong>: PostgreSQL database integration, Prisma ORM, and Zero-Loss Offline Queue.</li>
+<li><strong>Phase 10</strong>: MakeMyTrip (MMT) mobile bottom drawer sheet and dynamic package preselection.</li>
+<li><strong>Phase 11</strong>: Isolated Admin Portal with visitor activity telemetry and UTM campaign analytics.</li>
+<li><strong>Phase 12</strong>: Google SEO rich snippets, package schema generators, and admin sitemap controls.</li>
+<li><strong>Phase 13</strong>: Separate backend extraction to standalone Express REST API on Render.</li>
+<li><strong>Phase 14</strong>: Distributed Upstash Redis rate limiting and cross-origin admin auth.</li>
+<li><strong>Phase 15</strong>: Production readiness audit, security header verification, and final documentation.</li></ul>
+
+<hr class="divider"/>
+
+<h2 class="section-title">12. Production Deployment &amp; Infrastructure Runbook</h2>
+
+<h3 class="subsection-title">12.1 Render Backend Setup</h3>
+1. Create a <strong>Web Service</strong> on [Render](https://render.com) connecting the repository.
+2. Set <strong>Root Directory</strong> to </code>backend<code class="inline-code">.
+3. Set <strong>Build Command</strong>: </code>npm install &amp;&amp; npx prisma generate &amp;&amp; npm run build<code class="inline-code">
+4. Set <strong>Start Command</strong>: </code>npm start<code class="inline-code">
+5. Configure environment variables from </code>backend/.env.example<code class="inline-code">.
+6. Verify health probe: </code>curl https://&lt;your-render-api&gt;/health<code class="inline-code"> returns </code>{"status":"ok","db":"connected"}<code class="inline-code">.
+
+<h3 class="subsection-title">12.2 Vercel Frontend Setup</h3>
+1. Connect repository on [Vercel](https://vercel.com).
+2. Set Framework Preset: <strong>Next.js</strong>.
+3. Set </code>NEXT_PUBLIC_BACKEND_URL<code class="inline-code"> to your Render API endpoint.
+4. Set </code>DATABASE_URL<code class="inline-code"> (for server-side rendering fallback).
+5. Deploy.
+
+<h3 class="subsection-title">12.3 GoDaddy DNS Records</h3>
+<ul><li><strong></code>@<code class="inline-code"> (Apex A Record)</strong> → </code>76.76.21.21<code class="inline-code"> (Vercel IP)</li>
+<li><strong></code>www<code class="inline-code"> (CNAME Record)</strong> → </code>cname.vercel-dns.com<code class="inline-code"></li>
+<li><strong></code>api` (Optional CNAME)</strong> → Point to Render custom domain target</li></ul>
+
+<hr class="divider"/>
+
+<p><em>Document compiled and verified for The Indian Wings Company production launch.</em></p>
+
+  <div class="footer-note">
+    The Indian Wings Company — Proprietary & Confidential Technical Specification.<br/>
+    Generated automatically for production readiness verification.
+  </div>
+</body>
+</html>
