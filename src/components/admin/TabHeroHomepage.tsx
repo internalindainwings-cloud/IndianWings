@@ -244,12 +244,12 @@ export const TabHeroHomepage: React.FC = () => {
 
           {/* Hero Content Overlay */}
           <div className="relative z-10 p-4 sm:p-6 max-w-lg flex flex-col justify-center flex-grow">
-            <h2 className="font-display text-lg sm:text-2xl font-bold text-[#F5BA42] leading-tight drop-shadow-md mb-2">
+            <h2 className="font-display text-lg sm:text-2xl font-bold text-[#C5A45E] leading-tight drop-shadow-md mb-2">
               {config.headline || 'RIWAAYAT-E-KASHMIR'}
             </h2>
             {config.subheadline && (
               <p 
-                className="text-[#F5BA42] text-[11px] line-clamp-2 mb-3"
+                className="text-[#C5A45E] text-[11px] line-clamp-2 mb-3"
                 style={{ fontFamily: "'Canva Sans', var(--font-manrope), 'Manrope', sans-serif" }}
               >
                 {config.subheadline}
@@ -260,7 +260,7 @@ export const TabHeroHomepage: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="px-3 py-1.5 rounded-full bg-saffron text-midnight font-bold text-[10px] shadow"
+                className="px-3 py-1.5 rounded-full bg-[#C5A45E] text-midnight font-bold text-[10px] shadow"
               >
                 {config.primaryCtaText || 'Get Free Quote'} &rarr;
               </button>

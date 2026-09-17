@@ -54,7 +54,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({
           <button
             type="button"
             onClick={() => openModal({ source: 'hero_primary_cta' })}
-            className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-saffron text-midnight font-manrope font-bold text-xs shadow-md hover:shadow-saffron/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center gap-1.5 shrink-0"
+            className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#C5A45E] hover:bg-[#b5944e] text-midnight font-manrope font-bold text-xs shadow-md hover:shadow-[#C5A45E]/30 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center justify-center gap-1.5 shrink-0"
           >
             <span>{primaryCtaText}</span>
             <span aria-hidden="true">&rarr;</span>
