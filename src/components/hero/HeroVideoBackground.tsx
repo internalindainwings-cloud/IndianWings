@@ -14,37 +14,54 @@ const DEFAULT_MOBILE_POSTER = 'https://res.cloudinary.com/dcmoseix9/video/upload
 
 export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({ 
   src, 
-  mobileSrc = DEFAULT_MOBILE_VIDEO,
+  mobileSrc,
   poster,
-  mobilePoster = DEFAULT_MOBILE_POSTER
+  mobilePoster
 }) => {
-  const activeDesktopSrc = src || DEFAULT_DESKTOP_MEDIA;
-  const activeDesktopPoster = poster || DEFAULT_DESKTOP_MEDIA;
-  const isImage = activeDesktopSrc.match(/\.(jpeg|jpg|png|webp|avif)$/i) || activeDesktopSrc.includes('/image/upload/');
+  // Resolve active media URL from slide props dynamically
+  const candidateDesktop = (src && src.trim().length > 0) ? src.trim() : (poster && poster.trim().length > 0) ? poster.trim() : DEFAULT_DESKTOP_MEDIA;
+  const candidateMobile = (mobileSrc && mobileSrc.trim().length > 0) ? mobileSrc.trim() : (mobilePoster && mobilePoster.trim().length > 0) ? mobilePoster.trim() : candidateDesktop;
+
+  const activeDesktopSrc = candidateDesktop;
+  const activeDesktopPoster = (poster && poster.trim().length > 0) ? poster.trim() : candidateDesktop;
+
+  const isDesktopImage = activeDesktopSrc.match(/\.(jpeg|jpg|png|webp|avif)$/i) || activeDesktopSrc.includes('/image/upload/');
+  const isMobileImage = candidateMobile.match(/\.(jpeg|jpg|png|webp|avif)$/i) || candidateMobile.includes('/image/upload/');
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
-      {/* 1. Mobile View: Ultra-Optimized Scenic Video */}
+    <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight transition-opacity duration-700">
+      {/* 1. Mobile View: Dynamic Carousel Slide Media (Image or Video) */}
       <div className="block md:hidden absolute inset-0 w-full h-full pointer-events-none">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={mobilePoster}
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        >
-          <source src={mobileSrc} type="video/mp4" />
-        </video>
+        {isMobileImage ? (
+          <Image
+            src={candidateMobile}
+            alt="Hero Mobile Background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={candidateMobile}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          >
+            <source src={candidateMobile} type="video/mp4" />
+          </video>
+        )}
       </div>
 
-      {/* 2. Desktop View: Dynamic Cloudinary Image or Video based on activeDesktopSrc */}
+      {/* 2. Desktop View: Dynamic Carousel Slide Media (Image or Video) */}
       <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
-        {isImage ? (
+        {isDesktopImage ? (
           <Image
             src={activeDesktopSrc}
-            alt="Hero Visual"
+            alt="Hero Desktop Background"
             fill
             priority
             sizes="100vw"
@@ -66,9 +83,9 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
       </div>
       
       {/* Subtle uniform tint */}
-      <div className="absolute inset-0 bg-black/15 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
       {/* Subtle bottom gradient to blend with Action Bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-midnight/50 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-midnight/60 to-transparent pointer-events-none" />
     </div>
   );
 };

@@ -23,29 +23,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
     }
   }, [initialConfig]);
 
-  // Client refresh if loaded initially without props
+  // Always sync with latest API config on client mount
   useEffect(() => {
-    if (!initialConfig) {
-      fetch('/api/hero')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success && data.hero) {
-            setConfig(data.hero);
-          }
-        })
-        .catch((err) => console.warn('Could not load hero config:', err));
-    }
-  }, [initialConfig]);
+    fetch('/api/hero')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.hero) {
+          setConfig(data.hero);
+        }
+      })
+      .catch((err) => console.warn('Could not load hero config:', err));
+  }, []);
 
   const slides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
   const slide = slides[currentSlide % slides.length] || slides[0];
+
+  // Auto-advance carousel slides every 5.5 seconds
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   return (
     <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
       {/* Background stays absolutely positioned to cover the whole section */}
       <HeroVideoBackground 
         key={slide.id || currentSlide} 
-        src={slide.videoSrc || config.videoUrl} 
+        src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
         poster={slide.poster || config.posterUrl} 
       />
       
@@ -60,6 +67,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           secondaryCtaLink={config.secondaryCtaLink}
         />
         
+        {/* Mobile Slide Indicator Dots */}
+        {slides.length > 1 && (
+          <div className="lg:hidden flex items-center justify-start gap-1.5 mt-3 px-4 sm:px-8 z-20">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  currentSlide === idx ? 'w-6 bg-saffron' : 'w-2 bg-white/40'
+                }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Desktop Slide Indicator Numbers */}
         {slides.length > 1 && (
           <div className="hidden lg:block">
             <HeroSlideIndicator 
