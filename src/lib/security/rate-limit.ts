@@ -21,7 +21,7 @@ function getEnquiryLimiter(): Ratelimit | null {
   if (!r) return null;
   enquiryLimiter = new Ratelimit({
     redis: r,
-    limiter: Ratelimit.slidingWindow(6, '10 m'),
+    limiter: Ratelimit.slidingWindow(30, '10 m'), // Generous 30 leads per 10 min
     prefix: 'rl:enquiry',
   });
   return enquiryLimiter;
@@ -33,7 +33,7 @@ function getAdminLoginLimiter(): Ratelimit | null {
   if (!r) return null;
   adminLoginLimiter = new Ratelimit({
     redis: r,
-    limiter: Ratelimit.slidingWindow(5, '15 m'),
+    limiter: Ratelimit.slidingWindow(15, '15 m'),
     prefix: 'rl:admin_login',
   });
   return adminLoginLimiter;
@@ -45,7 +45,7 @@ function getItineraryLimiter(): Ratelimit | null {
   if (!r) return null;
   itineraryLimiter = new Ratelimit({
     redis: r,
-    limiter: Ratelimit.slidingWindow(8, '10 m'),
+    limiter: Ratelimit.slidingWindow(20, '10 m'),
     prefix: 'rl:itinerary',
   });
   return itineraryLimiter;
@@ -58,13 +58,33 @@ export interface RateLimitResult {
   redisUnavailable?: boolean;
 }
 
+function isLocalIp(ip: string): boolean {
+  if (!ip) return true;
+  const clean = ip.trim().toLowerCase();
+  return (
+    clean === '127.0.0.1' ||
+    clean === '::1' ||
+    clean === 'localhost' ||
+    clean.startsWith('127.') ||
+    clean.startsWith('192.168.') ||
+    clean.startsWith('10.') ||
+    clean === 'unknown'
+  );
+}
+
 async function checkLimit(
   limiter: Ratelimit | null,
   key: string
 ): Promise<RateLimitResult> {
+  // Always allow localhost & private IPs to prevent developer/tester lockouts
+  if (isLocalIp(key)) {
+    return { success: true, remaining: 100, resetAt: Date.now() + 60_000 };
+  }
+
   if (!limiter) {
-    console.warn('[RateLimit] Upstash Redis not configured. Failing closed for security.');
-    return { success: false, remaining: 0, resetAt: Date.now() + 60_000, redisUnavailable: true };
+    // Fail open: Never block genuine paying travel customers if Redis is not configured
+    console.warn('[RateLimit] Upstash Redis not configured. Allowing enquiry (fail-open).');
+    return { success: true, remaining: 100, resetAt: Date.now() + 60_000, redisUnavailable: true };
   }
 
   try {
@@ -75,8 +95,9 @@ async function checkLimit(
       resetAt: result.reset,
     };
   } catch (err) {
-    console.error('[RateLimit] Redis error — failing closed:', err);
-    return { success: false, remaining: 0, resetAt: Date.now() + 60_000, redisUnavailable: true };
+    // Fail open: If Redis experiences an outage, prioritize business revenue by saving lead
+    console.error('[RateLimit] Redis error — failing open to preserve lead flow:', err);
+    return { success: true, remaining: 100, resetAt: Date.now() + 60_000, redisUnavailable: true };
   }
 }
 
