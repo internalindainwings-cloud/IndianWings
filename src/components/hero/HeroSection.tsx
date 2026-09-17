@@ -79,7 +79,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
                 type="button"
                 onClick={() => setCurrentSlide(idx)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentSlide === idx ? 'w-6 bg-saffron' : 'w-2 bg-white/40'
+                  currentSlide === idx ? 'w-6 bg-[#C5A45E]' : 'w-2 bg-white/40'
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

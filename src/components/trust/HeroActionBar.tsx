@@ -30,16 +30,16 @@ export const HeroActionBar: React.FC<HeroActionBarProps> = ({ trustPills }) => {
           </svg>
         );
       case 'award':
-        return <Award size={11} strokeWidth={2.2} className="text-saffron" />;
+        return <Award size={11} strokeWidth={2.2} className="text-[#C5A45E]" />;
       case 'shield':
-        return <ShieldCheck size={11} strokeWidth={2.2} className="text-saffron" />;
+        return <ShieldCheck size={11} strokeWidth={2.2} className="text-[#C5A45E]" />;
       case 'sparkles':
-        return <Sparkles size={11} strokeWidth={2.2} className="text-saffron" />;
+        return <Sparkles size={11} strokeWidth={2.2} className="text-[#C5A45E]" />;
       case 'heart':
-        return <Heart size={11} strokeWidth={2.2} className="text-saffron" />;
+        return <Heart size={11} strokeWidth={2.2} className="text-[#C5A45E]" />;
       case 'users':
       default:
-        return <Users size={11} strokeWidth={2.2} className="text-saffron" />;
+        return <Users size={11} strokeWidth={2.2} className="text-[#C5A45E]" />;
     }
   };
 
@@ -48,23 +48,23 @@ export const HeroActionBar: React.FC<HeroActionBarProps> = ({ trustPills }) => {
       className="w-full border-y py-[7px] sm:py-[6px] px-2 sm:px-4 relative z-20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-all duration-300"
       style={{
         backgroundColor: 'color-mix(in srgb, var(--color-midnight) 45%, transparent)',
-        borderColor: 'rgba(255, 255, 255, 0.14)'
+        borderColor: 'rgba(197, 164, 94, 0.25)'
       }}
     >
       <div className="w-fit max-w-full mx-auto flex items-center justify-center gap-1 sm:gap-2 flex-wrap sm:flex-nowrap">
         {items.map((pill, idx) => (
           <div 
             key={pill.id || idx}
-            className="group flex items-center gap-1 sm:gap-1.5 py-[4.5px] sm:py-[5px] px-2 sm:px-2.5 rounded-md sm:rounded-lg backdrop-blur-md sm:backdrop-blur-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.18] hover:border-white/[0.32] shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 transition-all duration-200 text-left cursor-default select-none shrink-0"
+            className="group flex items-center gap-1 sm:gap-1.5 py-[4.5px] sm:py-[5px] px-2 sm:px-2.5 rounded-md sm:rounded-lg backdrop-blur-md sm:backdrop-blur-lg bg-black/30 hover:bg-black/45 border border-[#C5A45E]/40 hover:border-[#C5A45E]/80 shadow-[0_2px_10px_rgba(197,164,94,0.12)] hover:-translate-y-0.5 transition-all duration-200 text-left cursor-default select-none shrink-0"
           >
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-[4px] sm:rounded-md flex items-center justify-center shrink-0 bg-white/[0.12] border border-white/[0.2] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] group-hover:scale-105 transition-transform">
+            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-[4px] sm:rounded-md flex items-center justify-center shrink-0 bg-[#C5A45E]/15 border border-[#C5A45E]/30 shadow-[inset_0_1px_0_rgba(197,164,94,0.2)] group-hover:scale-105 transition-transform">
               {renderIcon(pill.icon)}
             </div>
             <div className="flex flex-col text-left leading-none min-w-0">
-              <span className="text-[11px] sm:text-[11.5px] md:text-[12px] font-extrabold text-white tracking-tight truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
+              <span className="text-[11px] sm:text-[11.5px] md:text-[12px] font-extrabold text-[#C5A45E] tracking-tight truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
                 {pill.value}
               </span>
-              <span className="text-[8px] sm:text-[8.5px] md:text-[9px] text-white/80 font-medium tracking-wide truncate mt-0.5">
+              <span className="text-[8px] sm:text-[8.5px] md:text-[9px] text-white/90 font-medium tracking-wide truncate mt-0.5">
                 {pill.label}
               </span>
             </div>

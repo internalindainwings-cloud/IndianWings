@@ -26,14 +26,14 @@ export const HeroSlideIndicator: React.FC<HeroSlideIndicatorProps> = ({
           >
             <span 
               className={`font-manrope text-xs font-semibold transition-colors duration-300 ${
-                isActive ? 'text-saffron' : 'text-warm-white/50 group-hover:text-warm-white'
+                isActive ? 'text-[#C5A45E]' : 'text-warm-white/50 group-hover:text-warm-white'
               }`}
             >
               {numberStr}
             </span>
             <span 
               className={`block transition-all duration-300 ${
-                isActive ? 'w-8 h-[2px] bg-saffron' : 'w-4 h-px bg-warm-white/30 group-hover:bg-warm-white/60 group-hover:w-6'
+                isActive ? 'w-8 h-[2px] bg-[#C5A45E]' : 'w-4 h-px bg-warm-white/30 group-hover:bg-warm-white/60 group-hover:w-6'
               }`}
             />
           </button>
