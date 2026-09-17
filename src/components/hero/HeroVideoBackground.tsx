@@ -8,8 +8,7 @@ interface HeroVideoBackgroundProps {
   mobilePoster?: string;
 }
 
-const DEFAULT_DESKTOP_VIDEO = 'https://res.cloudinary.com/wmwdypan/video/upload/f_auto,q_auto,ac_none/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.mp4';
-const DEFAULT_DESKTOP_POSTER = 'https://res.cloudinary.com/wmwdypan/video/upload/so_0,f_auto,q_auto/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.jpg';
+const DEFAULT_DESKTOP_MEDIA = 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png';
 const DEFAULT_MOBILE_VIDEO = 'https://res.cloudinary.com/dcmoseix9/video/upload/f_auto,q_auto,ac_none/v1789317861/Final_Video_rdc5nd.mp4';
 const DEFAULT_MOBILE_POSTER = 'https://res.cloudinary.com/dcmoseix9/video/upload/so_0,f_auto,q_auto/v1789317861/Final_Video_rdc5nd.jpg';
 
@@ -19,8 +18,8 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   poster,
   mobilePoster = DEFAULT_MOBILE_POSTER
 }) => {
-  const activeDesktopSrc = src || DEFAULT_DESKTOP_VIDEO;
-  const activeDesktopPoster = poster || DEFAULT_DESKTOP_POSTER;
+  const activeDesktopSrc = src || DEFAULT_DESKTOP_MEDIA;
+  const activeDesktopPoster = poster || DEFAULT_DESKTOP_MEDIA;
   const isImage = activeDesktopSrc.match(/\.(jpeg|jpg|png|webp|avif)$/i) || activeDesktopSrc.includes('/image/upload/');
 
   return (
