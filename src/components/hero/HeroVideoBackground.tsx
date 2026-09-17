@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import type { HeroSlide, HeroTransitionType } from '@/data/hero-defaults';
+import { optimizeCloudinaryUrl } from '@/lib/utilities/cloudinary';
 
 interface HeroVideoBackgroundProps {
   slides?: HeroSlide[];
@@ -76,11 +77,14 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
         {slides.map((s, idx) => {
           const isActive = idx === currentSlide;
-          const mediaUrl = (s.videoSrc && s.videoSrc.trim().length > 0)
+          const rawMediaUrl = (s.videoSrc && s.videoSrc.trim().length > 0)
             ? s.videoSrc.trim()
             : (s.poster && s.poster.trim().length > 0)
             ? s.poster.trim()
             : DEFAULT_DESKTOP_MEDIA;
+
+          // Automatically apply Cloudinary automatic format and quality compression
+          const mediaUrl = optimizeCloudinaryUrl(rawMediaUrl);
           const isImage = mediaUrl.match(/\.(jpeg|jpg|png|webp|avif)$/i) || mediaUrl.includes('/image/upload/');
           const { container, img } = getTransitionStyles(transitionType, isActive, idx, currentSlide);
 
@@ -97,6 +101,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                     alt={s.title || 'Hero Mobile Background'}
                     fill
                     priority={idx === 0}
+                    loading={idx === 0 ? undefined : 'lazy'}
                     sizes="100vw"
                     className={`object-cover object-center ${img}`}
                   />
@@ -106,7 +111,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                     muted
                     loop
                     playsInline
-                    preload="auto"
+                    preload={isActive ? 'auto' : 'metadata'}
                     poster={mediaUrl}
                     className="absolute inset-0 w-full h-full object-cover object-center"
                   >
@@ -123,6 +128,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                     alt={s.title || 'Hero Desktop Background'}
                     fill
                     priority={idx === 0}
+                    loading={idx === 0 ? undefined : 'lazy'}
                     sizes="100vw"
                     className={`object-cover object-center ${img}`}
                   />
@@ -132,7 +138,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                     muted
                     loop
                     playsInline
-                    preload="auto"
+                    preload={isActive ? 'auto' : 'metadata'}
                     poster={mediaUrl}
                     className="absolute inset-0 w-full h-full object-cover object-top"
                   >
@@ -153,15 +159,20 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   }
 
   // Fallback single media view
-  const candidateDesktop = (src && src.trim().length > 0) ? src.trim() : (poster && poster.trim().length > 0) ? poster.trim() : DEFAULT_DESKTOP_MEDIA;
-  const isDesktopImage = candidateDesktop.match(/\.(jpeg|jpg|png|webp|avif)$/i) || candidateDesktop.includes('/image/upload/');
+  const candidateDesktop = (src && src.trim().length > 0)
+    ? src.trim()
+    : (poster && poster.trim().length > 0)
+    ? poster.trim()
+    : DEFAULT_DESKTOP_MEDIA;
+  const optimizedCandidate = optimizeCloudinaryUrl(candidateDesktop);
+  const isDesktopImage = optimizedCandidate.match(/\.(jpeg|jpg|png|webp|avif)$/i) || optimizedCandidate.includes('/image/upload/');
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
       <div className="absolute inset-0 w-full h-full pointer-events-none">
         {isDesktopImage ? (
           <Image
-            src={candidateDesktop}
+            src={optimizedCandidate}
             alt="Hero Background"
             fill
             priority
@@ -175,10 +186,10 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             loop
             playsInline
             preload="auto"
-            poster={candidateDesktop}
+            poster={optimizedCandidate}
             className="absolute inset-0 w-full h-full object-cover object-top"
           >
-            <source src={candidateDesktop} type="video/mp4" />
+            <source src={optimizedCandidate} type="video/mp4" />
           </video>
         )}
       </div>
@@ -187,3 +198,5 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
     </div>
   );
 };
+
+

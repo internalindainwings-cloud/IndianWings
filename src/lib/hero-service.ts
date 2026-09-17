@@ -2,6 +2,7 @@ import 'server-only';
 import type { HeroHomepageConfig } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
 import { prisma } from '@/lib/database/prisma';
+import { optimizeCloudinaryUrl } from '@/lib/utilities/cloudinary';
 
 export type { HeroHomepageConfig };
 export { defaultHeroConfig };
@@ -37,7 +38,15 @@ export async function updateHeroConfig(newConfig: Partial<HeroHomepageConfig>): 
   const updated: HeroHomepageConfig = {
     ...current,
     ...newConfig,
-    slides: Array.isArray(newConfig.slides) ? newConfig.slides : current.slides,
+    videoUrl: newConfig.videoUrl !== undefined ? optimizeCloudinaryUrl(newConfig.videoUrl) : current.videoUrl,
+    posterUrl: newConfig.posterUrl !== undefined ? optimizeCloudinaryUrl(newConfig.posterUrl) : current.posterUrl,
+    slides: Array.isArray(newConfig.slides)
+      ? newConfig.slides.map((s) => ({
+          ...s,
+          videoSrc: s.videoSrc ? optimizeCloudinaryUrl(s.videoSrc) : s.videoSrc,
+          poster: s.poster ? optimizeCloudinaryUrl(s.poster) : s.poster,
+        }))
+      : current.slides,
     trustPills: Array.isArray(newConfig.trustPills) ? newConfig.trustPills : current.trustPills,
   };
 
