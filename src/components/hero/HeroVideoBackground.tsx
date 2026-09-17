@@ -7,8 +7,8 @@ interface HeroVideoBackgroundProps {
   mobilePoster?: string;
 }
 
-const DEFAULT_DESKTOP_VIDEO = 'https://res.cloudinary.com/dcmoseix9/video/upload/f_auto,q_auto,ac_none/v1789371598/final_hero_desktop_ebblmr.mp4';
-const DEFAULT_DESKTOP_POSTER = 'https://res.cloudinary.com/dcmoseix9/video/upload/so_0,f_auto,q_auto/v1789371598/final_hero_desktop_ebblmr.jpg';
+const DEFAULT_DESKTOP_VIDEO = 'https://res.cloudinary.com/wmwdypan/video/upload/f_auto,q_auto,ac_none/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.mp4';
+const DEFAULT_DESKTOP_POSTER = 'https://res.cloudinary.com/wmwdypan/video/upload/so_0,f_auto,q_auto/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.jpg';
 const DEFAULT_MOBILE_VIDEO = 'https://res.cloudinary.com/dcmoseix9/video/upload/f_auto,q_auto,ac_none/v1789317861/Final_Video_rdc5nd.mp4';
 const DEFAULT_MOBILE_POSTER = 'https://res.cloudinary.com/dcmoseix9/video/upload/so_0,f_auto,q_auto/v1789317861/Final_Video_rdc5nd.jpg';
 
