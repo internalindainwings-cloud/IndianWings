@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface HeroVideoBackgroundProps {
   src?: string;
@@ -7,8 +8,7 @@ interface HeroVideoBackgroundProps {
   mobilePoster?: string;
 }
 
-const DEFAULT_DESKTOP_VIDEO = 'https://res.cloudinary.com/wmwdypan/video/upload/f_auto,q_auto,ac_none/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.mp4';
-const DEFAULT_DESKTOP_POSTER = 'https://res.cloudinary.com/wmwdypan/video/upload/so_0,f_auto,q_auto/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.jpg';
+const DEFAULT_DESKTOP_IMAGE = '/images/hero-panoramic.jpg';
 const DEFAULT_MOBILE_VIDEO = 'https://res.cloudinary.com/dcmoseix9/video/upload/f_auto,q_auto,ac_none/v1789317861/Final_Video_rdc5nd.mp4';
 const DEFAULT_MOBILE_POSTER = 'https://res.cloudinary.com/dcmoseix9/video/upload/so_0,f_auto,q_auto/v1789317861/Final_Video_rdc5nd.jpg';
 
@@ -18,9 +18,6 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   poster,
   mobilePoster = DEFAULT_MOBILE_POSTER
 }) => {
-  const activeDesktopSrc = src || DEFAULT_DESKTOP_VIDEO;
-  const activeDesktopPoster = poster || DEFAULT_DESKTOP_POSTER;
-
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
       {/* 1. Mobile View: Ultra-Optimized Scenic Video */}
@@ -38,25 +35,22 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
         </video>
       </div>
 
-      {/* 2. Desktop View: High-Performance Desktop Video with Complete Checklist Applied (No Static Image Fallback) */}
+      {/* 2. Desktop View: Cinematic Ultra-Wide Panoramic Visual */}
       <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster={activeDesktopPoster}
-          className="absolute inset-0 w-full h-full object-cover object-top"
-        >
-          <source src={activeDesktopSrc} type="video/mp4" />
-        </video>
+        <Image
+          src={DEFAULT_DESKTOP_IMAGE}
+          alt="Shree Vaishnodevi & Himalayan Panoramic Sacred Valley"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center scale-[1.02] transition-transform duration-1000"
+        />
       </div>
       
-      {/* Subtle uniform tint (removed heavy left-side gradient overlay) */}
-      <div className="absolute inset-0 bg-black/15 pointer-events-none" />
-      {/* Subtle bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-midnight/50 to-transparent pointer-events-none" />
+      {/* Subtle uniform tint for contrast */}
+      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+      {/* Subtle bottom gradient to blend with Action Bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-midnight/60 to-transparent pointer-events-none" />
     </div>
   );
 };
