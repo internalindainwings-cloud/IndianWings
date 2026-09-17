@@ -26,8 +26,8 @@ export interface HeroHomepageConfig {
 }
 
 export const defaultHeroConfig: HeroHomepageConfig = {
-  headline: 'Discover the Magic of Kashmir',
-  subheadline: 'Curated luxury houseboats, alpine ski resorts, and private chauffeured tours across paradise.',
+  headline: 'RIWAAYAT-E-KASHMIR',
+  subheadline: 'Heritage & Cultural Journeys Begins',
   primaryCtaText: 'Get Free Quote',
   secondaryCtaText: 'Explore Packages',
   secondaryCtaLink: '/packages',

@@ -15,9 +15,9 @@ export interface HeroContentProps {
 }
 
 export const HeroContent: React.FC<HeroContentProps> = ({
-  headline = 'Discover the Magic of Kashmir',
+  headline = 'RIWAAYAT-E-KASHMIR',
   badgeText,
-  subheadline,
+  subheadline = 'Heritage & Cultural Journeys Begins',
   primaryCtaText = 'Get Free Quote',
   secondaryCtaText = 'Explore Packages',
   secondaryCtaLink = '/packages',
@@ -33,7 +33,10 @@ export const HeroContent: React.FC<HeroContentProps> = ({
         </h1>
 
         {subheadline && (
-          <p className="text-white/80 text-xs sm:text-sm font-manrope max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2">
+          <p 
+            className="text-[#F5BA42] text-xs sm:text-sm max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2"
+            style={{ fontFamily: "'Canva Sans', var(--font-manrope), 'Manrope', sans-serif" }}
+          >
             {subheadline}
           </p>
         )}

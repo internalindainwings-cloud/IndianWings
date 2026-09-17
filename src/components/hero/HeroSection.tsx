@@ -49,8 +49,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         poster={slide.poster || config.posterUrl} 
       />
       
-      {/* Main hero content fills available space — reduced top padding */}
-      <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-5 sm:-translate-y-7 md:-translate-y-9">
+      {/* Main hero content fills available space — pulled up towards nav on mobile */}
+      <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-12 sm:-translate-y-7 md:-translate-y-9">
         <HeroContent 
           headline={config.headline}
           badgeText={config.badgeText}

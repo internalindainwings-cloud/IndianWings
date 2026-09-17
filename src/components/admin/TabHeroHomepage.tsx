@@ -245,10 +245,13 @@ export const TabHeroHomepage: React.FC = () => {
           {/* Hero Content Overlay */}
           <div className="relative z-10 p-4 sm:p-6 max-w-lg flex flex-col justify-center flex-grow">
             <h2 className="font-display text-lg sm:text-2xl font-bold text-[#F5BA42] leading-tight drop-shadow-md mb-2">
-              {config.headline || 'Discover the Magic of Kashmir'}
+              {config.headline || 'RIWAAYAT-E-KASHMIR'}
             </h2>
             {config.subheadline && (
-              <p className="text-white/80 text-[11px] line-clamp-2 mb-3">
+              <p 
+                className="text-[#F5BA42] text-[11px] line-clamp-2 mb-3"
+                style={{ fontFamily: "'Canva Sans', var(--font-manrope), 'Manrope', sans-serif" }}
+              >
                 {config.subheadline}
               </p>
             )}
