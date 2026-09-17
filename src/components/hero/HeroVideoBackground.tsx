@@ -38,8 +38,8 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
         </video>
       </div>
 
-      {/* 2. Desktop View: High-Performance Desktop Video aligned to top below navbar */}
-      <div className="hidden md:block absolute inset-0 top-14 md:top-16 w-full h-[calc(100%-3.5rem)] md:h-[calc(100%-4rem)] pointer-events-none">
+      {/* 2. Desktop View: High-Performance Desktop Video with Complete Checklist Applied (No Static Image Fallback) */}
+      <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
         <video
           autoPlay
           muted

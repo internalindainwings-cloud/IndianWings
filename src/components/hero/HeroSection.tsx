@@ -41,7 +41,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
   const slide = slides[currentSlide % slides.length] || slides[0];
 
   return (
-    <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-120px)] min-[1140px]:min-h-[540px] min-[1140px]:max-h-[720px] min-[1400px]:max-h-[780px] flex flex-col justify-between overflow-hidden">
+    <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
       {/* Background stays absolutely positioned to cover the whole section */}
       <HeroVideoBackground 
         key={slide.id || currentSlide} 
