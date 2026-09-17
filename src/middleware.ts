@@ -63,10 +63,11 @@ export async function middleware(request: NextRequest) {
   const pathname = url.pathname;
 
   // Check if accessing via admin subdomain (e.g. admin.theindianwings.com or admin.localhost:3000)
+  const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
   const isAdminSubdomain = hostname.startsWith('admin.');
 
-  // Block access to /admin or /api/admin if not on the admin subdomain
-  if ((pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) && !isAdminSubdomain) {
+  // Block access to /admin or /api/admin if not on the admin subdomain (allow on localhost for local testing)
+  if ((pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) && !isAdminSubdomain && !isLocalhost) {
     url.pathname = '/';
     return NextResponse.redirect(url);
   }

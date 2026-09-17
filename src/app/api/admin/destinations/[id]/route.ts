@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
+import { optimizeCloudinaryUrl, optimizeCloudinaryUrls } from '@/lib/utilities/cloudinary';
 
 interface RouteContext {
   params: Promise<{
@@ -26,8 +27,8 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
         ...(body.region !== undefined && { region: body.region.trim() }),
         ...(body.tagline !== undefined && { tagline: body.tagline.trim() }),
         ...(body.category !== undefined && { category: body.category }),
-        ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl.trim() }),
-        ...(body.gallery !== undefined && { gallery: body.gallery }),
+        ...(body.imageUrl !== undefined && { imageUrl: optimizeCloudinaryUrl(body.imageUrl.trim()) }),
+        ...(body.gallery !== undefined && { gallery: optimizeCloudinaryUrls(body.gallery) }),
         ...(body.elevation !== undefined && { elevation: body.elevation.trim() }),
         ...(body.bestSeason !== undefined && { bestSeason: body.bestSeason.trim() }),
         ...(body.distanceFromSrinagar !== undefined && { distanceFromSrinagar: body.distanceFromSrinagar.trim() }),

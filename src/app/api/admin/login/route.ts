@@ -45,12 +45,15 @@ export async function POST(request: NextRequest) {
       message: 'Authentication successful',
     });
 
+    const isLocalhost = clientIp === '127.0.0.1' || (request.headers.get('host') || '').includes('localhost');
+    const isSecure = process.env.NODE_ENV === 'production' && !isLocalhost;
+
     response.cookies.set({
       name: COOKIE_NAME,
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isSecure,
+      sameSite: 'lax',
       maxAge: SESSION_MAX_AGE,
       path: '/',
     });

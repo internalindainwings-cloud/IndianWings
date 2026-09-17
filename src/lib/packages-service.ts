@@ -374,13 +374,14 @@ export async function getPackageBySlug(slug: string): Promise<EnrichedPackage | 
       where: { slug },
     });
 
-    if (!r && (slug === 'winter-wonderland-powder-snow-ski-6d-5n' || slug === 'winter-wonderland-snow-ski-package-6d-5n')) {
+    if (!r) {
+      const baseSlug = slug.replace(/-\d+d-\d+n$/i, '');
       r = await prisma.package.findFirst({
         where: {
           OR: [
-            { slug: 'winter-wonderland-powder-snow-ski-6d-5n' },
-            { slug: 'winter-wonderland-snow-ski-package-6d-5n' },
-            { id: 'seasonal-1' },
+            { slug },
+            { slug: baseSlug },
+            { slug: { startsWith: `${baseSlug}-` } },
           ],
         },
       });

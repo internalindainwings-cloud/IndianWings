@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
+import { optimizeCloudinaryUrl, optimizeCloudinaryUrls } from '@/lib/utilities/cloudinary';
 
 interface RouteContext {
   params: Promise<{
@@ -28,9 +29,9 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     if (body.tagColor !== undefined || body.cardAnimation !== undefined) {
       updateData.tagColor = body.cardAnimation || body.tagColor || null;
     }
-    if (body.imageUrl !== undefined) updateData.imageUrl = body.imageUrl;
-    if (body.videoUrl !== undefined) updateData.videoUrl = body.videoUrl && body.videoUrl.trim() !== '' ? body.videoUrl.trim() : null;
-    if (body.galleryUrls !== undefined) updateData.galleryUrls = body.galleryUrls;
+    if (body.imageUrl !== undefined) updateData.imageUrl = optimizeCloudinaryUrl(body.imageUrl);
+    if (body.videoUrl !== undefined) updateData.videoUrl = body.videoUrl && body.videoUrl.trim() !== '' ? optimizeCloudinaryUrl(body.videoUrl.trim()) : null;
+    if (body.galleryUrls !== undefined) updateData.galleryUrls = Array.isArray(body.galleryUrls) ? optimizeCloudinaryUrls(body.galleryUrls) : [];
     if (body.rating !== undefined) updateData.rating = parseFloat(body.rating);
     if (body.reviewCount !== undefined) updateData.reviewCount = parseInt(body.reviewCount, 10);
     if (body.destinations !== undefined) updateData.destinations = body.destinations;

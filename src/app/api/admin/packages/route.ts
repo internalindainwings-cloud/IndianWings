@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getAllPackages, generatePackageSlug } from '@/lib/packages-service';
+import { optimizeCloudinaryUrl, optimizeCloudinaryUrls } from '@/lib/utilities/cloudinary';
 
 export async function GET() {
   try {
@@ -99,9 +100,9 @@ export async function POST(request: NextRequest) {
         duration: duration.trim(),
         tag: tag || 'Best Seller',
         tagColor: body.cardAnimation || tagColor || null,
-        imageUrl: imageUrl || '/images/gallery/shikara-dal-lake.jpg',
-        videoUrl: videoUrl && videoUrl.trim() !== '' ? videoUrl.trim() : null,
-        galleryUrls: Array.isArray(galleryUrls) ? galleryUrls : [],
+        imageUrl: optimizeCloudinaryUrl(imageUrl) || '/images/gallery/shikara-dal-lake.jpg',
+        videoUrl: videoUrl && videoUrl.trim() !== '' ? optimizeCloudinaryUrl(videoUrl.trim()) : null,
+        galleryUrls: Array.isArray(galleryUrls) ? optimizeCloudinaryUrls(galleryUrls) : [],
         rating: typeof rating === 'number' ? rating : 4.9,
         reviewCount: typeof reviewCount === 'number' ? reviewCount : 1,
         destinations: Array.isArray(destinations) ? destinations : [],

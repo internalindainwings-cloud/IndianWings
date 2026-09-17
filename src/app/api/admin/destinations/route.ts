@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getAllDestinations } from '@/lib/destinations-service';
+import { optimizeCloudinaryUrl, optimizeCloudinaryUrls } from '@/lib/utilities/cloudinary';
 
 export async function GET() {
   try {
@@ -55,8 +56,10 @@ export async function POST(request: NextRequest) {
         region: region.trim(),
         tagline: tagline ? tagline.trim() : '',
         category,
-        imageUrl: imageUrl ? imageUrl.trim() : '/images/gallery/shikara-dal-lake.jpg',
-        gallery: Array.isArray(gallery) && gallery.length > 0 ? gallery : [imageUrl || '/images/gallery/shikara-dal-lake.jpg'],
+        imageUrl: optimizeCloudinaryUrl(imageUrl) || '/images/gallery/shikara-dal-lake.jpg',
+        gallery: Array.isArray(gallery) && gallery.length > 0 
+          ? optimizeCloudinaryUrls(gallery) 
+          : [optimizeCloudinaryUrl(imageUrl) || '/images/gallery/shikara-dal-lake.jpg'],
         elevation: elevation ? elevation.trim() : '1,585 m',
         bestSeason: bestSeason ? bestSeason.trim() : 'All Year Round',
         distanceFromSrinagar: distanceFromSrinagar ? distanceFromSrinagar.trim() : '0 km',
