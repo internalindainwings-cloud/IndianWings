@@ -32,7 +32,7 @@ export const defaultHeroConfig: HeroHomepageConfig = {
   secondaryCtaText: 'Explore Packages',
   secondaryCtaLink: '/packages',
   videoUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/f_auto,q_auto,ac_none/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.mp4',
-  posterUrl: '/images/hero-panoramic.jpg',
+  posterUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/so_0,f_auto,q_auto/v1789663600/indian_wings_vaishnodevi_kashmir_amarnath_ladakh_slideshow_1.jpg',
   slides: [
     {
       id: 'dal-lake',
