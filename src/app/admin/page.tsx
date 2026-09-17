@@ -19,6 +19,7 @@ import { TabReviews } from '@/components/admin/TabReviews';
 import { TabSeo } from '@/components/admin/TabSeo';
 import { TabSettings } from '@/components/admin/TabSettings';
 import { TabHeroHomepage } from '@/components/admin/TabHeroHomepage';
+import { TabAllUsers } from '@/components/admin/TabAllUsers';
 
 interface AdminData {
   stats: {
@@ -38,6 +39,7 @@ interface AdminData {
 const validTabs: AdminSection[] = [
   'dashboard',
   'leads',
+  'users',
   'herohomepage',
   'packages',
   'destinations',
@@ -163,6 +165,8 @@ function AdminDashboardContent() {
         return (
           <TabLeads leads={data?.leads || []} onRefresh={() => fetchData(true)} />
         );
+      case 'users':
+        return <TabAllUsers />;
       case 'herohomepage':
         return <TabHeroHomepage />;
       case 'packages':

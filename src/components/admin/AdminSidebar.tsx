@@ -18,11 +18,13 @@ import {
   Star,
   Settings,
   Sparkles,
+  Mail,
 } from 'lucide-react';
 
 export type AdminSection =
   | 'dashboard'
   | 'leads'
+  | 'users'
   | 'herohomepage'
   | 'packages'
   | 'destinations'
@@ -75,6 +77,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       label: 'Customer Inquiries',
       icon: <Users className="h-[18px] w-[18px]" />,
       badge: leadCount,
+    },
+    {
+      id: 'users',
+      label: 'All Users',
+      icon: <Mail className="h-[18px] w-[18px] text-[#C5A45E]" />,
     },
     {
       id: 'packages',

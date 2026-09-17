@@ -20,6 +20,7 @@ interface AdminShellProps {
 const sectionLabels: Record<AdminSection, string> = {
   dashboard: 'Dashboard',
   leads: 'Customer Inquiries',
+  users: 'All Users & Email Database',
   herohomepage: 'Hero Homepage Manager',
   packages: 'Packages & Itineraries Manager',
   destinations: 'Destinations & Valleys',
