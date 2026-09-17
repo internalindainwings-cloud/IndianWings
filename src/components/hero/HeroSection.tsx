@@ -38,20 +38,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
   const slides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
   const slide = slides[currentSlide % slides.length] || slides[0];
 
-  // Auto-advance carousel slides every 5.5 seconds
+  // Auto-advance carousel slides based on configured duration
   useEffect(() => {
     if (slides.length <= 1) return;
+    const duration = config.transitionDuration || 5500;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5500);
+    }, duration);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [slides.length, config.transitionDuration]);
 
   return (
     <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
-      {/* Background stays absolutely positioned to cover the whole section */}
+      {/* Background stays absolutely positioned with smooth multi-slide transitions */}
       <HeroVideoBackground 
-        key={slide.id || currentSlide} 
+        slides={slides}
+        currentSlide={currentSlide}
+        transitionType={config.transitionType || 'fade'}
         src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
         poster={slide.poster || config.posterUrl} 
       />

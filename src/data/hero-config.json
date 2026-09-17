@@ -6,6 +6,8 @@
   "secondaryCtaLink": "/packages",
   "videoUrl": "https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png",
   "posterUrl": "https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png",
+  "transitionType": "fade",
+  "transitionDuration": 5500,
   "slides": [
     {
       "id": "dal-lake",

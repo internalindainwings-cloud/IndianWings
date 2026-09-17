@@ -12,6 +12,8 @@ export interface HeroTrustPill {
   label: string;
 }
 
+export type HeroTransitionType = 'fade' | 'ken-burns' | 'slide' | 'blur-fade';
+
 export interface HeroHomepageConfig {
   headline: string;
   badgeText?: string;
@@ -21,6 +23,8 @@ export interface HeroHomepageConfig {
   secondaryCtaLink: string;
   videoUrl: string;
   posterUrl: string;
+  transitionType?: HeroTransitionType;
+  transitionDuration?: number;
   slides: HeroSlide[];
   trustPills: HeroTrustPill[];
 }
@@ -33,6 +37,8 @@ export const defaultHeroConfig: HeroHomepageConfig = {
   secondaryCtaLink: '/packages',
   videoUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
   posterUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
+  transitionType: 'fade',
+  transitionDuration: 5500,
   slides: [
     {
       id: 'dal-lake',
