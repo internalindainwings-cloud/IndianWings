@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Download, MessageSquare, Phone, Calendar, Users, Info, Search, Filter } from 'lucide-react';
+import { Download, MessageSquare, Phone, Calendar, Users, Info, Search, Filter, RefreshCw, Mail } from 'lucide-react';
 
 export interface LeadRecord {
   id: string;
@@ -22,9 +22,10 @@ export interface LeadRecord {
 interface TabLeadsProps {
   leads: LeadRecord[];
   onRefresh: () => void;
+  isRefreshing?: boolean;
 }
 
-export const TabLeads: React.FC<TabLeadsProps> = ({ leads }) => {
+export const TabLeads: React.FC<TabLeadsProps> = ({ leads, onRefresh, isRefreshing = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTripType, setSelectedTripType] = useState('ALL');
 
@@ -123,15 +124,27 @@ export const TabLeads: React.FC<TabLeadsProps> = ({ leads }) => {
           </div>
         </div>
 
-        {/* Export Button */}
-        <button
-          onClick={handleExportCSV}
-          disabled={leads.length === 0}
-          className="flex items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/15 active:scale-95 disabled:opacity-40"
-        >
-          <Download className="h-4 w-4 text-[#d98f5b]" />
-          <span>Export to CSV ({filteredLeads.length})</span>
-        </button>
+        {/* Action Buttons: Refresh & Export */}
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            className="flex items-center justify-center gap-2 rounded-xl bg-white/10 px-3.5 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/15 active:scale-95 disabled:opacity-50 cursor-pointer"
+            title="Refresh Inquiries"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 text-saffron ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+          </button>
+
+          <button
+            onClick={handleExportCSV}
+            disabled={leads.length === 0}
+            className="flex items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/15 active:scale-95 disabled:opacity-40 cursor-pointer"
+          >
+            <Download className="h-4 w-4 text-[#d98f5b]" />
+            <span>Export to CSV ({filteredLeads.length})</span>
+          </button>
+        </div>
       </div>
 
       {/* 3. Leads Table */}

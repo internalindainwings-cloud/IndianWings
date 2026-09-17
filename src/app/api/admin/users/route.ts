@@ -41,13 +41,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
     }
 
-    // 2. Fetch all Enquiries that have an email
+    // 2. Fetch all Enquiries (ordered latest first)
     const enquiries = await prisma.enquiry.findMany({
-      where: {
-        email: {
-          not: null,
-        },
-      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -61,13 +56,15 @@ export async function GET() {
       orderBy: { createdAt: 'desc' },
     });
 
-    // 4. Map and Aggregate unique users by Email
+    // 4. Map and Aggregate unique users by Email (or Phone fallback)
     const userMap = new Map<string, AdminUserRecord>();
 
     // Process enquiries first
     for (const enq of enquiries) {
-      const email = (enq.email || '').trim().toLowerCase();
-      if (!email || !email.includes('@')) continue;
+      const cleanEmail = (enq.email || '').trim().toLowerCase();
+      const hasEmail = cleanEmail.includes('@');
+      // Unique user key: email if available, otherwise phone
+      const userKey = hasEmail ? cleanEmail : `phone:${enq.phone.trim()}`;
 
       const inquirySummary: UserInquirySummary = {
         id: enq.id,
@@ -80,10 +77,10 @@ export async function GET() {
         status: enq.status || 'NEW',
       };
 
-      if (!userMap.has(email)) {
-        userMap.set(email, {
+      if (!userMap.has(userKey)) {
+        userMap.set(userKey, {
           id: enq.id,
-          email,
+          email: hasEmail ? cleanEmail : '',
           name: enq.name ? enq.name.trim() : 'Guest Traveler',
           phone: enq.phone ? enq.phone.trim() : '',
           firstSeen: enq.createdAt.toISOString(),
@@ -99,9 +96,14 @@ export async function GET() {
           inquiries: [inquirySummary],
         });
       } else {
-        const existing = userMap.get(email)!;
+        const existing = userMap.get(userKey)!;
         existing.totalInquiries += 1;
         existing.inquiries.push(inquirySummary);
+
+        // Update email if it was previously missing and is now present
+        if (!existing.email && hasEmail) {
+          existing.email = cleanEmail;
+        }
 
         // Update name/phone if missing
         if ((!existing.name || existing.name === 'Guest Traveler') && enq.name) {

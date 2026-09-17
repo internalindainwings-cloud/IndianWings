@@ -82,11 +82,33 @@ export const Footer: React.FC = () => {
   const { openModal } = useEnquiryModal();
   const settings = useSiteSettings();
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) return;
+
     setSubscribed(true);
     setEmail('');
+
+    try {
+      await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Newsletter Subscriber',
+          phone: '+910000000000',
+          email: cleanEmail,
+          travelDate: 'Newsletter Subscription',
+          guests: '1 Guest',
+          tripType: 'Newsletter & Deals',
+          message: 'Subscribed to Kashmir travel deals & tips from website footer.',
+          source: 'footer_newsletter',
+        }),
+      });
+    } catch (err) {
+      console.warn('Newsletter submission error:', err);
+    }
+
     setTimeout(() => setSubscribed(false), 5000);
   };
 

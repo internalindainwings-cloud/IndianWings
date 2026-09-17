@@ -75,9 +75,9 @@ export const TabAllUsers: React.FC = () => {
     return users
       .filter((user) => {
         const matchesSearch =
-          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.phone.includes(searchTerm) ||
+          (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (user.phone && user.phone.includes(searchTerm)) ||
           (user.city && user.city.toLowerCase().includes(searchTerm.toLowerCase()));
 
         const matchesStatus = statusFilter === 'ALL' || user.status === statusFilter;
@@ -317,7 +317,7 @@ export const TabAllUsers: React.FC = () => {
               <tbody className="divide-y divide-white/5 font-manrope">
                 {filteredUsers.map((user) => (
                   <tr
-                    key={user.email}
+                    key={user.id || user.email || user.phone}
                     className="hover:bg-white/[0.03] transition-colors cursor-pointer"
                     onClick={() => setSelectedUser(user)}
                   >
@@ -337,24 +337,30 @@ export const TabAllUsers: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-[#C5A45E] font-mono flex items-center gap-1.5 mt-0.5">
-                            <span className="truncate">{user.email}</span>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleCopyEmail(user.email);
-                              }}
-                              className="text-white/40 hover:text-white p-0.5"
-                              title="Copy Email"
-                            >
-                              {copiedEmail === user.email ? (
-                                <Check className="w-3 h-3 text-emerald-400" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                            </button>
-                          </div>
+                          {user.email ? (
+                            <div className="text-[11px] text-[#C5A45E] font-mono flex items-center gap-1.5 mt-0.5">
+                              <span className="truncate">{user.email}</span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCopyEmail(user.email);
+                                }}
+                                className="text-white/40 hover:text-white p-0.5"
+                                title="Copy Email"
+                              >
+                                {copiedEmail === user.email ? (
+                                  <Check className="w-3 h-3 text-emerald-400" />
+                                ) : (
+                                  <Copy className="w-3 h-3" />
+                                )}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="text-[10.5px] text-white/40 italic flex items-center gap-1 mt-0.5">
+                              <span>No email captured</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -426,13 +432,15 @@ export const TabAllUsers: React.FC = () => {
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                         {/* Direct Email Link */}
-                        <a
-                          href={`mailto:${user.email}`}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white/70 hover:text-white transition-colors"
-                          title="Send Email"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                        </a>
+                        {user.email ? (
+                          <a
+                            href={`mailto:${user.email}`}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-white/70 hover:text-white transition-colors"
+                            title={`Send Email to ${user.email}`}
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                          </a>
+                        ) : null}
 
                         {/* WhatsApp Button */}
                         {user.phone && (

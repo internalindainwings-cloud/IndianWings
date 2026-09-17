@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // 1. Authenticate Admin Session

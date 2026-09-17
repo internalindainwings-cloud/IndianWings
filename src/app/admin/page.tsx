@@ -72,22 +72,6 @@ function AdminDashboardContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  /* ── Update URL when section changes ────────────────────────── */
-  const handleSectionChange = useCallback(
-    (section: AdminSection) => {
-      setActiveSection(section);
-      const params = new URLSearchParams(searchParams.toString());
-      if (section === 'dashboard') {
-        params.delete('tab');
-      } else {
-        params.set('tab', section);
-      }
-      const qs = params.toString();
-      router.replace(`/admin${qs ? `?${qs}` : ''}`, { scroll: false });
-    },
-    [router, searchParams]
-  );
-
   const fetchData = useCallback(async (showRefreshing = false) => {
     if (showRefreshing) setIsRefreshing(true);
     try {
@@ -107,6 +91,27 @@ function AdminDashboardContent() {
       setIsRefreshing(false);
     }
   }, [router]);
+
+  /* ── Update URL when section changes ────────────────────────── */
+  const handleSectionChange = useCallback(
+    (section: AdminSection) => {
+      setActiveSection(section);
+      const params = new URLSearchParams(searchParams.toString());
+      if (section === 'dashboard') {
+        params.delete('tab');
+      } else {
+        params.set('tab', section);
+      }
+      const qs = params.toString();
+      router.replace(`/admin${qs ? `?${qs}` : ''}`, { scroll: false });
+
+      // If opening leads or dashboard, fetch fresh data immediately
+      if (section === 'leads' || section === 'dashboard') {
+        fetchData(false);
+      }
+    },
+    [router, searchParams, fetchData]
+  );
 
   useEffect(() => {
     fetchData();
@@ -163,7 +168,11 @@ function AdminDashboardContent() {
         );
       case 'leads':
         return (
-          <TabLeads leads={data?.leads || []} onRefresh={() => fetchData(true)} />
+          <TabLeads
+            leads={data?.leads || []}
+            onRefresh={() => fetchData(true)}
+            isRefreshing={isRefreshing}
+          />
         );
       case 'users':
         return <TabAllUsers />;

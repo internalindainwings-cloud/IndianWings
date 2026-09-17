@@ -28,6 +28,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
     travelDate: '',
     nights: '',
     guests: '2-4 Guests',
@@ -77,6 +78,11 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       return;
     }
 
+    if (formData.email.trim() && !formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setIsSubmitting(true);
     setError('');
 
@@ -90,14 +96,19 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     // 1. Gather UTM attribution and click IDs
     const attribution = getAttributionData();
 
+    const combinedMessage = [
+      formData.nights.trim() ? `Duration: ${formData.nights.trim()}` : '',
+      formData.message.trim(),
+    ].filter(Boolean).join(' | ');
+
     const leadPayload = {
       name: formData.name.trim(),
       phone: formData.phone.trim(),
+      email: formData.email.trim() ? formData.email.trim().toLowerCase() : undefined,
       travelDate: formData.travelDate.trim(),
-      nights: formData.nights.trim(),
       guests: formData.guests,
       tripType: formData.tripType,
-      message: formData.message.trim(),
+      message: combinedMessage,
       source,
       hpField: formData.hpField,
       visitorId: getVisitorId(),
@@ -122,6 +133,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       `*New Kashmir Trip Enquiry — The Indian Wings Company*\n\n` +
       `👤 *Name:* ${formData.name.trim()}\n` +
       `📞 *Phone/WhatsApp:* ${formattedPhone}\n` +
+      (formData.email.trim() ? `✉️ *Email:* ${formData.email.trim()}\n` : '') +
       `📅 *Travel Dates:* ${formData.travelDate.trim()}\n` +
       (formData.nights.trim() ? `🌙 *Duration / Nights:* ${formData.nights.trim()}\n` : '') +
       `👥 *Travellers:* ${formData.guests}\n` +
@@ -132,9 +144,9 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     const cleanContactPhone = siteConfig.contact.phone.replace(/[^0-9]/g, '');
     const finalWhatsAppUrl = `https://wa.me/${cleanContactPhone}?text=${encodeURIComponent(message)}`;
 
-    // 4. [LAYER 2]: Post to PostgreSQL API with 4-second timeout
+    // 4. [LAYER 2]: Post to PostgreSQL API with 15-second timeout (allowing DB wake-up)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch('/api/enquiries', {
@@ -149,10 +161,25 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       if (response.ok) {
         // Success: remove lead from pending queue
         removePendingLead(pendingLead.tempId);
+      } else {
+        const errJson = await response.json().catch(() => ({}));
+        console.warn('[EnquiryForm] API responded with error:', errJson);
+        let errorMsg = errJson.message || errJson.error || 'Failed to submit enquiry. Please check your details.';
+        if (errJson.details) {
+          const firstErr = Object.values(errJson.details)[0];
+          errorMsg = Array.isArray(firstErr) ? firstErr[0] : (typeof firstErr === 'string' ? firstErr : errorMsg);
+        }
+        setError(errorMsg);
+        setIsSubmitting(false);
+        return;
       }
-    } catch (apiError) {
-      // Network timeout or offline: lead stays in localStorage queue for auto-sync
-      console.warn('[EnquiryForm] Network slow or API unreachable; lead is buffered locally:', apiError);
+    } catch (apiError: any) {
+      console.warn('[EnquiryForm] Network issue during submission:', apiError);
+      if (apiError.name === 'AbortError') {
+        setError('Connection timed out. Please check your connection or send your enquiry via WhatsApp below.');
+        setIsSubmitting(false);
+        return;
+      }
     } finally {
       clearTimeout(timeoutId);
     }
@@ -198,6 +225,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
             setFormData({
               name: '',
               phone: '',
+              email: '',
               travelDate: '',
               nights: '',
               guests: '2-4 Guests',
@@ -287,8 +315,28 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Travel Date & No. of Nights */}
+        {/* Row 2: Email & Travel Date */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
+          <div>
+            <label
+              htmlFor="enquiry-email"
+              className={`block font-manrope font-bold uppercase tracking-[0.05em] text-midnight/80 ${isCompact ? 'text-[11px] mb-1' : 'text-xs mb-1.5'}`}
+            >
+              Email Address <span className="text-saffron">*</span>
+            </label>
+            <input
+              type="email"
+              id="enquiry-email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="rahul@example.com"
+              required
+              disabled={isSubmitting}
+              className={`w-full ${isCompact ? 'h-10 sm:h-9.5 px-3 text-[16px] sm:text-[13px]' : 'h-11 px-3.5 text-[16px] sm:text-sm'} rounded-lg border border-midnight/20 bg-white text-midnight placeholder:text-midnight/35 focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-colors disabled:opacity-60`}
+            />
+          </div>
+
           <div>
             <label
               htmlFor="enquiry-date"
@@ -308,7 +356,10 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
               className={`w-full ${isCompact ? 'h-10 sm:h-9.5 px-3 text-[16px] sm:text-[13px]' : 'h-11 px-3.5 text-[16px] sm:text-sm'} rounded-lg border border-midnight/20 bg-white text-midnight placeholder:text-midnight/35 focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-colors disabled:opacity-60`}
             />
           </div>
+        </div>
 
+        {/* Row 3: No. of Nights & Number of Travellers */}
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
           <div>
             <label
               htmlFor="enquiry-nights"
@@ -327,10 +378,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
               className={`w-full ${isCompact ? 'h-10 sm:h-9.5 px-3 text-[16px] sm:text-[13px]' : 'h-11 px-3.5 text-[16px] sm:text-sm'} rounded-lg border border-midnight/20 bg-white text-midnight placeholder:text-midnight/35 focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-colors disabled:opacity-60`}
             />
           </div>
-        </div>
 
-        {/* Row 3: Number of Travellers & Trip Preference */}
-        <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
           <div>
             <label
               htmlFor="enquiry-guests"
@@ -352,37 +400,38 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
               <option value="8+ Guests">8+ Guests (Corporate / Group)</option>
             </select>
           </div>
+        </div>
 
-          <div>
-            <label
-              htmlFor="enquiry-trip"
-              className={`block font-manrope font-bold uppercase tracking-[0.05em] text-midnight/80 ${isCompact ? 'text-[11px] mb-1' : 'text-xs mb-1.5'}`}
-            >
-              Trip Preference
-            </label>
-            <select
-              id="enquiry-trip"
-              name="tripType"
-              value={formData.tripType}
-              onChange={handleChange}
-              disabled={isSubmitting}
-              className={`w-full ${isCompact ? 'h-10 sm:h-9.5 px-3 text-[16px] sm:text-[13px]' : 'h-11 px-3.5 text-[16px] sm:text-sm'} rounded-lg border border-midnight/20 bg-white text-midnight focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-colors cursor-pointer disabled:opacity-60`}
-            >
-              <option value="Kashmir Classic (Srinagar, Gulmarg, Pahalgam)">
-                Kashmir Classic (Srinagar, Gulmarg, Pahalgam)
-              </option>
-              <option value="Honeymoon Special with Luxury Houseboat">
-                Honeymoon Special with Luxury Houseboat
-              </option>
-              <option value="Adventure & Snow Sports (Gulmarg Skiing & Treks)">
-                Adventure & Snow Sports (Gulmarg Skiing & Treks)
-              </option>
-              <option value="Offbeat Kashmir (Doodhpathri, Gurez, Sinthan Top)">
-                Offbeat Kashmir (Doodhpathri, Gurez, Sinthan Top)
-              </option>
-              <option value="Custom Tailor-made Package">Custom Tailor-made Package</option>
-            </select>
-          </div>
+        {/* Row 4: Trip Preference */}
+        <div>
+          <label
+            htmlFor="enquiry-trip"
+            className={`block font-manrope font-bold uppercase tracking-[0.05em] text-midnight/80 ${isCompact ? 'text-[11px] mb-1' : 'text-xs mb-1.5'}`}
+          >
+            Trip Preference
+          </label>
+          <select
+            id="enquiry-trip"
+            name="tripType"
+            value={formData.tripType}
+            onChange={handleChange}
+            disabled={isSubmitting}
+            className={`w-full ${isCompact ? 'h-10 sm:h-9.5 px-3 text-[16px] sm:text-[13px]' : 'h-11 px-3.5 text-[16px] sm:text-sm'} rounded-lg border border-midnight/20 bg-white text-midnight focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron transition-colors cursor-pointer disabled:opacity-60`}
+          >
+            <option value="Kashmir Classic (Srinagar, Gulmarg, Pahalgam)">
+              Kashmir Classic (Srinagar, Gulmarg, Pahalgam)
+            </option>
+            <option value="Honeymoon Special with Luxury Houseboat">
+              Honeymoon Special with Luxury Houseboat
+            </option>
+            <option value="Adventure & Snow Sports (Gulmarg Skiing & Treks)">
+              Adventure & Snow Sports (Gulmarg Skiing & Treks)
+            </option>
+            <option value="Offbeat Kashmir (Doodhpathri, Gurez, Sinthan Top)">
+              Offbeat Kashmir (Doodhpathri, Gurez, Sinthan Top)
+            </option>
+            <option value="Custom Tailor-made Package">Custom Tailor-made Package</option>
+          </select>
         </div>
 
         {!isCompact && (

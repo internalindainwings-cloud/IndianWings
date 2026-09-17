@@ -107,13 +107,12 @@ export async function POST(req: NextRequest) {
     const data = validationResult.data;
     const userAgent = req.headers.get('user-agent')?.slice(0, 500) || 'unknown';
 
-    // 7. Server-Side Duplicate Submission / Idempotency Protection
-    // Prevents double-clicks or repeated submissions within 2 minutes for the same phone
-    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+    // 7. Server-Side Duplicate Submission Protection (10s anti-double-click window)
+    const tenSecondsAgo = new Date(Date.now() - 10 * 1000);
     const existingRecentEnquiry = await prisma.enquiry.findFirst({
       where: {
         phone: data.phone,
-        createdAt: { gte: twoMinutesAgo },
+        createdAt: { gte: tenSecondsAgo },
       },
       select: { id: true, createdAt: true },
     });
@@ -135,7 +134,7 @@ export async function POST(req: NextRequest) {
       data: {
         name: data.name,
         phone: data.phone,
-        email: data.email || null,
+        email: data.email ? data.email.trim().toLowerCase() : null,
         travelDate: data.travelDate,
         guests: data.guests,
         tripType: data.tripType,
