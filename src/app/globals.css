@@ -18,15 +18,20 @@
 body {
   background-color: #FFFFFF;
   color: #1A1A1A;
-  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+  font-family: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Global Typography: Berkshire Swash with Manrope fallback applied to h1-h6, p, ul, li, etc. */
-h1, h2, h3, h4, h5, h6,
+/* h1 retains the decorative display font style */
+h1 {
+  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+}
+
+/* Global Typography: Clean Manrope for all standard content */
+h2, h3, h4, h5, h6,
 p,
 ul, ol, li,
 button, input, select, textarea, a, span, label, blockquote {
-  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+  font-family: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* ── Admin Portal Typography & Scoping: Pure Sans-Serif (No cursive in admin) ── */
@@ -87,15 +92,15 @@ button, input, select, textarea, a, span, label, blockquote {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Client-Chosen Typography System: Berkshire Swash with Manrope fallback globally */
-  --font-sans: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
+  /* Typography System: Clean Manrope for sans/body, Berkshire Swash for display */
+  --font-sans: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-manrope: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-jakarta: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
   --font-berkshire: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
   --font-serif: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
   --font-playfair: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
   --font-cormorant: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
-  --font-jakarta: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
-  --font-manrope: 'Berkshire Swash', var(--font-manrope), "Manrope", sans-serif;
 
   /* ── Marquee animations (Brands Section) ─────────────────── */
   --animate-marquee-ltr: marquee-ltr 30s linear infinite;

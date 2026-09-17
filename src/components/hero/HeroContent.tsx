@@ -29,22 +29,19 @@ export const HeroContent: React.FC<HeroContentProps> = ({
       <div className="w-full lg:w-1/2 max-w-xl flex flex-col items-start text-left select-none">
         {/* Optional Badge Pill */}
         {badgeText && (
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#C5A45E]/15 border border-[#C5A45E]/40 text-[#C5A45E] mb-2 sm:mb-2.5 backdrop-blur-md">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-manrope font-semibold bg-[#C5A45E]/15 border border-[#C5A45E]/40 text-[#C5A45E] mb-2 sm:mb-2.5 backdrop-blur-md">
             <Sparkles size={12} className="text-[#C5A45E]" />
             <span>{badgeText}</span>
           </div>
         )}
 
-        {/* Main Heading — Single Line in Luxury Sand Gold #C5A45E */}
+        {/* Main Heading — Single Line in Luxury Sand Gold #C5A45E (strictly font-display) */}
         <h1 className="font-display text-[20px] min-[360px]:text-[22px] min-[400px]:text-[24px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-tight tracking-tight whitespace-nowrap drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-3 sm:mb-4">
           {headline}
         </h1>
 
         {subheadline && (
-          <p 
-            className="text-[#C5A45E] text-xs sm:text-sm max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2"
-            style={{ fontFamily: "'Canva Sans', var(--font-manrope), 'Manrope', sans-serif" }}
-          >
+          <p className="font-manrope text-[#C5A45E] text-xs sm:text-sm max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2">
             {subheadline}
           </p>
         )}
