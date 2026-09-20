@@ -29,34 +29,18 @@ export const BotpressChatbot: React.FC = () => {
         `
       }} />
 
-      {/* Official Botpress Webchat v5.0 Engine + Direct Configuration on Load */}
+      {/* Official Botpress Webchat v5.0 Engine */}
       <Script
         id="botpress-webchat-inject"
         src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"
         strategy="afterInteractive"
         onLoad={() => {
-          try {
-            if (typeof window !== 'undefined' && (window as any).botpress) {
-              (window as any).botpress.init({
-                botId: 'c7380059-7f97-428c-97ed-6fb93d9d17eb',
-                configuration: {
-                  version: 'v2',
-                  website: {},
-                  email: {},
-                  phone: {},
-                  termsOfService: {},
-                  privacyPolicy: {},
-                  homePageEnabled: true,
-                  welcomeHeading: 'Hi there, how can we help?',
-                  welcomeSubtitle: 'Tap a starting point or ask in your own words.',
-                  citationsEnabled: true,
-                },
-                clientId: 'f8f53f01-1f3b-4d00-88e9-197c845300e8',
-              });
-              console.info('[The Indian Wings Company] Botpress Webchat initialized successfully.');
-            }
-          } catch (err) {
-            console.warn('[The Indian Wings Company] Botpress init notice:', err);
+          if (!document.getElementById('botpress-config-script')) {
+            const configScript = document.createElement('script');
+            configScript.id = 'botpress-config-script';
+            configScript.src = 'https://files.bpcontent.cloud/2026/09/20/17/20260920174145-5B30LJ6M.js';
+            configScript.defer = true;
+            document.body.appendChild(configScript);
           }
         }}
       />
