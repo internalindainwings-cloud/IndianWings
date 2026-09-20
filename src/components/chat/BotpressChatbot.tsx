@@ -65,7 +65,10 @@ export const BotpressChatbot: React.FC = () => {
     // If window.botpress is already available and initialized, skip reinjecting
     if (window.botpress && typeof window.botpress.init === 'function') {
       try {
-        window.botpress.init({ clientId });
+        window.botpress.init({
+          clientId,
+          botId: clientId,
+        });
       } catch (err) {
         if (process.env.NODE_ENV === 'development') {
           console.warn('[The Indian Wings Company] Botpress re-init notice:', err);
@@ -88,7 +91,9 @@ export const BotpressChatbot: React.FC = () => {
           try {
             window.botpress.init({
               clientId,
+              botId: clientId,
             });
+            console.info('[The Indian Wings Company] Botpress Webchat initialized successfully.');
           } catch (err) {
             if (process.env.NODE_ENV === 'development') {
               console.warn('[The Indian Wings Company] Failed to initialize Botpress Webchat:', err);
