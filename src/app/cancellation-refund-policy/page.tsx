@@ -251,7 +251,7 @@ export default function CancellationRefundPolicyPage() {
                 </div>
                 <div>
                   <span className="font-bold text-midnight block">Address:</span>
-                  <span>Boulevard Road, Dal Lake, Srinagar, J&amp;K 190001, India</span>
+                  <span>The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar, J&amp;K, India</span>
                 </div>
                 <div>
                   <span className="font-bold text-midnight block">Official Email:</span>

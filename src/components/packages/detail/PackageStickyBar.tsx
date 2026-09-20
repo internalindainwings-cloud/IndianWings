@@ -18,7 +18,7 @@ export const PackageStickyBar: React.FC<PackageStickyBarProps> = ({ pkg }) => {
     const text = encodeURIComponent(
       `Hello The Indian Wings Company! I am interested in booking the "${pkg.title}" (${pkg.duration}). Please share a customized itinerary and quote.`
     );
-    window.open(`https://wa.me/919906000000?text=${text}`, '_blank');
+    window.open(`https://wa.me/917827743041?text=${text}`, '_blank');
   };
 
   return (

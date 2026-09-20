@@ -15,36 +15,35 @@ export interface EnrichedRoute extends PickupDropRoute {
 }
 
 let hasSeededTransport = false;
+let hasCleanedMockVehicles = false;
+
+export async function cleanupMockVehicles(): Promise<void> {
+  if (hasCleanedMockVehicles) return;
+  try {
+    await prisma.transportVehicle.deleteMany({
+      where: {
+        slug: {
+          in: [
+            'swift-dzire',
+            'innova-crysta',
+            'fortuner-4x4',
+            'force-urbania',
+            'tempo-traveller',
+            'thar-4x4',
+          ],
+        },
+      },
+    });
+    hasCleanedMockVehicles = true;
+  } catch (err) {
+    console.warn('[TransportService] Mock vehicles cleanup error (skipped):', err);
+  }
+}
 
 export async function ensureTransportSeeded(): Promise<void> {
   if (hasSeededTransport) return;
   try {
-    const vCount = await prisma.transportVehicle.count();
-    if (vCount === 0) {
-      for (let i = 0; i < VEHICLE_FLEET.length; i++) {
-        const v = VEHICLE_FLEET[i];
-        const slug = v.id || v.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        await prisma.transportVehicle.upsert({
-          where: { slug },
-          update: {},
-          create: {
-            name: v.name,
-            slug,
-            category: v.category,
-            seats: v.seats,
-            bags: v.bags,
-            ac: v.ac,
-            fuel: v.fuel,
-            imageUrl: v.imageUrl,
-            tags: v.tags || [],
-            badge: v.badge || null,
-            pricePerDay: v.category.includes('Luxury') ? 4500 : v.category.includes('VIP') ? 6500 : 3000,
-            isActive: true,
-            sortOrder: i + 1,
-          },
-        });
-      }
-    }
+    // Note: Auto-seeding mock vehicles is disabled to keep UI & DB dynamic and clean
 
     const rCount = await prisma.transportRoute.count();
     if (rCount === 0) {
@@ -76,6 +75,7 @@ export async function ensureTransportSeeded(): Promise<void> {
 
 export async function getAllVehicles(includeDrafts = false): Promise<EnrichedVehicle[]> {
   try {
+    await cleanupMockVehicles();
     await ensureTransportSeeded();
     const records = await prisma.transportVehicle.findMany({
       where: includeDrafts ? {} : { isActive: true },

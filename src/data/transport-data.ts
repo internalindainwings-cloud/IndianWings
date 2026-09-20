@@ -24,80 +24,9 @@ export interface PickupDropRoute {
   isPopular?: boolean;
 }
 
-export const VEHICLE_FLEET: VehicleFleetItem[] = [
-  {
-    id: 'swift-dzire',
-    name: 'Maruti Suzuki Swift / Dzire',
-    category: 'Sedan / Hatch',
-    seats: '4 Seats',
-    bags: '2 Bags',
-    ac: 'AC & Heater',
-    fuel: 'Petrol / Diesel',
-    imageUrl: '/images/fleet/swift-dzire.jpg',
-    tags: ['Couple & Solo Friendly', 'All NH44 Tolls Included', 'Verified Mountain Driver'],
-    badge: 'Best Value'
-  },
-  {
-    id: 'innova-crysta',
-    name: 'Toyota Innova Crysta',
-    category: 'Luxury MPV',
-    seats: '6+1 Seats',
-    bags: '4 Bags',
-    ac: 'Dual-Zone AC',
-    fuel: 'Diesel',
-    imageUrl: '/images/fleet/innova-crysta.jpg',
-    tags: ['Captain Recliner Seats', 'Snow Chains Ready', 'Top Family Choice'],
-    badge: 'Most Popular'
-  },
-  {
-    id: 'fortuner-4x4',
-    name: 'Toyota Fortuner 4x4',
-    category: 'VIP SUV',
-    seats: '6 Seats',
-    bags: '4 Bags',
-    ac: 'Climate Control',
-    fuel: 'Diesel',
-    imageUrl: '/images/fleet/fortuner.jpg',
-    tags: ['4x4 Heavy Snow Traction', 'VIP Protocol Driver', 'Extreme Altitude Ready'],
-    badge: 'VIP Luxury'
-  },
-  {
-    id: 'force-urbania',
-    name: 'Force Urbania Luxury Van',
-    category: 'Group Traveller',
-    seats: '10–14 Seats',
-    bags: '10 Bags',
-    ac: 'Individual AC Louvers',
-    fuel: 'Diesel',
-    imageUrl: '/images/fleet/urbania.jpg',
-    tags: ['Business Class Recliners', 'Panoramic Windows', 'Corporate & Wedding Fleet'],
-    badge: 'Ultra Luxury'
-  },
-  {
-    id: 'tempo-traveller',
-    name: 'Force Tempo Traveller',
-    category: 'Group Traveller',
-    seats: '12 / 17 / 26 Seats',
-    bags: '15+ Bags',
-    ac: 'Double Blower AC',
-    fuel: 'Diesel',
-    imageUrl: '/images/fleet/tempo-traveller.jpg',
-    tags: ['Pushback Seats', 'Roof Luggage Carrier', 'Vaishno Devi Pilgrims'],
-    badge: 'Group Choice'
-  },
-  {
-    id: 'thar-4x4',
-    name: 'Mahindra Thar 4x4 / Scorpio-N',
-    category: 'Adventure 4x4',
-    seats: '4–6 Seats',
-    bags: '2 Bags',
-    ac: 'AC & Heating',
-    fuel: 'Diesel',
-    imageUrl: '/images/fleet/thar.jpg',
-    tags: ['Off-Road 4x4', 'Gurez & Sinthan Pass', 'Rugged Snow Clearance'],
-    badge: 'Adventure'
-  }
-];
+// All vehicle fleet items are loaded dynamically from the database.
+export const VEHICLE_FLEET: VehicleFleetItem[] = [];
+
 
 export const PICKUP_DROP_ROUTES: PickupDropRoute[] = [
   {

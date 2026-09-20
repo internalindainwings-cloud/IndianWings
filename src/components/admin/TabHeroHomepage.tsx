@@ -20,6 +20,7 @@ import {
   Users,
   Award,
   Star,
+  Smartphone,
 } from 'lucide-react';
 import type { HeroHomepageConfig, HeroSlide, HeroTrustPill } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
@@ -87,6 +88,8 @@ export const TabHeroHomepage: React.FC = () => {
       title: `Kashmir Slide ${config.slides.length + 1}`,
       videoSrc: config.videoUrl || defaultHeroConfig.videoUrl,
       poster: config.posterUrl || defaultHeroConfig.posterUrl,
+      mobilePoster: config.mobilePosterUrl || '',
+      mobileVideoSrc: config.mobileVideoUrl || '',
     };
     setConfig((prev) => ({
       ...prev,
@@ -481,6 +484,49 @@ export const TabHeroHomepage: React.FC = () => {
               </div>
             </div>
 
+            {/* Mobile-Specific Media Inputs */}
+            <div className="pt-4 border-t border-white/10">
+              <h4 className="text-xs font-bold text-saffron flex items-center gap-1.5 mb-3">
+                <Smartphone className="h-3.5 w-3.5" />
+                Mobile Device Media (Strict Vertical / Portrait 9:16 or 3:4 Optimization)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-medium text-white/70 mb-1 flex items-center gap-1.5">
+                    <ImageIcon className="h-3.5 w-3.5 text-saffron" />
+                    Mobile Poster / Image URL (Recommended for Phones)
+                  </label>
+                  <input
+                    type="text"
+                    value={config.mobilePosterUrl || ''}
+                    onChange={(e) => setConfig({ ...config, mobilePosterUrl: e.target.value })}
+                    placeholder="https://res.cloudinary.com/.../mobile_poster.jpg"
+                    className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
+                  />
+                  <p className="mt-1 text-[11px] text-white/40">
+                    Will be served strictly to mobile viewports (&lt; 768px). Falls back to desktop poster if blank.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-white/70 mb-1 flex items-center gap-1.5">
+                    <Film className="h-3.5 w-3.5 text-saffron" />
+                    Mobile Video URL (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    value={config.mobileVideoUrl || ''}
+                    onChange={(e) => setConfig({ ...config, mobileVideoUrl: e.target.value })}
+                    placeholder="https://res.cloudinary.com/.../mobile_video.mp4"
+                    className="w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
+                  />
+                  <p className="mt-1 text-[11px] text-white/40">
+                    Optional vertical 9:16 clip. If empty, mobile plays the primary video or displays the poster.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Presets */}
             <div className="pt-3 border-t border-white/10">
               <label className="block text-xs font-semibold text-white/80 mb-2">
@@ -553,7 +599,7 @@ export const TabHeroHomepage: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <div>
                       <label className="block text-[11px] font-medium text-white/70 mb-1">
                         Slide Title
@@ -569,7 +615,7 @@ export const TabHeroHomepage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-medium text-white/70 mb-1">
-                        Video URL
+                        Desktop Video URL
                       </label>
                       <input
                         type="url"
@@ -582,13 +628,41 @@ export const TabHeroHomepage: React.FC = () => {
 
                     <div>
                       <label className="block text-[11px] font-medium text-white/70 mb-1">
-                        Poster Image URL
+                        Desktop Poster Image URL
                       </label>
                       <input
                         type="text"
                         value={slide.poster}
                         onChange={(e) => handleUpdateSlide(idx, 'poster', e.target.value)}
                         placeholder="https://..."
+                        className="w-full rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-saffron/90 mb-1 flex items-center gap-1">
+                        <Smartphone className="h-3 w-3" />
+                        Mobile Poster / Image (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={slide.mobilePoster || ''}
+                        onChange={(e) => handleUpdateSlide(idx, 'mobilePoster', e.target.value)}
+                        placeholder="https://... (Portrait / 9:16)"
+                        className="w-full rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-saffron/90 mb-1 flex items-center gap-1">
+                        <Smartphone className="h-3 w-3" />
+                        Mobile Video URL (Optional)
+                      </label>
+                      <input
+                        type="url"
+                        value={slide.mobileVideoSrc || ''}
+                        onChange={(e) => handleUpdateSlide(idx, 'mobileVideoSrc', e.target.value)}
+                        placeholder="https://... (Portrait 9:16)"
                         className="w-full rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
                       />
                     </div>

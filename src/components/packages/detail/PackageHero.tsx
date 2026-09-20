@@ -17,6 +17,7 @@ import {
   Users,
   ChevronRight,
   ChevronLeft,
+  Gift,
 } from 'lucide-react';
 import type { EnrichedPackage } from '@/data/package-defaults';
 import { getCategoryLabel, getBestForLabel } from '@/lib/utilities/slug';
@@ -135,6 +136,10 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                 </span>
                 <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-bold border border-white/20 shadow-md">
                   {durationInfo.compact}
+                </span>
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-midnight text-[11px] sm:text-xs font-black shadow-md border border-white/60">
+                  <Gift className="h-3 w-3 text-midnight stroke-[2.5]" />
+                  Free Gift Inside
                 </span>
                 <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-600/90 backdrop-blur-md text-white text-[11px] sm:text-xs font-bold border border-emerald-400/30 shadow-md">
                   <ShieldCheck className="h-3 w-3 text-emerald-200" />

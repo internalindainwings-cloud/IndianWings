@@ -4,8 +4,14 @@ import { useEffect } from "react";
 
 export function SecurityScripts() {
   useEffect(() => {
+    // TEMPORARILY DISABLED FOR LIGHTHOUSE AUDITS & TESTING (Can be re-enabled later)
+    const ENABLE_INSPECT = true;
+    if (ENABLE_INSPECT) {
+      return;
+    }
+
     // 1. Clean console output
-    if (process.env.NODE_ENV === "production" || true) {
+    if (process.env.NODE_ENV === "production") {
       const noop = () => {};
       console.log = noop;
       console.info = noop;

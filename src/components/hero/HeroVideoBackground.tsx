@@ -83,9 +83,23 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             ? s.poster.trim()
             : DEFAULT_DESKTOP_MEDIA;
 
-          // Automatically apply Cloudinary automatic format and quality compression
+          // Desktop Media URL
           const mediaUrl = optimizeCloudinaryUrl(rawMediaUrl);
           const isImage = mediaUrl.match(/\.(jpeg|jpg|png|webp|avif)$/i) || mediaUrl.includes('/image/upload/');
+
+          // Mobile Media URL (falls back to desktop if not explicitly set)
+          const rawMobileUrl = (s.mobilePoster && s.mobilePoster.trim().length > 0)
+            ? s.mobilePoster.trim()
+            : (s.mobileVideoSrc && s.mobileVideoSrc.trim().length > 0)
+            ? s.mobileVideoSrc.trim()
+            : (mobilePoster && mobilePoster.trim().length > 0)
+            ? mobilePoster.trim()
+            : (mobileSrc && mobileSrc.trim().length > 0)
+            ? mobileSrc.trim()
+            : rawMediaUrl;
+          const mobileMediaUrl = optimizeCloudinaryUrl(rawMobileUrl);
+          const isMobileImage = mobileMediaUrl.match(/\.(jpeg|jpg|png|webp|avif)$/i) || mobileMediaUrl.includes('/image/upload/');
+
           const { container, img } = getTransitionStyles(transitionType, isActive, idx, currentSlide);
 
           return (
@@ -95,9 +109,9 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             >
               {/* Mobile View */}
               <div className="block md:hidden absolute inset-0 w-full h-full pointer-events-none">
-                {isImage ? (
+                {isMobileImage ? (
                   <Image
-                    src={mediaUrl}
+                    src={mobileMediaUrl}
                     alt={s.title || 'Hero Mobile Background'}
                     fill
                     priority={idx === 0}
@@ -112,10 +126,10 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                     loop
                     playsInline
                     preload={isActive ? 'auto' : 'metadata'}
-                    poster={mediaUrl}
+                    poster={mobileMediaUrl}
                     className="absolute inset-0 w-full h-full object-cover object-center"
                   >
-                    <source src={mediaUrl} type="video/mp4" />
+                    <source src={mobileMediaUrl} type="video/mp4" />
                   </video>
                 )}
               </div>
@@ -167,13 +181,48 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   const optimizedCandidate = optimizeCloudinaryUrl(candidateDesktop);
   const isDesktopImage = optimizedCandidate.match(/\.(jpeg|jpg|png|webp|avif)$/i) || optimizedCandidate.includes('/image/upload/');
 
+  const candidateMobile = (mobileSrc && mobileSrc.trim().length > 0)
+    ? mobileSrc.trim()
+    : (mobilePoster && mobilePoster.trim().length > 0)
+    ? mobilePoster.trim()
+    : candidateDesktop;
+  const optimizedMobile = optimizeCloudinaryUrl(candidateMobile);
+  const isMobileImage = optimizedMobile.match(/\.(jpeg|jpg|png|webp|avif)$/i) || optimizedMobile.includes('/image/upload/');
+
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      {/* Mobile View */}
+      <div className="block md:hidden absolute inset-0 w-full h-full pointer-events-none">
+        {isMobileImage ? (
+          <Image
+            src={optimizedMobile}
+            alt="Hero Mobile Background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={optimizedMobile}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          >
+            <source src={optimizedMobile} type="video/mp4" />
+          </video>
+        )}
+      </div>
+
+      {/* Desktop View */}
+      <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
         {isDesktopImage ? (
           <Image
             src={optimizedCandidate}
-            alt="Hero Background"
+            alt="Hero Desktop Background"
             fill
             priority
             sizes="100vw"

@@ -44,43 +44,111 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const footerLinks = {
-  Destinations: [
-    { label: 'Srinagar (Dal Lake & Mughal Gardens)', href: '/destinations/srinagar' },
-    { label: 'Gulmarg (Gondola & Snow Peaks)', href: '/destinations/gulmarg' },
-    { label: 'Pahalgam (Betaab Valley & Lidder)', href: '/destinations/pahalgam' },
-    { label: 'Sonmarg (Thajiwas Glacier & Gateway)', href: '/destinations/sonmarg' },
-    { label: 'Explore All Destinations →', href: '/destinations' },
-  ],
-  'Packages & Fleet': [
-    { label: 'Featured Kashmir Packages', href: '/packages#featured' },
-    { label: 'Seasonal & Honeymoon Packages', href: '/packages#seasonal' },
-    { label: 'Off-Beat Valley Tours', href: '/packages#off-beat' },
-    { label: 'Verified Luxury Fleet & Cabs', href: '/transport' },
-    { label: 'Adventure Activities (Gondola, Rafting)', href: '/activities' },
-  ],
-  'Travel Information': [
-    { label: 'Travel Advisory & FAQs', href: '/bucket-list/travel-information' },
-    { label: 'Clothing & Packing Guide', href: '/bucket-list/travel-information#clothing' },
-    { label: 'Permits, Prepaid SIMs & ATMs', href: '/bucket-list/travel-information#permits' },
-    { label: 'Best Time to Visit Kashmir', href: '/destinations#best-time' },
-    { label: 'Local Kashmiri Shopping Guide', href: '/bucket-list/shopping' },
-  ],
-  Company: [
-    { label: 'Why Travel With Us', href: '/#why-us' },
-    { label: 'Client Stories & Reviews', href: '/#reviews' },
-    { label: 'Safety & Hospitality Standards', href: '/activities#safety' },
-    { label: 'Terms & Conditions', href: '/terms-and-conditions' },
-    { label: 'Privacy Policy', href: '/privacy-policy' },
-    { label: 'Cancellation & Refunds', href: '/cancellation-refund-policy' },
-  ],
-};
+interface FooterLinkItem {
+  label: string;
+  href: string;
+}
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const { openModal } = useEnquiryModal();
   const settings = useSiteSettings();
+
+  const [destinationLinks, setDestinationLinks] = useState<FooterLinkItem[]>([
+    { label: 'Explore All Destinations →', href: '/destinations' },
+  ]);
+  const [packageLinks, setPackageLinks] = useState<FooterLinkItem[]>([
+    { label: 'All Kashmir Tour Packages', href: '/packages' },
+    { label: 'Verified Luxury Fleet & Cabs', href: '/transport' },
+    { label: 'Adventure Activities & Sports', href: '/activities' },
+  ]);
+
+  // Fetch available destinations and packages dynamically
+  React.useEffect(() => {
+    let isMounted = true;
+
+    // 1. Fetch Destinations
+    fetch('/api/destinations')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isMounted) return;
+        if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
+          const links: FooterLinkItem[] = data.destinations.slice(0, 5).map((d: any) => ({
+            label: d.tagline ? `${d.name} (${d.tagline})` : d.name,
+            href: `/destinations/${d.slug}`,
+          }));
+          links.push({ label: 'Explore All Destinations →', href: '/destinations' });
+          setDestinationLinks(links);
+        } else {
+          setDestinationLinks([
+            { label: 'Explore All Destinations →', href: '/destinations' },
+          ]);
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to fetch destinations for footer:', err);
+      });
+
+    // 2. Fetch Packages
+    fetch('/api/packages')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isMounted) return;
+        if (data.success && Array.isArray(data.packages) && data.packages.length > 0) {
+          const links: FooterLinkItem[] = data.packages.slice(0, 3).map((p: any) => ({
+            label: p.title.length > 36 ? `${p.title.slice(0, 36)}...` : p.title,
+            href: `/packages/${p.slug}`,
+          }));
+          links.push(
+            { label: 'Verified Luxury Fleet & Cabs', href: '/transport' },
+            { label: 'Adventure Activities (Gondola, Rafting)', href: '/activities' },
+            { label: 'Explore All Packages →', href: '/packages' }
+          );
+          setPackageLinks(links);
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to fetch packages for footer:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const footerSections = [
+    {
+      heading: 'Destinations',
+      links: destinationLinks,
+    },
+    {
+      heading: 'Packages & Fleet',
+      links: packageLinks,
+    },
+    {
+      heading: 'Travel Information',
+      links: [
+        { label: 'Things to Do in Kashmir', href: '/bucket-list/things-to-do' },
+        { label: 'Travel Advisory & FAQs', href: '/bucket-list/travel-information' },
+        { label: 'Clothing & Packing Guide', href: '/bucket-list/travel-information#clothing' },
+        { label: 'Permits, Prepaid SIMs & ATMs', href: '/bucket-list/travel-information#permits' },
+        { label: 'Local Kashmiri Shopping Guide', href: '/bucket-list/shopping' },
+        { label: 'Explore Kashmir Bucket List →', href: '/bucket-list' },
+      ],
+    },
+    {
+      heading: 'Company',
+      links: [
+        { label: 'Why Travel With Us', href: '/#why-us' },
+        { label: 'Client Stories & Reviews', href: '/#reviews' },
+        { label: 'Safety & Hospitality Standards', href: '/activities#safety' },
+        { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+        { label: 'Privacy Policy', href: '/privacy-policy' },
+        { label: 'Cancellation & Refunds', href: '/cancellation-refund-policy' },
+      ],
+    },
+  ];
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,7 +263,7 @@ export const Footer: React.FC = () => {
                 <div className="w-8 h-8 rounded-full bg-warm-white/5 flex items-center justify-center text-saffron shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <span>{settings.address || 'Boulevard Road, Dal Lake, Srinagar, Jammu & Kashmir 190001'}</span>
+                <span>{settings.address || 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar'}</span>
               </div>
             </div>
 
@@ -222,7 +290,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Nav Columns */}
-          {Object.entries(footerLinks).map(([heading, links]) => (
+          {footerSections.map(({ heading, links }) => (
             <div key={heading} className="lg:col-span-1">
               <h4 className="font-playfair font-bold text-warm-white text-base tracking-wide mb-4 border-b border-warm-white/10 pb-2">
                 {heading}

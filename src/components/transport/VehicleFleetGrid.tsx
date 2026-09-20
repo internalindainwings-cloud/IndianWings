@@ -35,7 +35,7 @@ export const VehicleFleetGrid: React.FC = () => {
       try {
         const res = await fetch('/api/transport');
         const json = await res.json();
-        if (json.success && Array.isArray(json.vehicles) && json.vehicles.length > 0 && isMounted) {
+        if (json.success && Array.isArray(json.vehicles) && isMounted) {
           setFleetList(json.vehicles);
         }
       } catch {
@@ -101,100 +101,112 @@ export const VehicleFleetGrid: React.FC = () => {
         </div>
 
         {/* Clean Vehicle Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {filteredFleet.map((vehicle: VehicleFleetItem) => (
-            <div
-              key={vehicle.id}
-              className="group bg-white rounded-xl overflow-hidden border border-black/[0.08] shadow-sm hover:shadow-md hover:border-black/15 transition-all duration-200 flex flex-col justify-between"
-            >
-              {/* Image Preview */}
-              <div className="relative w-full aspect-[16/10] overflow-hidden bg-black/5">
-                <Image
-                  src={vehicle.imageUrl}
-                  alt={vehicle.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        {filteredFleet.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+            {filteredFleet.map((vehicle: VehicleFleetItem) => (
+              <div
+                key={vehicle.id}
+                className="group bg-white rounded-xl overflow-hidden border border-black/[0.08] shadow-sm hover:shadow-md hover:border-black/15 transition-all duration-200 flex flex-col justify-between"
+              >
+                {/* Image Preview */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-black/5">
+                  <Image
+                    src={vehicle.imageUrl}
+                    alt={vehicle.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                {/* Badges */}
-                <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
-                  <span className="px-2 py-0.5 rounded-md bg-midnight/80 backdrop-blur-md text-[10px] font-manrope font-semibold text-warm-white border border-white/15">
-                    {vehicle.category}
-                  </span>
-                </div>
-
-                {vehicle.badge && (
-                  <div className="absolute top-2.5 right-2.5 z-10">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-saffron text-midnight text-[10px] font-manrope font-bold uppercase tracking-wide">
-                      <span>{vehicle.badge}</span>
+                  {/* Badges */}
+                  <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded-md bg-midnight/80 backdrop-blur-md text-[10px] font-manrope font-semibold text-warm-white border border-white/15">
+                      {vehicle.category}
                     </span>
                   </div>
-                )}
 
-                {/* Specs Overlay */}
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between gap-1 text-[11px] font-manrope text-warm-white bg-midnight/85 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-white/10">
-                  <span className="inline-flex items-center gap-1">
-                    <Users size={12} className="text-saffron shrink-0" />
-                    <span>{vehicle.seats}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Briefcase size={12} className="text-saffron shrink-0" />
-                    <span>{vehicle.bags}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <Wind size={12} className="text-saffron shrink-0" />
-                    <span>{vehicle.ac}</span>
-                  </span>
+                  {vehicle.badge && (
+                    <div className="absolute top-2.5 right-2.5 z-10">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-saffron text-midnight text-[10px] font-manrope font-bold uppercase tracking-wide">
+                        <span>{vehicle.badge}</span>
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Specs Overlay */}
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between gap-1 text-[11px] font-manrope text-warm-white bg-midnight/85 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-white/10">
+                    <span className="inline-flex items-center gap-1">
+                      <Users size={12} className="text-saffron shrink-0" />
+                      <span>{vehicle.seats}</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Briefcase size={12} className="text-saffron shrink-0" />
+                      <span>{vehicle.bags}</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1">
+                      <Wind size={12} className="text-saffron shrink-0" />
+                      <span>{vehicle.ac}</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Body */}
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-2">
+                    <h3 className="font-serif text-base sm:text-lg font-semibold text-[#0B1F2A] group-hover:text-saffron transition-colors">
+                      {vehicle.name}
+                    </h3>
+
+                    {/* Bullet Tags */}
+                    <ul className="space-y-1.5 pt-0.5">
+                      {vehicle.tags.map((tag, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-xs font-sans text-[#475569]">
+                          <span className="w-3 h-3 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0">
+                            <Check size={8} />
+                          </span>
+                          <span>{tag}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-3 border-t border-black/[0.08] flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={openModal}
+                      className="flex-1 py-2 px-3 rounded-lg bg-saffron text-midnight font-manrope font-bold text-xs hover:opacity-90 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <Car size={13} />
+                      <span>Get Enquiry</span>
+                    </button>
+
+                    <a
+                      href={`https://wa.me/917827743041?text=Hi%20The%20Indian%20Wings%20Company,%20I%20want%20to%20enquire%20about%20booking%20the%20${encodeURIComponent(vehicle.name)}.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 text-emerald-700 border border-[#25D366]/30 transition-colors flex items-center justify-center shrink-0"
+                      title={`WhatsApp ${vehicle.name}`}
+                    >
+                      <MessageCircle size={15} />
+                    </a>
+                  </div>
                 </div>
               </div>
-
-              {/* Card Body */}
-              <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div className="space-y-2">
-                  <h3 className="font-serif text-base sm:text-lg font-semibold text-[#0B1F2A] group-hover:text-saffron transition-colors">
-                    {vehicle.name}
-                  </h3>
-
-                  {/* Bullet Tags */}
-                  <ul className="space-y-1.5 pt-0.5">
-                    {vehicle.tags.map((tag, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-xs font-sans text-[#475569]">
-                        <span className="w-3 h-3 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0">
-                          <Check size={8} />
-                        </span>
-                        <span>{tag}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="pt-3 border-t border-black/[0.08] flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={openModal}
-                    className="flex-1 py-2 px-3 rounded-lg bg-saffron text-midnight font-manrope font-bold text-xs hover:opacity-90 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                  >
-                    <Car size={13} />
-                    <span>Get Enquiry</span>
-                  </button>
-
-                  <a
-                    href={`https://wa.me/917006837096?text=Hi%20The%20Indian%20Wings%20Company,%20I%20want%20to%20enquire%20about%20booking%20the%20${encodeURIComponent(vehicle.name)}.`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 text-emerald-700 border border-[#25D366]/30 transition-colors flex items-center justify-center shrink-0"
-                    title={`WhatsApp ${vehicle.name}`}
-                  >
-                    <MessageCircle size={15} />
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="py-12 sm:py-16 text-center rounded-2xl border border-dashed border-black/15 bg-black/[0.02]">
+            <Car size={32} className="mx-auto text-slate-400 mb-2" />
+            <p className="font-manrope font-bold text-base text-midnight mb-1">
+              No vehicles available at the moment
+            </p>
+            <p className="font-manrope text-xs text-slate-500 max-w-md mx-auto">
+              We are updating our live fleet registry. Please contact our 24/7 transport desk for custom private cab and tempo bookings.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

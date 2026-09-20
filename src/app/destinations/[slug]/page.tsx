@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getDestinationBySlug, getAllDestinationSlugs } from '@/data/destinations';
+import { getDestinationBySlug, getAllDestinationSlugs } from '@/lib/destinations-service';
 import { getDestinationContentBySlug } from '@/data/destination-content';
 import { DestinationDetailHero } from '@/components/destinations/DestinationDetailHero';
 import { DestinationSubNavigation } from '@/components/destinations/DestinationSubNavigation';
@@ -14,7 +14,7 @@ interface DestinationDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  const slugs = getAllDestinationSlugs();
+  const slugs = await getAllDestinationSlugs();
   return slugs.map((slug) => ({
     slug,
   }));
@@ -24,7 +24,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com'
 
 export async function generateMetadata({ params }: DestinationDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await getDestinationBySlug(slug);
 
   if (!destination) {
     return {
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
 
 export default async function DestinationDetailPage({ params }: DestinationDetailPageProps) {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await getDestinationBySlug(slug);
 
   if (!destination) {
     notFound();

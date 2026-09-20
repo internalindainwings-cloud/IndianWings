@@ -20,6 +20,7 @@ import { TabSeo } from '@/components/admin/TabSeo';
 import { TabSettings } from '@/components/admin/TabSettings';
 import { TabHeroHomepage } from '@/components/admin/TabHeroHomepage';
 import { TabAllUsers } from '@/components/admin/TabAllUsers';
+import { TabBucketList } from '@/components/admin/TabBucketList';
 
 interface AdminData {
   stats: {
@@ -45,6 +46,10 @@ const validTabs: AdminSection[] = [
   'destinations',
   'activities',
   'transport',
+  'bucket-list',
+  'bucket-travel-info',
+  'bucket-shopping',
+  'bucket-things-to-do',
   'reviews',
   'seo',
   'settings',
@@ -186,6 +191,14 @@ function AdminDashboardContent() {
         return <TabActivities />;
       case 'transport':
         return <TabTransport />;
+      case 'bucket-list':
+        return <TabBucketList initialSubPage="things-to-do" />;
+      case 'bucket-things-to-do':
+        return <TabBucketList initialSubPage="things-to-do" />;
+      case 'bucket-shopping':
+        return <TabBucketList initialSubPage="shopping" />;
+      case 'bucket-travel-info':
+        return <TabBucketList initialSubPage="travel-information" />;
       case 'reviews':
         return <TabReviews />;
       case 'seo':

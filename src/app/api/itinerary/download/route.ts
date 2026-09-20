@@ -21,7 +21,9 @@ const itineraryDownloadSchema = z.object({
       activities: z.array(z.string()).optional(),
       meals: z.string().optional(),
       stay: z.string().optional(),
-    })
+      imageUrl: z.string().optional(),
+      image: z.string().optional(),
+    }).passthrough()
   ).default([]),
   inclusions: z.array(z.string()).default([]),
   visitorId: z.string().optional(),

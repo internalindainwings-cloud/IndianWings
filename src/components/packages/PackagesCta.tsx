@@ -41,7 +41,7 @@ export const PackagesCta: React.FC = () => {
             </button>
 
             <a
-              href="https://wa.me/917006837096?text=Hi%20The%20Indian%20Wings%20Company,%20I%20want%20to%20customize%20a%20Kashmir%20tour%20package."
+              href="https://wa.me/917827743041?text=Hi%20The%20Indian%20Wings%20Company,%20I%20want%20to%20customize%20a%20Kashmir%20tour%20package."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-manrope font-bold text-xs sm:text-sm shadow-md hover:scale-[1.02] transition-all flex items-center justify-center gap-2"

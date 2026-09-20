@@ -118,7 +118,7 @@ export default function TermsAndConditionsPage() {
                 1. Legal Entity &amp; Scope of Services
               </h2>
               <p>
-                <strong>The Indian Wings Company</strong> (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is a premier destination management company and registered tour operator operating from Boulevard Road, Dal Lake, Srinagar, Jammu &amp; Kashmir 190001, India.
+                <strong>The Indian Wings Company</strong> (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is a premier destination management company and registered tour operator operating from The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar, Jammu &amp; Kashmir, India.
               </p>
               <p>
                 We provide holiday itinerary planning, verified hotel and heritage houseboat reservations, private sanitized chauffeur transportation, Dal Lake Shikara cruises, adventure activity bookings, and 24/7 ground assistance across Jammu, Kashmir, and Ladakh. By accessing our platform, requesting itineraries, paying a token deposit, or boarding our fleet, the client (&quot;Traveler&quot;, &quot;User&quot;, or &quot;Guest&quot;) enters into a legally binding contract with us governed by these Terms.
@@ -245,7 +245,7 @@ export default function TermsAndConditionsPage() {
                 </div>
                 <div>
                   <span className="font-bold text-midnight block">Registered Office:</span>
-                  <span>Boulevard Road, Dal Lake, Srinagar, J&amp;K 190001, India</span>
+                  <span>The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar, J&amp;K, India</span>
                 </div>
                 <div>
                   <span className="font-bold text-midnight block">Email:</span>

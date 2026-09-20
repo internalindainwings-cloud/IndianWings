@@ -35,8 +35,8 @@ export const HeroContent: React.FC<HeroContentProps> = ({
           </div>
         )}
 
-        {/* Main Heading — Single Line in Luxury Sand Gold #C5A45E (strictly font-display) */}
-        <h1 className="font-display text-[20px] min-[360px]:text-[22px] min-[400px]:text-[24px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-tight tracking-tight whitespace-nowrap drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-3 sm:mb-4">
+        {/* Main Heading — Luxury Sand Gold #C5A45E */}
+        <h1 className="font-manrope font-extrabold text-[19px] min-[360px]:text-[22px] min-[400px]:text-[24px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2.5 sm:mb-4">
           {headline}
         </h1>
 
@@ -46,8 +46,8 @@ export const HeroContent: React.FC<HeroContentProps> = ({
           </p>
         )}
 
-        {/* Action Buttons: Small size directly here */}
-        <div className="flex flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        {/* Action Buttons: Responsive row */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={() => openModal({ source: 'hero_primary_cta' })}

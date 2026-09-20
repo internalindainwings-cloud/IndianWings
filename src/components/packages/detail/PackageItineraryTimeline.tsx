@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ChevronDown, ChevronUp, MapPin, Coffee, Moon, CheckCircle2, Download } from 'lucide-react';
 import type { ItineraryDay, EnrichedPackage } from '@/data/package-defaults';
 import { DownloadItineraryModal } from './DownloadItineraryModal';
@@ -119,29 +120,46 @@ export const PackageItineraryTimeline: React.FC<PackageItineraryTimelineProps> =
                 {/* Day Expanded Content */}
                 {isExpanded && (
                   <div className="border-t border-black/5 bg-slate-50/50 p-4 sm:p-5 space-y-4 text-xs font-manrope leading-relaxed text-[#475569]">
-                    <p className="text-sm text-[#334155] leading-relaxed">
-                      {day.description}
-                    </p>
+                    <div className={`flex flex-col ${(day.imageUrl || day.image) ? 'md:flex-row gap-4 sm:gap-6 items-start' : ''}`}>
+                      <div className="flex-1 space-y-3 min-w-0">
+                        <p className="text-sm text-[#334155] leading-relaxed">
+                          {day.description}
+                        </p>
 
-                    {/* Activity Pills */}
-                    {day.activities && day.activities.length > 0 && (
-                      <div className="space-y-1.5 pt-1">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B]">
-                          Key Highlights for Today:
-                        </span>
-                        <div className="flex flex-wrap gap-2">
-                          {day.activities.map((act, i) => (
-                            <span
-                              key={i}
-                              className="inline-flex items-center gap-1 rounded-lg bg-white border border-black/5 px-2.5 py-1 text-xs text-[#0B1F2A] font-medium shadow-2xs"
-                            >
-                              <CheckCircle2 className="h-3 w-3 text-[#d98f5b]" />
-                              {act}
+                        {/* Activity Pills */}
+                        {day.activities && day.activities.length > 0 && (
+                          <div className="space-y-1.5 pt-1">
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B]">
+                              Key Highlights for Today:
                             </span>
-                          ))}
-                        </div>
+                            <div className="flex flex-wrap gap-2">
+                              {day.activities.map((act, i) => (
+                                <span
+                                  key={i}
+                                  className="inline-flex items-center gap-1 rounded-lg bg-white border border-black/5 px-2.5 py-1 text-xs text-[#0B1F2A] font-medium shadow-2xs"
+                                >
+                                  <CheckCircle2 className="h-3 w-3 text-[#d98f5b]" />
+                                  {act}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
+
+                      {/* Optional Day Image — Shown only if provided by Admin; otherwise completely hidden */}
+                      {(day.imageUrl || day.image) && (
+                        <div className="w-full md:w-56 lg:w-64 shrink-0 rounded-xl overflow-hidden border border-black/10 shadow-xs relative h-48 md:h-36 bg-slate-100">
+                          <Image
+                            src={day.imageUrl || day.image || ''}
+                            alt={`Day ${day.day} — ${day.title}`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 256px"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
 
                     {/* Stay and Meals Pill Bar */}
                     <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-black/5">

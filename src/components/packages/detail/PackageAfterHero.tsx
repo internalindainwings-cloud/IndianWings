@@ -41,50 +41,19 @@ interface PackageAfterHeroProps {
 type NavTab = 'overview' | 'itinerary' | 'stay' | 'transport' | 'inclusions' | 'faqs' | 'cancellation' | 'viewAll';
 
 /**
- * Intelligent Destination Image Mapper
+ * Day Image Resolver (Custom admin-provided day images only)
  */
-function getDayImage(day: ItineraryDay, defaultImg: string) {
-  const text = `${day.title} ${day.description} ${day.stay || ''}`.toLowerCase();
+function getDayImage(day?: ItineraryDay | null) {
+  if (!day) return null;
+  const imgUrl = day.imageUrl || day.image;
+  if (!imgUrl || typeof imgUrl !== 'string' || !imgUrl.trim()) {
+    return null;
+  }
 
-  if (text.includes('gulmarg') || text.includes('gondola') || text.includes('snow') || text.includes('ski') || text.includes('apharwat')) {
-    return {
-      url: '/images/gallery/gulmarg-snow.jpg',
-      caption: 'Gulmarg Gondola & Alpine Snow Meadows',
-      location: 'Gulmarg (8,690 ft)',
-    };
-  }
-  if (text.includes('pahalgam') || text.includes('betaab') || text.includes('aru') || text.includes('baisaran') || text.includes('lidder')) {
-    return {
-      url: '/images/gallery/pahalgam-valley.jpg',
-      caption: 'Betaab Valley & Lidder River',
-      location: 'Pahalgam (7,200 ft)',
-    };
-  }
-  if (text.includes('sonmarg') || text.includes('thajiwas') || text.includes('glacier') || text.includes('sindh')) {
-    return {
-      url: '/images/gallery/sonmarg-glacier.jpg',
-      caption: 'Thajiwas Glacier & Golden Meadows',
-      location: 'Sonmarg (8,960 ft)',
-    };
-  }
-  if (text.includes('houseboat') || text.includes('shikara') || text.includes('nigeen') || text.includes('dal lake')) {
-    return {
-      url: '/images/gallery/shikara-dal-lake.jpg',
-      caption: 'Serene Shikara Ride & Luxury Houseboats',
-      location: 'Dal Lake, Srinagar',
-    };
-  }
-  if (text.includes('srinagar') || text.includes('mughal') || text.includes('nishat') || text.includes('shalimar') || text.includes('chashme')) {
-    return {
-      url: '/images/gallery/houseboat-kashmir.jpg',
-      caption: 'Srinagar Gardens & Boulevard Road',
-      location: 'Srinagar Valley',
-    };
-  }
   return {
-    url: defaultImg || '/images/gallery/kashmir-summit-view.png',
+    url: imgUrl.trim(),
     caption: day.title,
-    location: 'Kashmir Valley',
+    location: day.stay ? day.stay.split(',')[0].trim() : 'Kashmir',
   };
 }
 
@@ -102,17 +71,15 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
   const categoryLabel = getCategoryLabel(pkg.categorySlug || pkg.tag);
   const bestForLabel = getBestForLabel(pkg.categorySlug || pkg.tag);
 
-  // Derive active day for the sticky image container
-  const currentDay = pkg.itinerary.find((d) => d.day === activeDayNumber) || pkg.itinerary[0] || {
-    day: 1,
-    title: 'Arrival in Srinagar',
-    description: 'Welcome to Kashmir.',
-    meals: 'Dinner Included',
-    stay: 'Heritage Houseboat',
-    activities: ['Welcome tea', 'Shikara ride'],
-  };
+  // Check if any day in the itinerary has an image uploaded by admin
+  const hasAnyDayImages = pkg.itinerary.some(
+    (d) => Boolean((d.imageUrl && d.imageUrl.trim()) || (d.image && d.image.trim()))
+  );
 
-  const dayImage = getDayImage(currentDay, pkg.imageUrl);
+  // Derive active day for the sticky image container
+  const currentDay = pkg.itinerary.find((d) => d.day === activeDayNumber) || pkg.itinerary[0];
+
+  const currentDayImage = getDayImage(currentDay);
 
   // Route string
   const primaryRoute =
@@ -456,13 +423,13 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
           </div>
         </div>
 
-        {/* 2-Column Itinerary Layout: Left Days + Right Sticky Destination Image */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Itinerary Layout: If any day has an image, render 2-column layout with right sticky image. Otherwise, span full width. */}
+        <div className={hasAnyDayImages ? "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" : "w-full"}>
           
-          {/* Left: All Days Rendered Directly in UI (lg:col-span-7) */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Left / Main Column: All Days Rendered Directly in UI */}
+          <div className={hasAnyDayImages ? "lg:col-span-7 space-y-6" : "w-full space-y-6"}>
             {pkg.itinerary.map((d) => {
-              const dImg = getDayImage(d, pkg.imageUrl);
+              const dImg = getDayImage(d);
               const isActive = activeDayNumber === d.day;
 
               return (
@@ -528,113 +495,119 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
                       </div>
                     )}
 
-                    {/* Mobile-Only Photo Preview (hidden on desktop where sticky column handles it) */}
-                    <div className="lg:hidden relative h-48 w-full rounded-2xl overflow-hidden border border-slate-200 mt-3">
-                      <Image
-                        src={dImg.url}
-                        alt={dImg.caption}
-                        fill
-                        sizes="100vw"
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
-                      <div className="absolute bottom-2.5 left-3 right-3 text-white">
-                        <span className="text-[10px] font-bold text-white bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
-                          {dImg.location}
-                        </span>
-                        <p className="text-xs font-medium text-slate-200 truncate mt-0.5">{dImg.caption}</p>
+                    {/* Mobile-Only Photo Preview (rendered ONLY if admin uploaded an image for this day) */}
+                    {dImg && (
+                      <div className="lg:hidden relative h-48 w-full rounded-2xl overflow-hidden border border-slate-200 mt-3">
+                        <Image
+                          src={dImg.url}
+                          alt={dImg.caption}
+                          fill
+                          sizes="100vw"
+                          className="object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
+                        <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                          <span className="text-[10px] font-bold text-white bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/20">
+                            {dImg.location}
+                          </span>
+                          <p className="text-xs font-medium text-slate-200 truncate mt-0.5">{dImg.caption}</p>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Right: Sticky Day Destination Image on Scroll (lg:col-span-5) */}
-          <div className="hidden lg:block lg:col-span-5 sticky top-28 space-y-4">
-            <div className="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-xl p-3">
-              {/* Image Frame */}
-              <div className="relative h-72 sm:h-80 w-full rounded-2xl overflow-hidden bg-slate-900 group">
-                <Image
-                  key={`sticky-img-${currentDay.day}`}
-                  src={dayImage.url}
-                  alt={dayImage.caption}
-                  fill
-                  priority
-                  sizes="(max-width: 1200px) 40vw, 450px"
-                  className="object-cover transition-all duration-700 animate-in fade-in zoom-in-95 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+          {/* Right: Sticky Day Destination Image on Scroll (ONLY rendered if package has day images) */}
+          {hasAnyDayImages && (
+            <div className="hidden lg:block lg:col-span-5 sticky top-28 space-y-4">
+              <div className="rounded-3xl border border-slate-200 bg-white overflow-hidden shadow-xl p-3">
+                {/* Image Frame - rendered ONLY if active day has an image */}
+                {currentDayImage ? (
+                  <div className="relative h-72 sm:h-80 w-full rounded-2xl overflow-hidden bg-slate-900 group">
+                    <Image
+                      key={`sticky-img-${currentDay?.day}`}
+                      src={currentDayImage.url}
+                      alt={currentDayImage.caption}
+                      fill
+                      priority
+                      sizes="(max-width: 1200px) 40vw, 450px"
+                      className="object-cover transition-all duration-700 animate-in fade-in zoom-in-95 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-                {/* Top Badges */}
-                <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0B1F2A]/85 backdrop-blur-md px-3 py-1 text-xs font-extrabold text-white border border-white/20 shadow-xs">
-                    <Calendar className="h-3.5 w-3.5 text-[#d98f5b]" />
-                    Day {currentDay.day} of {pkg.itinerary.length}
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[11px] font-bold text-white border border-white/20">
-                    <MapPin className="h-3 w-3 text-saffron" />
-                    {dayImage.location}
-                  </span>
-                </div>
+                    {/* Top Badges */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0B1F2A]/85 backdrop-blur-md px-3 py-1 text-xs font-extrabold text-white border border-white/20 shadow-xs">
+                        <Calendar className="h-3.5 w-3.5 text-[#d98f5b]" />
+                        Day {currentDay?.day} of {pkg.itinerary.length}
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-1 text-[11px] font-bold text-white border border-white/20">
+                        <MapPin className="h-3 w-3 text-saffron" />
+                        {currentDayImage.location}
+                      </span>
+                    </div>
 
-                {/* Bottom Caption & Title */}
-                <div className="absolute bottom-3.5 left-4 right-4 text-white space-y-1">
-                  <h4 className="text-sm font-bold text-white leading-snug drop-shadow-md">
-                    {currentDay.title}
-                  </h4>
-                  <p className="text-xs text-slate-200 font-medium drop-shadow-sm truncate">
-                    {dayImage.caption}
-                  </p>
-                </div>
-              </div>
+                    {/* Bottom Caption & Title */}
+                    <div className="absolute bottom-3.5 left-4 right-4 text-white space-y-1">
+                      <h4 className="text-sm font-bold text-white leading-snug drop-shadow-md">
+                        {currentDay?.title}
+                      </h4>
+                      <p className="text-xs text-slate-200 font-medium drop-shadow-sm truncate">
+                        {currentDayImage.caption}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
 
-              {/* Quick Jump Pills & Hotel Info */}
-              <div className="p-3 pt-4 space-y-3 font-manrope">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#0B1F2A]">Jump to Day:</span>
-                  <span className="text-[11px] text-slate-500">Auto-updates on scroll</span>
-                </div>
+                {/* Quick Jump Pills & Hotel Info */}
+                <div className="p-3 pt-4 space-y-3 font-manrope">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#0B1F2A]">Jump to Day:</span>
+                    <span className="text-[11px] text-slate-500">Auto-updates on scroll</span>
+                  </div>
 
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {pkg.itinerary.map((d) => {
-                    const isCurrent = d.day === currentDay.day;
-                    return (
-                      <button
-                        key={`quick-jump-${d.day}`}
-                        type="button"
-                        onClick={() => {
-                          setActiveDayNumber(d.day);
-                          const el = document.getElementById(`itinerary-day-${d.day}`);
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          }
-                        }}
-                        className={`h-8 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
-                          isCurrent
-                            ? 'bg-[#0B1F2A] text-white shadow-sm ring-2 ring-[#d98f5b]'
-                            : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}
-                        title={d.title}
-                      >
-                        Day {d.day}
-                      </button>
-                    );
-                  })}
-                </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {pkg.itinerary.map((d) => {
+                      const isCurrent = d.day === (currentDay?.day ?? 1);
+                      return (
+                        <button
+                          key={`quick-jump-${d.day}`}
+                          type="button"
+                          onClick={() => {
+                            setActiveDayNumber(d.day);
+                            const el = document.getElementById(`itinerary-day-${d.day}`);
+                            if (el) {
+                              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                          }}
+                          className={`h-8 px-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                            isCurrent
+                              ? 'bg-[#0B1F2A] text-white shadow-sm ring-2 ring-[#d98f5b]'
+                              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                          }`}
+                          title={d.title}
+                        >
+                          Day {d.day}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
-                  <span className="truncate max-w-[200px]">
-                    🏨 {currentDay.stay ? currentDay.stay.split(',')[0] : 'Luxury Stay'}
-                  </span>
-                  <span className="text-emerald-700 font-semibold shrink-0">
-                    ☕ {currentDay.meals || 'Breakfast & Dinner'}
-                  </span>
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
+                    <span className="truncate max-w-[200px]">
+                      🏨 {currentDay.stay ? currentDay.stay.split(',')[0] : 'Luxury Stay'}
+                    </span>
+                    <span className="text-emerald-700 font-semibold shrink-0">
+                      ☕ {currentDay.meals || 'Breakfast & Dinner'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
         </div>
       </section>

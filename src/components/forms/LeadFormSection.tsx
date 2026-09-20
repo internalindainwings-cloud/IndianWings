@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Play } from 'lucide-react';
+import { Play, Volume2, VolumeX } from 'lucide-react';
 import { EnquiryForm } from './EnquiryForm';
 
 interface LeadFormSectionProps {
@@ -10,16 +10,34 @@ interface LeadFormSectionProps {
 }
 
 export const LeadFormSection: React.FC<LeadFormSectionProps> = ({
-  videoUrl = 'https://res.cloudinary.com/dcmoseix9/video/upload/f_auto,q_auto/v1789371598/final_hero_desktop_ebblmr.mp4',
-  posterUrl = 'https://res.cloudinary.com/dcmoseix9/video/upload/so_0,f_auto,q_auto/v1789371598/final_hero_desktop_ebblmr.jpg'
+  videoUrl = 'https://res.cloudinary.com/wmwdypan/video/upload/v1789743401/testimonial.mp4',
+  posterUrl,
 }) => {
+  // If a custom posterUrl is provided via props, use it.
+  // For this particular video (testimonial.mp4), specifically use the frame at 0:04 (so_4) as requested.
+  // Otherwise for other videos, derive dynamically from the video source.
+  const activePosterUrl = posterUrl || (
+    videoUrl.includes('v1789743401/testimonial.mp4')
+      ? 'https://res.cloudinary.com/wmwdypan/video/upload/so_4,f_auto,q_auto/v1789743401/testimonial.jpg'
+      : videoUrl.includes('res.cloudinary.com')
+        ? videoUrl.replace(/\.[^/.]+$/, '.jpg').replace('/video/upload/', '/video/upload/so_0,f_auto,q_auto/')
+        : undefined
+  );
+
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePlayVideo = () => {
     if (videoRef.current) {
-      videoRef.current.play();
+      videoRef.current.muted = false;
+      videoRef.current.volume = 1;
+      videoRef.current.play().catch((err) => {
+        console.warn('Playback error:', err);
+      });
       setIsPlaying(true);
+      setIsMuted(false);
     }
   };
 
@@ -27,10 +45,19 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({
     setIsPlaying(false);
   };
 
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
   return (
     <section 
       id="quote" 
-      className="w-full bg-white pt-4 sm:pt-5 lg:pt-3 pb-8 sm:pb-12 px-3 sm:px-6 md:px-8 border-b border-black/[0.08] scroll-mt-20"
+      className="w-full bg-white pt-7 sm:pt-9 lg:pt-7 pb-8 sm:pb-12 px-3 sm:px-6 md:px-8 border-b border-black/[0.08] scroll-mt-20"
     >
       <div className="max-w-[1160px] mx-auto w-full relative group/card">
         
@@ -64,10 +91,18 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({
             <video
               ref={videoRef}
               src={videoUrl}
-              poster={posterUrl}
+              poster={activePosterUrl}
               className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-500 ${!isPlaying ? 'group-hover/panel:blur-[3px] group-hover/panel:scale-105' : ''}`}
               controls={isPlaying}
               playsInline
+              onLoadedMetadata={(e) => {
+                if (e.currentTarget.duration) {
+                  setDuration(e.currentTarget.duration);
+                }
+              }}
+              onVolumeChange={(e) => {
+                setIsMuted(e.currentTarget.muted || e.currentTarget.volume === 0);
+              }}
               onPause={handlePauseVideo}
               onEnded={handlePauseVideo}
             />
@@ -83,12 +118,32 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({
               <span>Itinerary Walkthrough</span>
             </div>
 
+            {/* Top Audio / Volume Control Pill */}
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={isMuted ? "Unmute video audio" : "Mute video audio"}
+              className="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-midnight/85 hover:bg-midnight backdrop-blur-md border border-white/25 text-warm-white text-[10px] sm:text-[10.5px] font-manrope font-semibold shadow-md transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              {isMuted ? (
+                <>
+                  <VolumeX size={13} className="text-rose-400" />
+                  <span>Unmute</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 size={13} className="text-emerald-400" />
+                  <span>Audio On</span>
+                </>
+              )}
+            </button>
+
             {/* Play Button & Interactive Overlay (When paused) */}
             {!isPlaying && (
               <button
                 type="button"
                 onClick={handlePlayVideo}
-                aria-label="Play itinerary walkthrough video"
+                aria-label="Play itinerary walkthrough video with audio"
                 className="absolute inset-0 z-10 flex flex-col items-center justify-center cursor-pointer p-4 group"
               >
                 {/* Glowing Play Circle */}
@@ -105,7 +160,9 @@ export const LeadFormSection: React.FC<LeadFormSectionProps> = ({
             {!isPlaying && (
               <div className="absolute bottom-2.5 sm:bottom-3 right-3 sm:right-3.5 z-20 flex items-center justify-end text-[10px] sm:text-[10.5px] font-manrope font-medium text-warm-white/85 pointer-events-none">
                 <span className="bg-black/45 backdrop-blur-md px-2 py-0.5 rounded border border-white/10 shrink-0">
-                  1:00 MIN
+                  {duration
+                    ? `${Math.floor(duration / 60)}:${String(Math.floor(duration % 60)).padStart(2, '0')} MIN`
+                    : '1:00 MIN'}
                 </span>
               </div>
             )}

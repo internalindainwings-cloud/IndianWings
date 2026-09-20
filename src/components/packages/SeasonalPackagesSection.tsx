@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { seasonalPackagesData } from '@/data/seasonal-packages';
 import { PackageItem } from '@/data/packages';
 import { PackageCard } from './PackageCard';
 
@@ -11,10 +10,15 @@ const ITEMS_PER_PAGE = 3;
 
 type SeasonFilter = 'all' | 'winter' | 'spring' | 'summer' | 'autumn';
 
-export const SeasonalPackagesSection = () => {
+interface SeasonalPackagesSectionProps {
+  initialPackages?: PackageItem[];
+}
+
+export const SeasonalPackagesSection: React.FC<SeasonalPackagesSectionProps> = ({ initialPackages = [] }) => {
   const [activeFilter, setActiveFilter] = useState<SeasonFilter>('all');
-  const [packagesList, setPackagesList] = useState<PackageItem[]>(seasonalPackagesData);
+  const [packagesList, setPackagesList] = useState<PackageItem[]>(initialPackages);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoaded, setIsLoaded] = useState<boolean>(initialPackages.length > 0);
 
   useEffect(() => {
     let isMounted = true;
@@ -22,7 +26,7 @@ export const SeasonalPackagesSection = () => {
       try {
         const res = await fetch('/api/packages?category=seasonal');
         const json = await res.json();
-        if (json.success && Array.isArray(json.packages) && json.packages.length > 0 && isMounted) {
+        if (json.success && Array.isArray(json.packages) && isMounted) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const mapped = json.packages.map((p: any) => ({
             ...p,
@@ -31,7 +35,9 @@ export const SeasonalPackagesSection = () => {
           setPackagesList(mapped);
         }
       } catch {
-        // keep fallback
+        // network error
+      } finally {
+        if (isMounted) setIsLoaded(true);
       }
     }
     load();
@@ -147,11 +153,22 @@ export const SeasonalPackagesSection = () => {
         </div>
 
         {/* Cards Grid (Consistent 3-Column Layout) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {currentPackages.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} />
-          ))}
-        </div>
+        {filteredPackages.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {currentPackages.map((pkg) => (
+              <PackageCard key={pkg.id} pkg={pkg} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 sm:py-14 text-center rounded-2xl border border-dashed border-black/15 bg-black/[0.02]">
+            <p className="font-manrope font-bold text-sm sm:text-base text-midnight mb-1">
+              No packages in this season yet
+            </p>
+            <p className="font-manrope text-xs text-slate-500">
+              New handcrafted seasonal packages are being curated.
+            </p>
+          </div>
+        )}
 
         {/* Pagination Controls */}
         {filteredPackages.length > ITEMS_PER_PAGE && (

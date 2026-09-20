@@ -49,10 +49,9 @@ const navLinks: NavItem[] = [
     href: '/destinations',
     icon: MapPin,
     children: [
-      { name: 'Srinagar', href: '/destinations/srinagar', icon: MapPin },
-      { name: 'Gulmarg', href: '/destinations/gulmarg', icon: Snowflake },
-      { name: 'Pahalgam', href: '/destinations/pahalgam', icon: Trees },
-      { name: 'Sonmarg', href: '/destinations/sonmarg', icon: Sun },
+      { name: 'Iconic Valleys', href: '/destinations', icon: MapPin },
+      { name: 'Alpine Meadows', href: '/destinations', icon: Snowflake },
+      { name: 'Off-Beat Kashmir', href: '/destinations', icon: Compass },
       { name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isViewAll: true }
     ]
   },
@@ -105,11 +104,54 @@ const navLinks: NavItem[] = [
 export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrolled?: boolean }) => {
   const pathname = usePathname();
   const { openModal } = useEnquiryModal();
+  const [destSubItems, setDestSubItems] = React.useState<SubNavItem[]>([
+    { name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isViewAll: true }
+  ]);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    fetch('/api/destinations')
+      .then(res => res.json())
+      .then(data => {
+        if (!isMounted) return;
+        if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
+          const items: SubNavItem[] = data.destinations.slice(0, 5).map((d: any) => ({
+            name: d.name,
+            href: `/destinations/${d.slug}`,
+            icon: MapPin,
+          }));
+          items.push({ name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isViewAll: true });
+          setDestSubItems(items);
+        } else {
+          setDestSubItems([
+            { name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isViewAll: true }
+          ]);
+        }
+      })
+      .catch(() => {
+        // Keep default
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const linksToRender = React.useMemo(() => {
+    return navLinks.map(link => {
+      if (link.name === 'Destinations') {
+        return {
+          ...link,
+          children: destSubItems,
+        };
+      }
+      return link;
+    });
+  }, [destSubItems]);
 
   return (
     <nav className="flex items-center gap-1 lg:gap-2 xl:gap-3 shrink-0">
       <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 font-manrope text-[11px] lg:text-[12px] xl:text-[12.5px] font-semibold tracking-wide transition-all duration-300 rounded-full px-2 lg:px-2.5 xl:px-3 py-1 lg:py-1.5 border border-warm-white/10 bg-midnight/60 backdrop-blur-md text-warm-white">
-        {navLinks.map((link) => {
+        {linksToRender.map((link) => {
           const isActive = pathname === link.href || link.children?.some(child => pathname === child.href);
           const Icon = link.icon;
           return (
@@ -118,8 +160,8 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
                 href={link.href}
                 className={`inline-flex items-center gap-1.5 transition-all duration-200 px-2 lg:px-2.5 xl:px-3 py-0.5 lg:py-1 rounded-full ${
                   isActive 
-                    ? 'bg-saffron text-midnight font-bold shadow-[0_4px_16px_rgba(245,158,11,0.6),0_2px_4px_rgba(0,0,0,0.3)]' 
-                    : 'text-warm-white/90 hover:text-saffron hover:bg-warm-white/10 hover:shadow-[0_3px_10px_rgba(245,158,11,0.45)]'
+                    ? 'bg-[#C5A45E] text-midnight font-bold shadow-[0_4px_16px_rgba(197,164,94,0.6),0_2px_4px_rgba(0,0,0,0.3)]' 
+                    : 'text-warm-white/90 hover:text-[#C5A45E] hover:bg-warm-white/10 hover:shadow-[0_3px_10px_rgba(197,164,94,0.45)]'
                 }`}
               >
                 <Icon className={`w-[17px] h-[17px] shrink-0 text-current ${
@@ -177,7 +219,7 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
         <button
           type="button"
           onClick={() => openModal({ source: 'desktop_nav_cta' })}
-          className="inline-flex items-center gap-1.5 font-manrope text-[11px] lg:text-[12px] xl:text-[13px] font-bold text-midnight bg-saffron rounded-full hover:bg-opacity-90 transition-all shadow-[0_4px_16px_rgba(245,158,11,0.6),0_2px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_22px_rgba(245,158,11,0.75)] whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-3.5 py-1.5 lg:px-4 lg:py-1.5 xl:px-4.5 xl:py-1.5"
+          className="inline-flex items-center gap-1.5 font-manrope text-[11px] lg:text-[12px] xl:text-[13px] font-bold text-midnight bg-[#C5A45E] rounded-full hover:bg-[#b5944e] transition-all shadow-[0_4px_16px_rgba(197,164,94,0.6),0_2px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_22px_rgba(197,164,94,0.75)] whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-3.5 py-1.5 lg:px-4 lg:py-1.5 xl:px-4.5 xl:py-1.5"
         >
           <span>Plan Your Trip</span>
           <ArrowRight className="w-[17px] h-[17px] shrink-0 text-current drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)] transition-transform duration-200 group-hover:translate-x-0.5" />

@@ -3,6 +3,8 @@ export interface HeroSlide {
   title: string;
   videoSrc: string;
   poster: string;
+  mobilePoster?: string;
+  mobileVideoSrc?: string;
 }
 
 export interface HeroTrustPill {
@@ -23,6 +25,8 @@ export interface HeroHomepageConfig {
   secondaryCtaLink: string;
   videoUrl: string;
   posterUrl: string;
+  mobilePosterUrl?: string;
+  mobileVideoUrl?: string;
   transitionType?: HeroTransitionType;
   transitionDuration?: number;
   slides: HeroSlide[];

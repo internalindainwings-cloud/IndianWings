@@ -5,6 +5,7 @@ import PackagesSection from '@/components/packages/PackagesSection';
 import SeasonalPackagesSection from '@/components/packages/SeasonalPackagesSection';
 import OffBeatPackagesSection from '@/components/packages/OffBeatPackagesSection';
 import PackagesCta from '@/components/packages/PackagesCta';
+import { getAllPackages } from '@/lib/packages-service';
 
 export const metadata: Metadata = {
   title: 'Kashmir Tour Packages & Holiday Itineraries | The Indian Wings Company',
@@ -27,7 +28,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PackagesPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function PackagesPage() {
+  const allPackages = await getAllPackages(false);
+  const featuredPackages = allPackages.filter((p) => p.categorySlug === 'featured');
+  const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal');
+  const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat');
+
   return (
     <main className="w-full min-h-screen bg-background text-charcoal flex flex-col">
       {/* 1. Hero Header */}
@@ -38,17 +46,17 @@ export default function PackagesPage() {
 
       {/* 3. Featured Packages */}
       <div id="featured" className="scroll-mt-28">
-        <PackagesSection />
+        <PackagesSection initialPackages={featuredPackages} />
       </div>
 
       {/* 4. Seasonal Specials */}
       <div id="seasonal" className="scroll-mt-28">
-        <SeasonalPackagesSection />
+        <SeasonalPackagesSection initialPackages={seasonalPackages} />
       </div>
 
       {/* 5. Off-Beat Itineraries */}
       <div id="off-beat" className="scroll-mt-28">
-        <OffBeatPackagesSection />
+        <OffBeatPackagesSection initialPackages={offBeatPackages} />
       </div>
 
       {/* 6. Customization CTA */}

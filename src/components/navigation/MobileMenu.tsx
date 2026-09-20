@@ -50,10 +50,9 @@ const mobileNavLinks: NavItem[] = [
     href: '/destinations',
     icon: MapPin,
     children: [
-      { name: 'Srinagar', href: '/destinations/srinagar', icon: MapPin },
-      { name: 'Gulmarg', href: '/destinations/gulmarg', icon: Snowflake },
-      { name: 'Pahalgam', href: '/destinations/pahalgam', icon: Trees },
-      { name: 'Sonmarg', href: '/destinations/sonmarg', icon: Sun },
+      { name: 'Iconic Valleys', href: '/destinations', icon: MapPin },
+      { name: 'Alpine Meadows', href: '/destinations', icon: Snowflake },
+      { name: 'Off-Beat Kashmir', href: '/destinations', icon: Compass },
       { name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isAction: true },
     ]
   },
@@ -243,7 +242,7 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
             onClose();
             openModal({ source: 'mobile_drawer_cta' });
           }}
-          className="w-full inline-flex items-center justify-center gap-2 font-manrope font-bold text-midnight bg-saffron px-6 py-3.5 rounded-full hover:bg-opacity-90 transition-all text-base shadow-[0_6px_22px_rgba(245,158,11,0.6),0_2px_6px_rgba(0,0,0,0.3)] active:scale-98 cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-2 font-manrope font-bold text-midnight bg-[#C5A45E] px-6 py-3.5 rounded-full hover:bg-[#b5944e] transition-all text-base shadow-[0_6px_22px_rgba(197,164,94,0.6),0_2px_6px_rgba(0,0,0,0.3)] active:scale-98 cursor-pointer"
         >
           <span>Plan Your Trip</span>
           <ArrowRight className="w-[19px] h-[19px] shrink-0 text-current drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)]" />

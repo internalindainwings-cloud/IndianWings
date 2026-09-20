@@ -1,16 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { destinationsData, DestinationItem } from '@/data/destinations';
+import { DestinationItem } from '@/data/destinations';
 import { DestinationCard } from './DestinationCard';
 
 type CategoryFilter = 'All' | 'Iconic' | 'Alpine' | 'Off-Beat';
 
 const CATEGORIES: CategoryFilter[] = ['All', 'Iconic', 'Alpine', 'Off-Beat'];
 
-export const DestinationsPageGrid: React.FC = () => {
+interface DestinationsPageGridProps {
+  initialDestinations?: DestinationItem[];
+}
+
+export const DestinationsPageGrid: React.FC<DestinationsPageGridProps> = ({ initialDestinations = [] }) => {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
-  const [destinationsList, setDestinationsList] = useState<DestinationItem[]>(destinationsData);
+  const [destinationsList, setDestinationsList] = useState<DestinationItem[]>(initialDestinations);
 
   useEffect(() => {
     let isMounted = true;
@@ -18,11 +22,11 @@ export const DestinationsPageGrid: React.FC = () => {
       try {
         const res = await fetch('/api/destinations');
         const json = await res.json();
-        if (json.success && Array.isArray(json.destinations) && json.destinations.length > 0 && isMounted) {
+        if (json.success && Array.isArray(json.destinations) && isMounted) {
           setDestinationsList(json.destinations);
         }
       } catch {
-        // preserve fallback
+        // network error
       }
     }
     load();
@@ -78,15 +82,26 @@ export const DestinationsPageGrid: React.FC = () => {
         </div>
 
         {/* Destinations Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {filteredDestinations.map((destination: DestinationItem, idx: number) => (
-            <DestinationCard
-              key={destination.id}
-              destination={destination}
-              index={idx}
-            />
-          ))}
-        </div>
+        {filteredDestinations.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {filteredDestinations.map((destination: DestinationItem, idx: number) => (
+              <DestinationCard
+                key={destination.id}
+                destination={destination}
+                index={idx}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="py-12 sm:py-16 text-center rounded-2xl border border-dashed border-black/15 bg-black/[0.02]">
+            <p className="font-manrope font-bold text-base text-midnight mb-1">
+              No destinations in this category
+            </p>
+            <p className="font-manrope text-xs text-slate-500">
+              Try selecting another category or view all valleys.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

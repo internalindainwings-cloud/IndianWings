@@ -22,10 +22,10 @@ export async function GET() {
     return NextResponse.json({
       success: false,
       settings: {
-        phone: '+91 99060 00000',
+        phone: '+91 98118 08387',
         email: 'info@theindianwingscompany.com',
-        whatsapp: '+919906000000',
-        address: 'Boulevard Road, Dal Lake, Srinagar, Jammu & Kashmir 190001',
+        whatsapp: '+91 78277 43041',
+        address: 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar',
         announcementEnabled: false,
         announcementText: '',
         announcementLink: '/packages',

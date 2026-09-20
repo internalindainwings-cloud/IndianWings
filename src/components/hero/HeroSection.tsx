@@ -49,14 +49,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
   }, [slides.length, config.transitionDuration]);
 
   return (
-    <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
+    <section className="relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
       {/* Background stays absolutely positioned with smooth multi-slide transitions */}
       <HeroVideoBackground 
         slides={slides}
         currentSlide={currentSlide}
         transitionType={config.transitionType || 'fade'}
         src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
-        poster={slide.poster || config.posterUrl} 
+        poster={slide.poster || config.posterUrl}
+        mobileSrc={slide.mobileVideoSrc || slide.mobilePoster || config.mobileVideoUrl || config.mobilePosterUrl}
+        mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
       />
       
       {/* Main hero content fills available space — pulled up further towards nav on mobile */}

@@ -9,39 +9,8 @@ export interface EnrichedDestination extends DestinationItem {
 let hasSeededDestinations = false;
 
 export async function ensureDestinationsSeeded(): Promise<void> {
-  if (hasSeededDestinations) return;
-  try {
-    const count = await prisma.destination.count();
-    if (count === 0) {
-      for (let i = 0; i < destinationsData.length; i++) {
-        const d = destinationsData[i];
-        await prisma.destination.upsert({
-          where: { slug: d.slug },
-          update: {},
-          create: {
-            slug: d.slug,
-            name: d.name,
-            region: d.region || 'Jammu & Kashmir',
-            tagline: d.tagline,
-            category: d.category,
-            imageUrl: d.imageUrl,
-            gallery: d.gallery || [d.imageUrl],
-            elevation: d.elevation,
-            bestSeason: d.bestSeason,
-            distanceFromSrinagar: d.distanceFromSrinagar,
-            highlights: d.highlights || [],
-            description: d.description,
-            packageCount: d.packageCount || 0,
-            isActive: true,
-            sortOrder: i + 1,
-          },
-        });
-      }
-    }
-    hasSeededDestinations = true;
-  } catch (err) {
-    console.warn('[DestinationsService] Seed skipped or DB offline; using memory fallback:', err);
-  }
+  // Auto-seeding disabled to prevent dummy destinations from returning
+  return;
 }
 
 export async function getAllDestinations(includeDrafts = false): Promise<EnrichedDestination[]> {
@@ -87,9 +56,22 @@ export async function getAllDestinations(includeDrafts = false): Promise<Enriche
 export async function getDestinationBySlug(slug: string): Promise<EnrichedDestination | null> {
   try {
     await ensureDestinationsSeeded();
-    const r = await prisma.destination.findUnique({
+    let r = await prisma.destination.findUnique({
       where: { slug },
     });
+
+    if (!r) {
+      const altSlug = slug.endsWith('-valley') ? slug.replace(/-valley$/i, '') : `${slug}-valley`;
+      r = await prisma.destination.findFirst({
+        where: {
+          OR: [
+            { slug },
+            { slug: altSlug },
+            { name: { contains: slug.replace(/-/g, ' '), mode: 'insensitive' } },
+          ],
+        },
+      });
+    }
 
     if (r) {
       return {
@@ -117,4 +99,13 @@ export async function getDestinationBySlug(slug: string): Promise<EnrichedDestin
 
   const fallback = destinationsData.find((d) => d.slug === slug || d.id === slug);
   return fallback ? { ...fallback, isActive: true, sortOrder: 1 } : null;
+}
+
+export async function getAllDestinationSlugs(): Promise<string[]> {
+  try {
+    const destinations = await getAllDestinations(false);
+    return destinations.map((d) => d.slug);
+  } catch {
+    return [];
+  }
 }

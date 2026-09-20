@@ -9,44 +9,41 @@ export interface EnrichedActivity extends AdventureActivityItem {
 }
 
 let hasSeededActivities = false;
+let hasCleanedMockActivities = false;
+
+export async function cleanupMockActivities(): Promise<void> {
+  if (hasCleanedMockActivities) return;
+  try {
+    await prisma.activity.deleteMany({
+      where: {
+        slug: {
+          in: [
+            'gulmarg-skiing',
+            'lidder-rafting',
+            'paragliding-srinagar',
+            'snowmobile-gulmarg',
+            'atv-quad-biking',
+            'alpine-lake-trekking',
+            'horseback-trail-riding',
+            'hot-air-ballooning',
+          ],
+        },
+      },
+    });
+    hasCleanedMockActivities = true;
+  } catch (err) {
+    console.warn('[ActivitiesService] Mock activities cleanup error (skipped):', err);
+  }
+}
 
 export async function ensureActivitiesSeeded(): Promise<void> {
-  if (hasSeededActivities) return;
-  try {
-    const count = await prisma.activity.count();
-    if (count === 0) {
-      for (let i = 0; i < ADVENTURE_ACTIVITIES.length; i++) {
-        const a = ADVENTURE_ACTIVITIES[i];
-        const slug = a.id || a.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        await prisma.activity.upsert({
-          where: { slug },
-          update: {},
-          create: {
-            name: a.name,
-            slug,
-            location: a.location,
-            category: a.category,
-            duration: a.duration,
-            difficulty: a.difficulty,
-            season: a.season,
-            imageUrl: a.imageUrl,
-            tags: a.tags || [],
-            badge: a.badge || null,
-            priceFrom: 1500,
-            isActive: true,
-            sortOrder: i + 1,
-          },
-        });
-      }
-    }
-    hasSeededActivities = true;
-  } catch (err) {
-    console.warn('[ActivitiesService] Seed skipped or DB offline; using memory fallback:', err);
-  }
+  // Auto-seeding mock activities is disabled to keep UI & DB dynamic and clean
+  return;
 }
 
 export async function getAllActivities(includeDrafts = false): Promise<EnrichedActivity[]> {
   try {
+    await cleanupMockActivities();
     await ensureActivitiesSeeded();
     const records = await prisma.activity.findMany({
       where: includeDrafts ? {} : { isActive: true },

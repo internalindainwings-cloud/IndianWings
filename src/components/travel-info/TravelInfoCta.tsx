@@ -38,7 +38,7 @@ export const TravelInfoCta: React.FC = () => {
             </button>
 
             <a
-              href="https://wa.me/917006837096?text=Hi%20The%20Indian%20Wings%20Company,%20I%20need%20travel%20information%20and%20custom%20trip%20planning%20for%20Kashmir."
+              href="https://wa.me/917827743041?text=Hi%20The%20Indian%20Wings%20Company,%20I%20need%20travel%20information%20and%20custom%20trip%20planning%20for%20Kashmir."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-manrope font-bold text-xs sm:text-sm shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"

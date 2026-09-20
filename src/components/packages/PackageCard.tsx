@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Phone, Mail, Heart, Snowflake, Users, Check, ArrowRight } from 'lucide-react';
+import { Phone, Mail, Heart, Snowflake, Users, Check, ArrowRight, Gift } from 'lucide-react';
 import { PackageItem } from '@/data/packages';
 import { useEnquiryModal } from '@/context/EnquiryModalContext';
 import { generatePackageSlug } from '@/lib/utilities/slug';
@@ -15,7 +15,7 @@ interface PackageCardProps {
 
 export const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
   const { openModal } = useEnquiryModal();
-  const slug = generatePackageSlug(pkg.title, pkg.duration);
+  const slug = pkg.slug || generatePackageSlug(pkg.title, pkg.duration);
   const [isActive, setIsActive] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -284,6 +284,14 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
 
             <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-midnight/85 backdrop-blur-md text-warm-white text-[9.5px] font-manrope font-semibold border border-white/15 shadow-xs">
               {pkg.duration}
+            </span>
+          </div>
+
+          {/* Bottom-Left Badge: Free Gift Inside */}
+          <div className="absolute bottom-2 left-2 pointer-events-none z-10">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 text-[9.5px] sm:text-[10px] font-manrope font-extrabold shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-white/70 tracking-tight">
+              <Gift size={11} className="text-slate-950 stroke-[2.5]" />
+              <span>Free Gift Inside</span>
             </span>
           </div>
         </Link>

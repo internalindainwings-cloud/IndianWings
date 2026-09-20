@@ -381,6 +381,7 @@ export const TabPackages: React.FC = () => {
           activities: ['Scenic valley transfer', 'Local exploration'],
           meals: 'Breakfast & Dinner Included',
           stay: 'Centrally Heated Hotel / Resort',
+          imageUrl: '',
         },
       ],
     });
@@ -1350,6 +1351,61 @@ export const TabPackages: React.FC = () => {
                             onChange={(e) => handleUpdateDay(idx, 'description', e.target.value)}
                             className="w-full rounded-lg border border-white/10 bg-white/5 p-2 text-white focus:outline-none"
                           />
+                        </div>
+
+                        {/* Day Image (Optional - Appears on right side & mobile preview) */}
+                        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-white/70 font-medium flex items-center gap-1.5 text-xs">
+                              <ImageIcon className="h-3.5 w-3.5 text-[#d98f5b]" />
+                              <span>Day Image (Optional — Shown on Right Side Panel & Mobile)</span>
+                            </label>
+                            {(day.imageUrl || day.image) && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleUpdateDay(idx, 'imageUrl', '');
+                                  handleUpdateDay(idx, 'image', '');
+                                }}
+                                className="text-[11px] text-red-400 hover:text-red-300 font-medium cursor-pointer"
+                              >
+                                Remove Image
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            {(day.imageUrl || day.image) ? (
+                              <div className="relative h-14 w-20 shrink-0 rounded-lg overflow-hidden border border-white/20 bg-black/40">
+                                <Image
+                                  src={day.imageUrl || day.image || ''}
+                                  alt={`Day ${day.day} Image`}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            ) : (
+                              <div className="h-14 w-20 shrink-0 rounded-lg border border-dashed border-white/15 bg-white/[0.02] flex items-center justify-center text-[10px] text-white/30 text-center px-1">
+                                No image
+                              </div>
+                            )}
+
+                            <div className="flex-1">
+                              <input
+                                type="text"
+                                value={day.imageUrl || day.image || ''}
+                                onChange={(e) => {
+                                  handleUpdateDay(idx, 'imageUrl', e.target.value);
+                                  handleUpdateDay(idx, 'image', e.target.value);
+                                }}
+                                className="w-full rounded-lg border border-white/10 bg-white/5 p-2 text-xs text-white placeholder-white/30 focus:border-[#d98f5b] focus:outline-none"
+                                placeholder="Paste image URL (e.g. /images/gallery/gulmarg-snow.jpg or Cloudinary URL)"
+                              />
+                              <p className="text-[10px] text-white/40 mt-1">
+                                Leave blank if no photo is needed for Day {day.day}.
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

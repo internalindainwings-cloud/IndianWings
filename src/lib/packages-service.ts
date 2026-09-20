@@ -181,10 +181,7 @@ function staticToEnriched(item: PackageItem, categorySlug: string, sortOrder: nu
 
 /* ── Static Fallback Repository (Zero Downtime) ────────────────── */
 function getStaticFallbackPackages(): EnrichedPackage[] {
-  const featured = featuredPackagesData.map((p, i) => staticToEnriched(p, 'featured', i + 1));
-  const seasonal = seasonalPackagesData.map((p, i) => staticToEnriched(p, 'seasonal', i + 10));
-  const offbeat = offBeatPackagesData.map((p, i) => staticToEnriched(p, 'offbeat', i + 20));
-  return [...featured, ...seasonal, ...offbeat];
+  return [];
 }
 
 const defaultCategories: PackageCategoryItem[] = [
@@ -193,7 +190,7 @@ const defaultCategories: PackageCategoryItem[] = [
   { id: 'cat-offbeat', slug: 'offbeat', name: 'Off-Beat Expeditions', description: 'Untouched Himalayan valleys: Gurez, Doodhpathri, Bangus & Sinthan Top', sortOrder: 3, isActive: true },
 ];
 
-/* ── Auto-Seed Database if Empty ───────────────────────────────── */
+/* ── Auto-Seed Database Categories if Empty ────────────────────── */
 let hasSeeded = false;
 
 export async function ensureDatabaseSeeded(): Promise<void> {
@@ -215,52 +212,12 @@ export async function ensureDatabaseSeeded(): Promise<void> {
         });
       }
     }
-
-    const pkgCount = await prisma.package.count();
-    if (pkgCount === 0) {
-      const fallbackList = getStaticFallbackPackages();
-      const categories = await prisma.packageCategory.findMany();
-      const catMap = new Map(categories.map((c) => [c.slug, c.id]));
-
-      for (const p of fallbackList) {
-        await prisma.package.create({
-          data: {
-            slug: p.slug,
-            title: p.title,
-            categorySlug: p.categorySlug,
-            categoryId: catMap.get(p.categorySlug) || null,
-            duration: p.duration,
-            tag: p.tag,
-            tagColor: p.tagColor,
-            imageUrl: p.imageUrl,
-            videoUrl: p.videoUrl,
-            galleryUrls: p.galleryUrls,
-            rating: p.rating,
-            reviewCount: p.reviewCount,
-            destinations: p.destinations,
-            inclusions: p.inclusions,
-            exclusions: p.exclusions,
-            highlights: p.highlights,
-            startingPrice: p.startingPrice,
-            originalPrice: p.originalPrice,
-            isFeatured: p.isFeatured,
-            isActive: p.isActive,
-            sortOrder: p.sortOrder,
-            itinerary: p.itinerary as unknown as object,
-            metaTitle: p.metaTitle,
-            metaDescription: p.metaDescription,
-            keywords: p.keywords,
-            canonicalUrl: p.canonicalUrl,
-            noIndex: p.noIndex,
-          },
-        });
-      }
-    }
     hasSeeded = true;
   } catch (err) {
-    console.warn('[PackagesService] Auto-seed skipped or database offline; using memory fallback:', err);
+    console.warn('[PackagesService] Category check skipped or database offline:', err);
   }
 }
+
 
 /* ── Public Retrieval APIs ─────────────────────────────────────── */
 

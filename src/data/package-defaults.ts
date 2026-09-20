@@ -5,6 +5,8 @@ export interface ItineraryDay {
   activities?: string[];
   meals?: string; // e.g. "Breakfast & Dinner Included"
   stay?: string;  // e.g. "4-Star Luxury Resort in Gulmarg"
+  imageUrl?: string;
+  image?: string;
 }
 
 export interface PackageStayItem {

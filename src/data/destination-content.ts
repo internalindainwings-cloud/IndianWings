@@ -471,7 +471,108 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
       },
     ],
   },
+  'gurez-valley': {
+    tagline: 'Explore the Offbeat Side of Kashmir',
+    attractions: [
+      {
+        id: 'gur-1',
+        name: 'Habba Khatoon Peak & Spring',
+        category: 'Most Loved Places',
+        subtitle: 'Pyramid-Shaped Mountain Peak',
+        description: 'Legendary pyramid mountain named after the 16th-century poetess-queen Habba Khatoon, rising abruptly above the turquoise Kishanganga River with a crystal-clear spring waterfall at its base.',
+        imageUrl: '/images/gallery/kashmir-summit-view.png',
+        duration: '2–3 Hours',
+      },
+      {
+        id: 'gur-2',
+        name: 'Dawar Heritage Settlement',
+        category: 'Hills & Mountains',
+        subtitle: 'Ancient Dard-Shin Center',
+        description: 'The central township of Gurez, characterized by traditional log-wood architecture, ancient archaeological relics, and warm Dard-Shin mountain hospitality.',
+        imageUrl: '/images/gallery/pahalgam-valley.jpg',
+        duration: 'Half Day',
+      },
+      {
+        id: 'gur-3',
+        name: 'Tulail Valley Expedition',
+        category: 'Hills & Mountains',
+        subtitle: 'Untouched Wilderness Border Valley',
+        description: 'A breathtaking 40 km excursion deeper past Dawar through rustic wooden hamlets, wildflower pastures, and scenic Kishanganga riverbends.',
+        imageUrl: '/images/gallery/sonmarg-glacier.jpg',
+        duration: 'Full Day',
+      },
+      {
+        id: 'gur-4',
+        name: 'Riverside Log Camps & Stays',
+        category: 'Resorts & Stays',
+        subtitle: 'Offbeat Alpine Stays',
+        description: 'Peaceful wooden cottages and comfortable riverside camping setups right beside the rushing Kishanganga River with mountain views.',
+        imageUrl: '/images/gallery/houseboat-kashmir.jpg',
+        duration: 'Overnight',
+      },
+      {
+        id: 'gur-5',
+        name: 'Traditional Dardic & Kashmiri Kehwa',
+        category: 'Foodie Hotspots',
+        subtitle: 'Mountain Flavors & Breads',
+        description: 'Warm up with saffron and wild herb kehwa accompanied by traditional tandoori flatbreads and home-cooked Kashmiri dishes.',
+        imageUrl: '/images/gallery/shikara-dal-lake.jpg',
+        duration: '1 Hour',
+      },
+      {
+        id: 'gur-6',
+        name: 'Razdan Pass (11,672 ft) Crossing',
+        category: 'Adventure',
+        subtitle: 'Thrilling Mountain Pass',
+        description: 'Dramatic high-altitude mountain pass offering 360-degree vistas of the Pir Panjal, Mt Harmukh, and the roaring Kishanganga canyon.',
+        imageUrl: '/images/gallery/gulmarg-snow.jpg',
+        duration: '2 Hours',
+      },
+    ],
+    seasons: [
+      {
+        id: 'gur-s1',
+        period: 'MAY - SEP',
+        label: 'Peak Season',
+        whatToExpect: 'Passes are fully open, lush emerald meadows, blooming wildflowers, and refreshing crisp alpine breezes.',
+        thingsYoullLove: [
+          'Spectacular views of Habba Khatoon Peak and the azure Kishanganga River',
+          'Full-day expeditions to remote Tulail Valley wooden villages',
+          'Pleasant daytime temperatures ideal for photography and village walks',
+        ],
+      },
+      {
+        id: 'gur-s2',
+        period: 'OCT - NOV',
+        label: 'Moderate Season',
+        whatToExpect: 'Golden autumn grasslands, crisp morning chill, and early dusting of snow on the upper Himalayan ridgelines.',
+        thingsYoullLove: [
+          'Striking contrast between golden valley fields and snow-capped peaks',
+          'Peaceful, unhurried atmosphere with genuine local cultural interaction',
+          'Crisp mountain visibility ideal for landscape photography',
+        ],
+      },
+      {
+        id: 'gur-s3',
+        period: 'DEC - APR',
+        label: 'Off-season',
+        whatToExpect: 'Heavy snowfall across Razdan Pass closes surface access; valley rests under pristine white winter silence.',
+        thingsYoullLove: [
+          'Untouched deep winter snow cover across the entire Himalayan basin',
+        ],
+      },
+    ],
+    festivals: [
+      {
+        name: 'Gurez Tourism & Culture Festival',
+        month: 'July – August',
+        description: 'Annual cultural celebration organized by J&K Tourism showcasing traditional Shin-Dard folk dance, music, handicrafts, and local cuisines.',
+      },
+    ],
+  },
 };
+
+destinationDetailContentData['gurez'] = destinationDetailContentData['gurez-valley'];
 
 // Fallback content generator for off-beat / other destinations (Gurez, Doodhpathri, Yusmarg, Sinthan Top, Bangus)
 export function getDestinationContentBySlug(slug: string, name: string): DestinationDetailContent {

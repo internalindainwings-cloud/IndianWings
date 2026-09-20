@@ -3,14 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react';
-import { featuredPackagesData, PackageItem } from '@/data/packages';
+import { PackageItem } from '@/data/packages';
 import { PackageCard } from './PackageCard';
 
 const ITEMS_PER_PAGE = 3;
 
-export const PackagesSection = () => {
-  const [packagesList, setPackagesList] = useState<PackageItem[]>(featuredPackagesData);
+interface PackagesSectionProps {
+  initialPackages?: PackageItem[];
+}
+
+export const PackagesSection: React.FC<PackagesSectionProps> = ({ initialPackages = [] }) => {
+  const [packagesList, setPackagesList] = useState<PackageItem[]>(initialPackages);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoaded, setIsLoaded] = useState<boolean>(initialPackages.length > 0);
 
   useEffect(() => {
     let isMounted = true;
@@ -18,11 +23,13 @@ export const PackagesSection = () => {
       try {
         const res = await fetch('/api/packages?category=featured');
         const json = await res.json();
-        if (json.success && Array.isArray(json.packages) && json.packages.length > 0 && isMounted) {
+        if (json.success && Array.isArray(json.packages) && isMounted) {
           setPackagesList(json.packages);
         }
       } catch {
-        // preserve fallback
+        // network error
+      } finally {
+        if (isMounted) setIsLoaded(true);
       }
     }
     load();
@@ -75,67 +82,80 @@ export const PackagesSection = () => {
         </div>
 
         {/* 3. Cards Grid (Consistent 3-Column Layout) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {currentPackages.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} />
-          ))}
-        </div>
+        {packagesList.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {currentPackages.map((pkg) => (
+              <PackageCard key={pkg.id} pkg={pkg} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 sm:py-14 text-center rounded-2xl border border-dashed border-black/15 bg-black/[0.02]">
+            <p className="font-manrope font-bold text-sm sm:text-base text-midnight mb-1">
+              No featured packages found
+            </p>
+            <p className="font-manrope text-xs text-slate-500">
+              Check back soon for new handcrafted packages.
+            </p>
+          </div>
+        )}
 
         {/* 4. Pagination Controls */}
-        <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3.5 border-t border-black/8">
-          <p className="text-xs sm:text-sm font-manrope text-[#64748B]">
-            Showing <span className="font-bold text-[#0B1F2A]">{startIndex + 1}–{startIndex + currentPackages.length}</span> of <span className="font-bold text-[#0B1F2A]">{packagesList.length}</span> featured packages
-          </p>
+        {packagesList.length > ITEMS_PER_PAGE && (
+          <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3.5 border-t border-black/8">
+            <p className="text-xs sm:text-sm font-manrope text-[#64748B]">
+              Showing <span className="font-bold text-[#0B1F2A]">{startIndex + 1}–{startIndex + currentPackages.length}</span> of <span className="font-bold text-[#0B1F2A]">{packagesList.length}</span> featured packages
+            </p>
 
-          {/* Pagination Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
-                currentPage === 1
-                  ? 'border-black/5 text-black/30 cursor-not-allowed bg-transparent'
-                  : 'border-black/15 text-[#0B1F2A] hover:bg-saffron hover:border-saffron hover:text-midnight bg-white shadow-2xs'
-              }`}
-            >
-              <ChevronLeft size={16} />
-            </button>
+            {/* Pagination Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                aria-label="Previous page"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
+                  currentPage === 1
+                    ? 'border-black/5 text-black/30 cursor-not-allowed bg-transparent'
+                    : 'border-black/15 text-[#0B1F2A] hover:bg-saffron hover:border-saffron hover:text-midnight bg-white shadow-2xs'
+                }`}
+              >
+                <ChevronLeft size={16} />
+              </button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-              const isActive = currentPage === page;
-              return (
-                <button
-                  key={page}
-                  type="button"
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-9 h-9 rounded-full text-xs font-manrope font-bold transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? 'bg-saffron text-midnight shadow-xs scale-105'
-                      : 'bg-white hover:bg-black/5 text-[#0B1F2A] border border-black/10'
-                  }`}
-                >
-                  {page}
-                </button>
-              );
-            })}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                const isActive = currentPage === page;
+                return (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-9 h-9 rounded-full text-xs font-manrope font-bold transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? 'bg-saffron text-midnight shadow-xs scale-105'
+                        : 'bg-white hover:bg-black/5 text-[#0B1F2A] border border-black/10'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
 
-            <button
-              type="button"
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
-                currentPage === totalPages
-                  ? 'border-black/5 text-black/30 cursor-not-allowed bg-transparent'
-                  : 'border-black/15 text-[#0B1F2A] hover:bg-saffron hover:border-saffron hover:text-midnight bg-white shadow-2xs'
-              }`}
-            >
-              <ChevronRight size={16} />
-            </button>
+              <button
+                type="button"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                aria-label="Next page"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
+                  currentPage === totalPages
+                    ? 'border-black/5 text-black/30 cursor-not-allowed bg-transparent'
+                    : 'border-black/15 text-[#0B1F2A] hover:bg-saffron hover:border-saffron hover:text-midnight bg-white shadow-2xs'
+                }`}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

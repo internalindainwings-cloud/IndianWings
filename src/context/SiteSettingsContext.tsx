@@ -21,7 +21,7 @@ const defaultState: SiteSettingsState = {
   whatsapp: siteConfig.contact.phone,
   whatsappUrl: siteConfig.contact.whatsappUrl,
   email: siteConfig.contact.email,
-  address: 'Boulevard Road, Dal Lake, Srinagar, Jammu & Kashmir 190001',
+  address: 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar',
   announcementEnabled: false,
   announcementText: '',
   announcementLink: '/packages',
@@ -41,7 +41,7 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
         if (json.success && json.settings && mounted) {
           const s = json.settings;
           const cleanPhone = (s.phone || siteConfig.contact.phone).replace(/[^0-9]/g, '');
-          const cleanWhatsapp = (s.whatsapp || s.phone || '919906000000').replace(/[^0-9]/g, '');
+          const cleanWhatsapp = (s.whatsapp || '917827743041').replace(/[^0-9]/g, '');
           setSettings({
             phone: s.phone || siteConfig.contact.phone,
             displayPhone: s.phone || siteConfig.contact.displayPhone,

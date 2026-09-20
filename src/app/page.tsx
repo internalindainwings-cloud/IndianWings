@@ -9,6 +9,8 @@ import { OffBeatPackagesSection } from "@/components/packages/OffBeatPackagesSec
 import { DestinationsSection } from "@/components/destinations/DestinationsSection";
 import { BrandsSection } from "@/components/brands/BrandsSection";
 import { FounderMessage } from "@/components/team/FounderMessage";
+import { getAllPackages } from "@/lib/packages-service";
+import { getAllDestinations } from "@/lib/destinations-service";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
@@ -50,14 +52,14 @@ const homeJsonLd = {
       url: siteUrl,
       logo: `${siteUrl}/assets/client_logo.png`,
       description: 'Premier travel agency specializing in handcrafted Kashmir holiday itineraries, verified houseboat stays, and private mountain transport.',
-      telephone: '+919906000000',
+      telephone: '+919811808387',
       email: 'info@theindianwingscompany.com',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Boulevard Road, Dal Lake',
+        streetAddress: 'Sheikh Palace, 2nd Floor, Kanyar Chowk',
         addressLocality: 'Srinagar',
         addressRegion: 'Jammu & Kashmir',
-        postalCode: '190001',
+        postalCode: '190003',
         addressCountry: 'IN',
       },
     },
@@ -76,7 +78,15 @@ const homeJsonLd = {
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const heroConfig = await getHeroConfig();
+  const [heroConfig, allPackages, allDestinations] = await Promise.all([
+    getHeroConfig(),
+    getAllPackages(false),
+    getAllDestinations(false),
+  ]);
+
+  const featuredPackages = allPackages.filter((p) => p.categorySlug === 'featured');
+  const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal');
+  const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat');
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
@@ -91,16 +101,16 @@ export default async function Home() {
       <WhyTravelWithUsSection />
       
       {/* 1. Featured Packages */}
-      <PackagesSection />
+      <PackagesSection initialPackages={featuredPackages} />
 
       {/* 2. Seasonal Packages */}
-      <SeasonalPackagesSection />
+      <SeasonalPackagesSection initialPackages={seasonalPackages} />
 
       {/* 3. Off Beat Packages */}
-      <OffBeatPackagesSection />
+      <OffBeatPackagesSection initialPackages={offBeatPackages} />
 
       {/* 4. Featured Destinations */}
-      <DestinationsSection />
+      <DestinationsSection initialDestinations={allDestinations} />
 
       {/* 5. Trusted Partners Marquee Bar (Compact, No Giant Heading) */}
       <BrandsSection />

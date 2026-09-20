@@ -38,10 +38,10 @@ export const TabSettings: React.FC = () => {
       const json = await res.json();
       if (json.success && json.settings) {
         setSettings(json.settings);
-        setPhone(json.settings.phone || '+91 99060 00000');
+        setPhone(json.settings.phone || '+91 98118 08387');
         setEmail(json.settings.email || 'info@theindianwingscompany.com');
-        setWhatsapp(json.settings.whatsapp || '+919906000000');
-        setAddress(json.settings.address || 'Boulevard Road, Dal Lake, Srinagar, Jammu & Kashmir 190001');
+        setWhatsapp(json.settings.whatsapp || '+91 78277 43041');
+        setAddress(json.settings.address || 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar');
         setAnnouncementEnabled(Boolean(json.settings.announcementEnabled));
         setAnnouncementText(json.settings.announcementText || '');
         setAnnouncementLink(json.settings.announcementLink || '/packages');
@@ -228,7 +228,7 @@ export const TabSettings: React.FC = () => {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 99060 00000"
+                placeholder="+91 98118 08387"
                 className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-[#d98f5b] focus:outline-none font-mono"
               />
             </div>
@@ -243,7 +243,7 @@ export const TabSettings: React.FC = () => {
                 required
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value)}
-                placeholder="+919906000000"
+                placeholder="+91 78277 43041"
                 className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-emerald-400 focus:outline-none font-mono"
               />
             </div>
@@ -273,7 +273,7 @@ export const TabSettings: React.FC = () => {
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Boulevard Road, Dal Lake, Srinagar, Jammu & Kashmir 190001"
+                placeholder="The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar"
                 className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-red-400 focus:outline-none"
               />
             </div>
