@@ -21,6 +21,7 @@ import {
   Award,
   Star,
   Smartphone,
+  MapPin,
 } from 'lucide-react';
 import type { HeroHomepageConfig, HeroSlide, HeroTrustPill } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
@@ -86,6 +87,7 @@ export const TabHeroHomepage: React.FC = () => {
     const newSlide: HeroSlide = {
       id: `slide-${Date.now()}`,
       title: `Kashmir Slide ${config.slides.length + 1}`,
+      location: 'Shree Mata Vaishno Devi, Katra',
       videoSrc: config.videoUrl || defaultHeroConfig.videoUrl,
       poster: config.posterUrl || defaultHeroConfig.posterUrl,
       mobilePoster: config.mobilePosterUrl || '',
@@ -664,6 +666,20 @@ export const TabHeroHomepage: React.FC = () => {
                         onChange={(e) => handleUpdateSlide(idx, 'mobileVideoSrc', e.target.value)}
                         placeholder="https://... (Portrait 9:16)"
                         className="w-full rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs font-mono text-white placeholder-white/30 focus:border-saffron focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-[#C5A45E] mb-1 flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        Location Tag (Right Bottom on Hero with 📍 Icon)
+                      </label>
+                      <input
+                        type="text"
+                        value={slide.location || ''}
+                        onChange={(e) => handleUpdateSlide(idx, 'location', e.target.value)}
+                        placeholder="e.g. Shree Mata Vaishno Devi, Katra"
+                        className="w-full rounded-md border border-[#C5A45E]/40 bg-white/5 px-2.5 py-1.5 text-xs text-white placeholder-white/30 focus:border-saffron focus:outline-none"
                       />
                     </div>
                   </div>

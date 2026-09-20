@@ -1,6 +1,7 @@
 export interface HeroSlide {
   id: string;
   title: string;
+  location?: string;
   videoSrc: string;
   poster: string;
   mobilePoster?: string;
@@ -47,18 +48,21 @@ export const defaultHeroConfig: HeroHomepageConfig = {
     {
       id: 'dal-lake',
       title: 'Shree Vaishno Devi Sacred Valley',
+      location: 'Shree Mata Vaishno Devi, Katra',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },
     {
       id: 'gulmarg',
       title: 'Gulmarg Alpine Meadows',
+      location: 'Gulmarg Meadow of Flowers, Kashmir',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },
     {
       id: 'pahalgam',
       title: 'Pahalgam Valley & Lidder River',
+      location: 'Pahalgam Valley & Betaab Valley, Kashmir',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },
