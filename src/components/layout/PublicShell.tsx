@@ -8,6 +8,7 @@ import { FloatingContactActions } from '@/components/common/FloatingContactActio
 import { EnquiryModalProvider } from '@/context/EnquiryModalContext';
 import { EnquiryModal } from '@/components/forms/EnquiryModal';
 import { SiteSettingsProvider } from '@/context/SiteSettingsContext';
+import { BotpressChatbot } from '@/components/chat/BotpressChatbot';
 
 export const PublicShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
@@ -38,6 +39,7 @@ export const PublicShell: React.FC<{ children: React.ReactNode }> = ({ children 
         <main className="flex-1">{children}</main>
         <Footer />
         <FloatingContactActions />
+        <BotpressChatbot />
         <EnquiryModal />
       </EnquiryModalProvider>
     </SiteSettingsProvider>

@@ -14,6 +14,7 @@ const envSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1, 'UPSTASH_REDIS_REST_TOKEN is required'),
 
   FRONTEND_ORIGIN: z.string().url('FRONTEND_ORIGIN must be a valid URL'),
+  BOTPRESS_WEBHOOK_SECRET: z.string().min(32, 'BOTPRESS_WEBHOOK_SECRET must be at least 32 characters'),
 
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.string().optional(),

@@ -11,6 +11,7 @@ import healthRouter from './routes/health';
 import enquiriesRouter from './routes/enquiries';
 import itineraryRouter from './routes/itinerary';
 import telemetryRouter from './routes/telemetry';
+import botpressRouter from './routes/integrations/botpress';
 
 // Public routes
 import publicPackagesRouter from './routes/public/packages';
@@ -77,7 +78,7 @@ export function createApp() {
       },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'x-bp-secret'],
     })
   );
 
@@ -96,6 +97,7 @@ export function createApp() {
   app.use('/api/enquiries', enquiriesRouter);
   app.use('/api/itinerary', itineraryRouter);
   app.use('/api/telemetry', telemetryRouter);
+  app.use('/api/integrations/botpress', botpressRouter);
 
   // Public read routes
   app.use('/api/public/packages', publicPackagesRouter);

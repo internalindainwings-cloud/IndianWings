@@ -6,6 +6,7 @@ import { requireAdmin } from '../middleware/auth';
 import { requestSizeLimit } from '../middleware/requestSize';
 import { validateOrigin } from '../middleware/originGuard';
 import { enquirySchema } from '../validations/enquiry';
+import { createEnquiryRecord } from '../services/enquiry';
 import { env } from '../config/env';
 
 const router = Router();
@@ -43,59 +44,15 @@ router.post(
         return;
       }
 
-      const data = validation.data;
       const userAgent = (req.headers['user-agent'] || 'unknown').slice(0, 500);
+      const result = await createEnquiryRecord(validation.data, { ipAddress, userAgent });
 
-      // Idempotency: prevent duplicate submissions within 2 minutes from same phone
-      const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
-      const existing = await prisma.enquiry.findFirst({
-        where: { phone: data.phone, createdAt: { gte: twoMinutesAgo } },
-        select: { id: true },
-      });
-
-      if (existing) {
-        res.json({ success: true, id: existing.id, message: 'Enquiry already received.' });
+      if (result.duplicate) {
+        res.json({ success: true, id: result.id, message: result.message });
         return;
       }
 
-      const enquiry = await prisma.enquiry.create({
-        data: {
-          name: data.name,
-          phone: data.phone,
-          email: data.email || null,
-          travelDate: data.travelDate,
-          guests: data.guests,
-          tripType: data.tripType,
-          message: data.message || null,
-          source: data.source || 'website_inline',
-          utmSource: data.utmSource || null,
-          utmMedium: data.utmMedium || null,
-          utmCampaign: data.utmCampaign || null,
-          utmTerm: data.utmTerm || null,
-          utmContent: data.utmContent || null,
-          gclid: data.gclid || null,
-          fbclid: data.fbclid || null,
-          referrer: data.referrer || null,
-          visitorId: data.visitorId || null,
-          ipAddress,
-          userAgent,
-        },
-      });
-
-      if (data.visitorId) {
-        prisma.userSession.updateMany({
-          where: { visitorId: data.visitorId },
-          data: {
-            converted: true,
-            enquiryId: enquiry.id,
-            name: data.name,
-            phone: data.phone,
-            email: data.email || null,
-          },
-        }).catch((err: unknown) => console.warn('[Telemetry] Could not link session to enquiry:', err));
-      }
-
-      res.status(201).json({ success: true, id: enquiry.id, message: 'Enquiry received and saved successfully.' });
+      res.status(201).json({ success: true, id: result.id, message: result.message });
     } catch (err) {
       console.error('[Enquiries] POST error:', err);
       res.status(500).json({

@@ -16,6 +16,7 @@ const health_1 = __importDefault(require("./routes/health"));
 const enquiries_1 = __importDefault(require("./routes/enquiries"));
 const itinerary_1 = __importDefault(require("./routes/itinerary"));
 const telemetry_1 = __importDefault(require("./routes/telemetry"));
+const botpress_1 = __importDefault(require("./routes/integrations/botpress"));
 // Public routes
 const packages_1 = __importDefault(require("./routes/public/packages"));
 const destinations_1 = __importDefault(require("./routes/public/destinations"));
@@ -72,7 +73,7 @@ function createApp() {
         },
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'x-bp-secret'],
     }));
     // Parse cookies & JSON payloads
     app.use((0, cookie_parser_1.default)());
@@ -86,6 +87,7 @@ function createApp() {
     app.use('/api/enquiries', enquiries_1.default);
     app.use('/api/itinerary', itinerary_1.default);
     app.use('/api/telemetry', telemetry_1.default);
+    app.use('/api/integrations/botpress', botpress_1.default);
     // Public read routes
     app.use('/api/public/packages', packages_1.default);
     app.use('/api/public/destinations', destinations_1.default);

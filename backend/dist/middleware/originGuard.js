@@ -17,6 +17,10 @@ function validateOrigin(req, res, next) {
     if (SAFE_METHODS.has(req.method)) {
         return next();
     }
+    // Server-to-server webhook integrations are authenticated independently via cryptographic secrets
+    if (req.path.startsWith('/api/integrations') || req.baseUrl.startsWith('/api/integrations')) {
+        return next();
+    }
     const origin = getClientOrigin(req);
     if (!origin) {
         res.status(403).json({ success: false, error: 'Forbidden: missing Origin header' });
