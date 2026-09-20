@@ -15,25 +15,19 @@ declare global {
   }
 }
 
-const BOTPRESS_SCRIPT_URL = 'https://cdn.botpress.cloud/webchat/v2.2/inject.js';
+const DEFAULT_INJECT_SCRIPT = 'https://cdn.botpress.cloud/webchat/v5.0/inject.js';
+const DEFAULT_CONFIG_SCRIPT = 'https://files.bpcontent.cloud/2026/09/20/17/20260920174145-5B30LJ6M.js';
 const STYLE_TAG_ID = 'tiwc-botpress-positioning-styles';
-const SCRIPT_TAG_ID = 'tiwc-botpress-inject-script';
+const INJECT_SCRIPT_ID = 'tiwc-botpress-inject-script';
+const CONFIG_SCRIPT_ID = 'tiwc-botpress-config-script';
 
 export const BotpressChatbot: React.FC = () => {
   const clientId = process.env.NEXT_PUBLIC_BOTPRESS_CLIENT_ID?.trim();
+  const injectUrl = process.env.NEXT_PUBLIC_BOTPRESS_INJECT_URL?.trim() || DEFAULT_INJECT_SCRIPT;
+  const configUrl = process.env.NEXT_PUBLIC_BOTPRESS_CONFIG_URL?.trim() || DEFAULT_CONFIG_SCRIPT;
 
   useEffect(() => {
-    // Graceful exit if Client ID is not configured
-    if (!clientId) {
-      if (process.env.NODE_ENV === 'development') {
-        console.info(
-          '[The Indian Wings Company] Botpress Chatbot: NEXT_PUBLIC_BOTPRESS_CLIENT_ID is not configured. Webchat widget is disabled.'
-        );
-      }
-      return;
-    }
-
-    // Inject CSS rule ensuring approved positioning:
+    // Inject approved positioning CSS rules
     // Mobile: bottom 84px, right 16px (avoids mobile bottom dock)
     // Desktop: bottom 24px, right 24px
     if (!document.getElementById(STYLE_TAG_ID)) {
@@ -62,66 +56,60 @@ export const BotpressChatbot: React.FC = () => {
       document.head.appendChild(styleEl);
     }
 
-    // If window.botpress is already available and initialized, skip reinjecting
-    if (window.botpress && typeof window.botpress.init === 'function') {
-      try {
-        window.botpress.init({
-          clientId,
-          botId: clientId,
-        });
-      } catch (err) {
+    // Helper to inject config script once inject.js is ready
+    const loadConfigScript = () => {
+      if (document.getElementById(CONFIG_SCRIPT_ID)) return;
+      const configScript = document.createElement('script');
+      configScript.id = CONFIG_SCRIPT_ID;
+      configScript.src = configUrl;
+      configScript.defer = true;
+      configScript.onload = () => {
         if (process.env.NODE_ENV === 'development') {
-          console.warn('[The Indian Wings Company] Botpress re-init notice:', err);
+          console.info('[The Indian Wings Company] Botpress Webchat loaded and initialized successfully.');
         }
-      }
+      };
+      configScript.onerror = () => {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[The Indian Wings Company] Failed to load Botpress config script.');
+        }
+      };
+      document.body.appendChild(configScript);
+    };
+
+    // If inject script is already present and window.botpress exists, just load config
+    if (document.getElementById(INJECT_SCRIPT_ID)) {
+      loadConfigScript();
       return;
     }
 
-    // Check if script element already exists
-    let scriptEl = document.getElementById(SCRIPT_TAG_ID) as HTMLScriptElement | null;
-    if (!scriptEl) {
-      scriptEl = document.createElement('script');
-      scriptEl.id = SCRIPT_TAG_ID;
-      scriptEl.src = BOTPRESS_SCRIPT_URL;
-      scriptEl.async = true;
-      scriptEl.defer = true;
+    // Step 1: Inject official Botpress webchat engine
+    const injectScript = document.createElement('script');
+    injectScript.id = INJECT_SCRIPT_ID;
+    injectScript.src = injectUrl;
+    injectScript.async = true;
 
-      scriptEl.onload = () => {
-        if (window.botpress && typeof window.botpress.init === 'function') {
-          try {
-            window.botpress.init({
-              clientId,
-              botId: clientId,
-            });
-            console.info('[The Indian Wings Company] Botpress Webchat initialized successfully.');
-          } catch (err) {
-            if (process.env.NODE_ENV === 'development') {
-              console.warn('[The Indian Wings Company] Failed to initialize Botpress Webchat:', err);
-            }
-          }
-        }
-      };
+    injectScript.onload = () => {
+      // Step 2: Inject dedicated Botpress bot configuration bundle
+      loadConfigScript();
+    };
 
-      scriptEl.onerror = () => {
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(
-            '[The Indian Wings Company] Failed to load Botpress Webchat script from CDN. The site will continue functioning normally.'
-          );
-        }
-      };
+    injectScript.onerror = () => {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(
+          '[The Indian Wings Company] Failed to load Botpress Webchat script from CDN. Site continues functioning normally.'
+        );
+      }
+    };
 
-      document.body.appendChild(scriptEl);
-    }
+    document.body.appendChild(injectScript);
 
     return () => {
-      // Optional cleanup on unmount
       const existingStyle = document.getElementById(STYLE_TAG_ID);
       if (existingStyle) {
         existingStyle.remove();
       }
     };
-  }, [clientId]);
+  }, [clientId, injectUrl, configUrl]);
 
-  // Renders nothing directly in JSX; Botpress injects its own widget asynchronously
   return null;
 };
