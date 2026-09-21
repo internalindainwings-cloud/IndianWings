@@ -46,7 +46,8 @@ function SmallVideoCard({ review }: { review: VideoReview }) {
         <video 
           src={review.videoUrl} 
           controls 
-          autoPlay 
+          autoPlay
+          preload="none"
           className="w-full h-full object-cover"
         />
       )}

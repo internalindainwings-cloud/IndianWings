@@ -6,9 +6,13 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const connectionString =
-    process.env.DATABASE_URL ||
-    'postgresql://postgres:postgres@localhost:5432/neondb?sslmode=require';
+  const connectionString = process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      'Missing required environment variable: DATABASE_URL. Please set DATABASE_URL in your environment.'
+    );
+  }
 
   const adapter = new PrismaPg({ connectionString });
 

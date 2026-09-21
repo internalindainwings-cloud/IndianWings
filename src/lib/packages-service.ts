@@ -276,7 +276,9 @@ function parseItineraryPayload(raw: any, defaultTitle: string, defaultDestinatio
   };
 }
 
-export async function getAllPackages(includeDrafts = false): Promise<EnrichedPackage[]> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchAllPackagesFromDb(includeDrafts = false): Promise<EnrichedPackage[]> {
   try {
     await ensureDatabaseSeeded();
     const records = await prisma.package.findMany({
@@ -335,7 +337,20 @@ export async function getAllPackages(includeDrafts = false): Promise<EnrichedPac
   return includeDrafts ? fallback : fallback.filter((p) => p.isActive);
 }
 
-export async function getPackageBySlug(slug: string): Promise<EnrichedPackage | null> {
+const getCachedActivePackages = unstable_cache(
+  async () => fetchAllPackagesFromDb(false),
+  ['packages-active'],
+  { tags: ['packages'], revalidate: 3600 }
+);
+
+export async function getAllPackages(includeDrafts = false): Promise<EnrichedPackage[]> {
+  if (includeDrafts) {
+    return fetchAllPackagesFromDb(true);
+  }
+  return getCachedActivePackages();
+}
+
+async function fetchPackageBySlugFromDb(slug: string): Promise<EnrichedPackage | null> {
   try {
     await ensureDatabaseSeeded();
     let r = await prisma.package.findUnique({
@@ -411,7 +426,17 @@ export async function getPackageBySlug(slug: string): Promise<EnrichedPackage | 
   return null;
 }
 
-export async function getCategories(): Promise<PackageCategoryItem[]> {
+const getCachedPackageBySlug = unstable_cache(
+  async (slug: string) => fetchPackageBySlugFromDb(slug),
+  ['package-by-slug'],
+  { tags: ['packages'], revalidate: 3600 }
+);
+
+export async function getPackageBySlug(slug: string): Promise<EnrichedPackage | null> {
+  return getCachedPackageBySlug(slug);
+}
+
+async function fetchCategoriesFromDb(): Promise<PackageCategoryItem[]> {
   try {
     await ensureDatabaseSeeded();
     const categories = await prisma.packageCategory.findMany({
@@ -440,6 +465,16 @@ export async function getCategories(): Promise<PackageCategoryItem[]> {
   }
 
   return defaultCategories;
+}
+
+const getCachedCategories = unstable_cache(
+  async () => fetchCategoriesFromDb(),
+  ['package-categories'],
+  { tags: ['packages'], revalidate: 3600 }
+);
+
+export async function getCategories(): Promise<PackageCategoryItem[]> {
+  return getCachedCategories();
 }
 
 export function getCategoryLabel(categorySlugOrTag?: string | null): string {

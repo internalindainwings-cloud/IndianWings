@@ -12,44 +12,48 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
     }
 
-    // 2. Fetch Verified Leads (Last 100)
-    const leads = await prisma.enquiry.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100,
-    });
-
-    // 3. Fetch User Sessions with their Event Timelines (Last 50)
-    const sessions = await prisma.userSession.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-      include: {
-        events: {
-          orderBy: { timestamp: 'asc' },
-          take: 30, // Limit events per session to prevent oversized payloads
-        },
-      },
-    });
-
-    // 4. Compute High-Level Metrics
-    const totalLeads = await prisma.enquiry.count();
-    const totalSessions = await prisma.userSession.count();
-    const convertedSessions = await prisma.userSession.count({ where: { converted: true } });
-
-    // Leads today
+    // 2. Compute High-Level Metrics & Fetch Data Concurrently
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
-    const leadsToday = await prisma.enquiry.count({
-      where: { createdAt: { gte: startOfToday } },
-    });
 
-    // Average duration across active sessions
-    const avgDurationResult = await prisma.userSession.aggregate({
-      _avg: { durationSeconds: true },
-      where: { durationSeconds: { gt: 0 } },
-    });
+    const [
+      leads,
+      sessions,
+      totalLeads,
+      totalSessions,
+      convertedSessions,
+      leadsToday,
+      avgDurationResult,
+    ] = await Promise.all([
+      // Fetch Verified Leads (Last 100)
+      prisma.enquiry.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+      }),
+      // Fetch User Sessions with their Event Timelines (Last 50)
+      prisma.userSession.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+        include: {
+          events: {
+            orderBy: { timestamp: 'asc' },
+            take: 30, // Limit events per session to prevent oversized payloads
+          },
+        },
+      }),
+      prisma.enquiry.count(),
+      prisma.userSession.count(),
+      prisma.userSession.count({ where: { converted: true } }),
+      prisma.enquiry.count({ where: { createdAt: { gte: startOfToday } } }),
+      prisma.userSession.aggregate({
+        _avg: { durationSeconds: true },
+        where: { durationSeconds: { gt: 0 } },
+      }),
+    ]);
+
     const avgDuration = Math.round(avgDurationResult._avg.durationSeconds || 0);
 
-    // 5. Aggregate Marketing Campaigns
+    // 3. Aggregate Marketing Campaigns
     const campaignMap: Record<string, { clicks: number; converted: number }> = {};
     for (const s of sessions) {
       const sourceKey = s.utmSource || s.referrer || 'Direct / Organic';
@@ -69,20 +73,27 @@ export async function GET() {
       rate: data.clicks > 0 ? Math.round((data.converted / data.clicks) * 100) : 0,
     }));
 
-    return NextResponse.json({
-      success: true,
-      stats: {
-        totalLeads,
-        leadsToday,
-        totalSessions,
-        convertedSessions,
-        conversionRate: totalSessions > 0 ? ((convertedSessions / totalSessions) * 100).toFixed(1) : '0.0',
-        avgDurationSeconds: avgDuration,
+    return NextResponse.json(
+      {
+        success: true,
+        stats: {
+          totalLeads,
+          leadsToday,
+          totalSessions,
+          convertedSessions,
+          conversionRate: totalSessions > 0 ? ((convertedSessions / totalSessions) * 100).toFixed(1) : '0.0',
+          avgDurationSeconds: avgDuration,
+        },
+        leads,
+        sessions,
+        campaigns,
       },
-      leads,
-      sessions,
-      campaigns,
-    });
+      {
+        headers: {
+          'Cache-Control': 'no-store, private',
+        },
+      }
+    );
   } catch (err) {
     console.error('[API /api/admin/data] Error fetching admin data:', err);
     return NextResponse.json({ error: 'Failed to fetch admin data' }, { status: 500 });

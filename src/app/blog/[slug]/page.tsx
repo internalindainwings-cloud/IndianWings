@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock, ArrowLeft, ArrowRight, Share2, Sparkles, CheckCircle2, Phone, MessageSquare } from 'lucide-react';
 import { getBlogBySlug, getAllBlogs } from '@/lib/blogs-service';
 import { siteConfig } from '@/config/site-config';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 interface BlogDetailPageProps {
   params: Promise<{
@@ -58,7 +60,11 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const { slug } = await params;
-  const blog = await getBlogBySlug(slug);
+  const [blog, headersList] = await Promise.all([
+    getBlogBySlug(slug),
+    headers(),
+  ]);
+  const nonce = headersList.get('x-nonce') ?? undefined;
 
   if (!blog) {
     notFound();
@@ -126,11 +132,13 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
       />
 
       <article className="min-h-screen bg-background text-charcoal pb-20">
@@ -163,7 +171,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
             {/* Author Bar */}
             <div className="flex items-center gap-3 pt-2">
               <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
-                <Image src={blog.author.avatar} alt={blog.author.name} fill className="object-cover" />
+                <Image src={blog.author.avatar} alt={blog.author.name} fill sizes="40px" className="object-cover" />
               </div>
               <div>
                 <div className="text-xs font-bold text-white">{blog.author.name}</div>
@@ -176,7 +184,14 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         {/* Featured Image */}
         <div className="max-w-4xl mx-auto px-5 sm:px-8 -mt-8 relative z-10">
           <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/20">
-            <Image src={blog.imageUrl} alt={blog.title} fill priority className="object-cover" />
+            <Image
+              src={blog.imageUrl}
+              alt={blog.title}
+              fill
+              priority
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="object-cover"
+            />
           </div>
         </div>
 

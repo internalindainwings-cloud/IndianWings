@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyAdminPassword, createAdminToken, COOKIE_NAME, SESSION_MAX_AGE } from '@/lib/security/admin-auth';
-import { checkAdminLoginRateLimit } from '@/lib/security/rate-limit';
+import { checkAdminLoginRateLimit, resolveClientIp } from '@/lib/security/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
     // 1. Rate Limiting Protection via Upstash Redis (Max 5 login attempts per 15 minutes per IP)
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const clientIp = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
+    const clientIp = resolveClientIp(request);
 
     const rateLimit = await checkAdminLoginRateLimit(clientIp);
     if (!rateLimit.success) {
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest) {
       value: token,
       httpOnly: true,
       secure: isSecure,
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: SESSION_MAX_AGE,
       path: '/',
     });

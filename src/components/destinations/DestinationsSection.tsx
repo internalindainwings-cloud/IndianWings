@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { DestinationItem } from '@/data/destinations';
 import { DestinationCard } from './DestinationCard';
@@ -10,26 +10,7 @@ interface DestinationsSectionProps {
 }
 
 export const DestinationsSection: React.FC<DestinationsSectionProps> = ({ initialDestinations = [] }) => {
-  const [destinationsList, setDestinationsList] = useState<DestinationItem[]>(initialDestinations);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function load() {
-      try {
-        const res = await fetch('/api/destinations');
-        const json = await res.json();
-        if (json.success && Array.isArray(json.destinations) && isMounted) {
-          setDestinationsList(json.destinations);
-        }
-      } catch {
-        // network error
-      }
-    }
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const [destinationsList] = useState<DestinationItem[]>(initialDestinations);
 
   // Show the first 3 destinations
   const iconicDestinations = destinationsList.slice(0, 3);

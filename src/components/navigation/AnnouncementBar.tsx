@@ -1,41 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Sparkles, X, ChevronRight } from 'lucide-react';
+import { useSiteSettings } from '@/context/SiteSettingsContext';
 
 export const AnnouncementBar: React.FC = () => {
-  const [data, setData] = useState<{
-    enabled: boolean;
-    text: string;
-    link: string;
-  } | null>(null);
+  const settings = useSiteSettings();
   const [dismissed, setDismissed] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function fetchSettings() {
-      try {
-        const res = await fetch('/api/settings');
-        const json = await res.json();
-        if (json.success && json.settings && isMounted) {
-          setData({
-            enabled: Boolean(json.settings.announcementEnabled),
-            text: json.settings.announcementText || '',
-            link: json.settings.announcementLink || '/packages',
-          });
-        }
-      } catch {
-        // silent fail
-      }
-    }
-    fetchSettings();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (!data || !data.enabled || !data.text || dismissed) {
+  if (!settings.announcementEnabled || !settings.announcementText || dismissed) {
     return null;
   }
 
@@ -44,9 +18,9 @@ export const AnnouncementBar: React.FC = () => {
       <div className="max-w-[1920px] mx-auto flex items-center justify-between gap-2">
         <div className="flex-1 flex items-center justify-center gap-2 truncate">
           <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-200 animate-pulse" />
-          <span className="truncate">{data.text}</span>
+          <span className="truncate">{settings.announcementText}</span>
           <Link
-            href={data.link}
+            href={settings.announcementLink || '/packages'}
             className="hidden sm:inline-flex items-center gap-0.5 text-amber-100 hover:text-white underline font-bold shrink-0 ml-1"
           >
             <span>Learn More</span>

@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPackageBySlug, getAllPackages } from '@/lib/packages-service';
 import { PackageHero } from '@/components/packages/detail/PackageHero';
 import { PackageAfterHero } from '@/components/packages/detail/PackageAfterHero';
 import { defaultPackageFaqs } from '@/data/package-faqs';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 interface PackageDetailPageProps {
   params: Promise<{
@@ -74,10 +76,16 @@ export async function generateStaticParams() {
   }));
 }
 
+export const dynamic = 'force-dynamic';
+
 /* ── 3. Page Component ────────────────────────────────────────── */
 export default async function PackageDetailPage({ params }: PackageDetailPageProps) {
   const { slug } = await params;
-  const pkg = await getPackageBySlug(slug);
+  const [pkg, headersList] = await Promise.all([
+    getPackageBySlug(slug),
+    headers(),
+  ]);
+  const nonce = headersList.get('x-nonce') ?? undefined;
 
   if (!pkg) {
     notFound();
@@ -160,15 +168,18 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
       {/* ── Inject JSON-LD Rich Snippets into <head> ────────────── */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(touristTripSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(touristTripSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }}
       />
 
       <main className="min-h-screen bg-background text-[#0B1F2A] pb-12 sm:pb-16">

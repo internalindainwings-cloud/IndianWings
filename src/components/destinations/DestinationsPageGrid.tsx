@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { DestinationItem } from '@/data/destinations';
 import { DestinationCard } from './DestinationCard';
 
+import { fetchClientDestinations } from '@/lib/client-data';
+
 type CategoryFilter = 'All' | 'Iconic' | 'Alpine' | 'Off-Beat';
 
 const CATEGORIES: CategoryFilter[] = ['All', 'Iconic', 'Alpine', 'Off-Beat'];
@@ -20,10 +22,9 @@ export const DestinationsPageGrid: React.FC<DestinationsPageGridProps> = ({ init
     let isMounted = true;
     async function load() {
       try {
-        const res = await fetch('/api/destinations');
-        const json = await res.json();
+        const json = await fetchClientDestinations();
         if (json.success && Array.isArray(json.destinations) && isMounted) {
-          setDestinationsList(json.destinations);
+          setDestinationsList(json.destinations as unknown as DestinationItem[]);
         }
       } catch {
         // network error

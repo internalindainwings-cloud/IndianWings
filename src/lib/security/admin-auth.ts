@@ -78,7 +78,9 @@ export async function isAuthenticatedAdmin(): Promise<boolean> {
 }
 
 /**
- * Verifies admin password using timing-safe comparison
+ * Verifies admin password using timing-safe comparison.
+ * Both inputs are hashed to a fixed-length SHA-256 digest before
+ * comparison, eliminating the length-leaking early-return.
  */
 export function verifyAdminPassword(password: string): boolean {
   const expectedPassword = process.env.ADMIN_PASSWORD;
@@ -87,11 +89,12 @@ export function verifyAdminPassword(password: string): boolean {
     return false;
   }
 
-  const inputBuffer = Buffer.from(password);
-  const expectedBuffer = Buffer.from(expectedPassword);
+  // Hash both values to a constant 32-byte digest so timingSafeEqual
+  // always operates on equal-length buffers without leaking password length.
+  const inputHash = crypto.createHash('sha256').update(password).digest();
+  const expectedHash = crypto.createHash('sha256').update(expectedPassword).digest();
 
-  if (inputBuffer.length !== expectedBuffer.length) return false;
-  return crypto.timingSafeEqual(inputBuffer, expectedBuffer);
+  return crypto.timingSafeEqual(inputHash, expectedHash);
 }
 
 export { COOKIE_NAME, SESSION_MAX_AGE };

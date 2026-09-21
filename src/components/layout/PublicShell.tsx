@@ -1,16 +1,23 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { Navbar } from '@/components/navigation/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { FloatingContactActions } from '@/components/common/FloatingContactActions';
 import { EnquiryModalProvider } from '@/context/EnquiryModalContext';
-import { EnquiryModal } from '@/components/forms/EnquiryModal';
 import { SiteSettingsProvider } from '@/context/SiteSettingsContext';
 import { BotpressChatbot } from '@/components/chat/BotpressChatbot';
 
-export const PublicShell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const EnquiryModal = dynamic(
+  () => import('@/components/forms/EnquiryModal').then((m) => ({ default: m.EnquiryModal })),
+  { ssr: false }
+);
+
+
+
+export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string }> = ({ children, nonce }) => {
   const pathname = usePathname();
   const isAdmin = pathname ? pathname.startsWith('/admin') : false;
 
@@ -39,7 +46,7 @@ export const PublicShell: React.FC<{ children: React.ReactNode }> = ({ children 
         <main className="flex-1">{children}</main>
         <Footer />
         <FloatingContactActions />
-        <BotpressChatbot />
+        <BotpressChatbot nonce={nonce} />
         <EnquiryModal />
       </EnquiryModalProvider>
     </SiteSettingsProvider>

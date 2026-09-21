@@ -6,7 +6,9 @@ export { type GalleryCategory, DEFAULT_GALLERY_CATEGORIES };
 
 const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'gallery-categories.json');
 
-export async function getAllGalleryCategories(): Promise<GalleryCategory[]> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchAllGalleryCategories(): Promise<GalleryCategory[]> {
   try {
     const raw = await fs.readFile(DATA_FILE, 'utf-8');
     const parsed = JSON.parse(raw);
@@ -18,6 +20,12 @@ export async function getAllGalleryCategories(): Promise<GalleryCategory[]> {
   }
   return DEFAULT_GALLERY_CATEGORIES;
 }
+
+export const getAllGalleryCategories = unstable_cache(
+  fetchAllGalleryCategories,
+  ['gallery-categories'],
+  { tags: ['gallery'], revalidate: 3600 }
+);
 
 export async function addGalleryCategory(cat: { name: string; icon?: string; id?: string }): Promise<GalleryCategory> {
   const current = await getAllGalleryCategories();

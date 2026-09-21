@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import { headers } from "next/headers";
+import nextDynamic from "next/dynamic";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { getHeroConfig } from "@/lib/hero-service";
 import { LeadFormSection } from "@/components/forms/LeadFormSection";
@@ -8,10 +10,25 @@ import { SeasonalPackagesSection } from "@/components/packages/SeasonalPackagesS
 import { OffBeatPackagesSection } from "@/components/packages/OffBeatPackagesSection";
 import { DestinationsSection } from "@/components/destinations/DestinationsSection";
 import { BrandsSection } from "@/components/brands/BrandsSection";
-import { HomeGallerySection } from "@/components/gallery/HomeGallerySection";
 import { FounderMessage } from "@/components/team/FounderMessage";
 import { getAllPackages } from "@/lib/packages-service";
 import { getAllDestinations } from "@/lib/destinations-service";
+import { safeJsonLd } from "@/lib/utilities/safe-json-ld";
+import { optimizeCloudinaryUrl } from "@/lib/utilities/cloudinary";
+
+const HomeGallerySection = nextDynamic(
+  () => import('@/components/gallery/HomeGallerySection').then((m) => ({ default: m.HomeGallerySection })),
+  {
+    loading: () => (
+      <section
+        id="gallery"
+        aria-label="Kashmir Photo &amp; Video Gallery"
+        className="w-full bg-[#FAF9F5] py-12 sm:py-16 lg:py-20 border-t border-black/8 min-h-[480px]"
+      />
+    ),
+  }
+);
+
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
@@ -79,11 +96,13 @@ const homeJsonLd = {
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const [heroConfig, allPackages, allDestinations] = await Promise.all([
+  const [heroConfig, allPackages, allDestinations, headersList] = await Promise.all([
     getHeroConfig(),
     getAllPackages(false),
     getAllDestinations(false),
+    headers(),
   ]);
+  const nonce = headersList.get('x-nonce') ?? undefined;
 
   // 1. Featured Packages: Dynamically driven by admin isFeatured toggle (falls back to Classic packages if none selected)
   const explicitFeatured = allPackages.filter((p) => p.isFeatured && p.isActive);
@@ -93,13 +112,55 @@ export default async function Home() {
   const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal' && p.isActive);
   const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat' && p.isActive);
 
+  // Derive active Slide 0 LCP image URLs for server-side responsive preload
+  const firstSlide = heroConfig.slides?.[0];
+  const rawDesktop = (firstSlide?.videoSrc && firstSlide.videoSrc.trim().length > 0)
+    ? firstSlide.videoSrc.trim()
+    : (firstSlide?.poster && firstSlide.poster.trim().length > 0)
+    ? firstSlide.poster.trim()
+    : (heroConfig.videoUrl || heroConfig.posterUrl || 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png');
+  const rawMobile = (firstSlide?.mobilePoster && firstSlide.mobilePoster.trim().length > 0)
+    ? firstSlide.mobilePoster.trim()
+    : (firstSlide?.mobileVideoSrc && firstSlide.mobileVideoSrc.trim().length > 0)
+    ? firstSlide.mobileVideoSrc.trim()
+    : rawDesktop;
+
+  const desktopLcpUrl = optimizeCloudinaryUrl(rawDesktop);
+  const mobileLcpUrl = optimizeCloudinaryUrl(rawMobile);
+  const isLcpImage = desktopLcpUrl.includes('/image/upload/') || /\.(jpeg|jpg|png|webp|avif)$/i.test(desktopLcpUrl);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(homeJsonLd) }}
       />
+
+      {/* Preload active Hero LCP image with responsive media queries matching the <picture> srcset */}
+      {isLcpImage && (
+        <>
+          <link
+            rel="preload"
+            as="image"
+            media="(min-width: 768px)"
+            href={`/_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1920&q=75`}
+            imageSrcSet={`/_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1200&q=75 1200w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1920&q=75 1920w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=2048&q=75 2048w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=3840&q=75 3840w`}
+            imageSizes="100vw"
+            fetchPriority="high"
+          />
+          <link
+            rel="preload"
+            as="image"
+            media="(max-width: 767px)"
+            href={`/_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1080&q=75`}
+            imageSrcSet={`/_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=640&q=75 640w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1200&q=75 1200w`}
+            imageSizes="100vw"
+            fetchPriority="high"
+          />
+        </>
+      )}
 
       <HeroSection heroConfig={heroConfig} />
       <LeadFormSection />

@@ -1,9 +1,8 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
 import { Phone, MessageCircle } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
+
 
 interface FounderMessageProps {
   imageSrc?: string;
@@ -34,7 +33,6 @@ export function FounderMessage({
               fill
               className="object-cover object-top"
               sizes="(max-width: 640px) 176px, 208px"
-              priority
             />
           </div>
 

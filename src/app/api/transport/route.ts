@@ -8,11 +8,18 @@ export async function GET() {
       getAllRoutes(false),
     ]);
 
-    return NextResponse.json({
-      success: true,
-      vehicles,
-      routes,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        vehicles,
+        routes,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      }
+    );
   } catch (err) {
     console.error('[API /api/transport GET] Error:', err);
     return NextResponse.json({ error: 'Failed to fetch transport data' }, { status: 500 });

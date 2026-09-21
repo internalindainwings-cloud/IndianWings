@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getSiteSettings, updateSiteSettings } from '@/lib/settings-service';
 
@@ -26,6 +27,14 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const updated = await updateSiteSettings(body);
+
+    try {
+      revalidateTag('settings', 'max');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
+
     return NextResponse.json({ success: true, settings: updated });
   } catch (err) {
     console.error('[API /api/admin/settings POST] Error:', err);

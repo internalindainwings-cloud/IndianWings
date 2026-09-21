@@ -1,13 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { DesktopNavigation } from './DesktopNavigation';
-import { MobileMenu } from './MobileMenu';
 import { MobileBottomDock } from './MobileBottomDock';
 import { AnnouncementBar } from './AnnouncementBar';
+
+const MobileMenu = dynamic(
+  () => import('./MobileMenu').then((m) => ({ default: m.MobileMenu })),
+  { ssr: false }
+);
+
+
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,7 +52,7 @@ export const Navbar = () => {
                 className={`object-contain w-auto drop-shadow-md hover:scale-105 transition-all duration-300 origin-left ${
                   isScrolled ? 'h-8 md:h-9 xl:h-9.5' : 'h-8.5 md:h-9.5 xl:h-10'
                 }`} 
-                priority
+                loading="eager"
               />
             </Link>
           </div>
@@ -71,8 +78,10 @@ export const Navbar = () => {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
-      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      {/* Mobile Menu Overlay - Rendered only when open to avoid downloading chunk on desktop / initial load */}
+      {isMobileMenuOpen && (
+        <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+      )}
 
       {/* Mobile Bottom Navigation Capsule Dock (Option 2) */}
       <MobileBottomDock

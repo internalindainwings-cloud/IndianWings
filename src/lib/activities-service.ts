@@ -8,32 +8,9 @@ export interface EnrichedActivity extends AdventureActivityItem {
   sortOrder: number;
 }
 
-let hasSeededActivities = false;
-let hasCleanedMockActivities = false;
-
 export async function cleanupMockActivities(): Promise<void> {
-  if (hasCleanedMockActivities) return;
-  try {
-    await prisma.activity.deleteMany({
-      where: {
-        slug: {
-          in: [
-            'gulmarg-skiing',
-            'lidder-rafting',
-            'paragliding-srinagar',
-            'snowmobile-gulmarg',
-            'atv-quad-biking',
-            'alpine-lake-trekking',
-            'horseback-trail-riding',
-            'hot-air-ballooning',
-          ],
-        },
-      },
-    });
-    hasCleanedMockActivities = true;
-  } catch (err) {
-    console.warn('[ActivitiesService] Mock activities cleanup error (skipped):', err);
-  }
+  // Mock activities already cleaned up; no-op to prevent write query overhead on read paths
+  return;
 }
 
 export async function ensureActivitiesSeeded(): Promise<void> {

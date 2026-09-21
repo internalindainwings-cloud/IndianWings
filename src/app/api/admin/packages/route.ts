@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getAllPackages, generatePackageSlug } from '@/lib/packages-service';
@@ -121,6 +122,14 @@ export async function POST(request: NextRequest) {
         noIndex: Boolean(noIndex),
       },
     });
+
+    try {
+      revalidateTag('packages', 'max');
+      revalidatePath('/packages');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
 
     return NextResponse.json({ success: true, package: newPackage });
   } catch (err) {

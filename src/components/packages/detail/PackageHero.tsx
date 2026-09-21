@@ -231,7 +231,7 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                   }`}
                   title={`View Photo ${idx + 1}`}
                 >
-                  <Image src={url} alt={`${pkg.title} scene ${idx + 1}`} fill className="object-cover" />
+                  <Image src={url} alt={`${pkg.title} scene ${idx + 1}`} fill sizes="40px" className="object-cover" />
                 </button>
               ))}
             </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 
@@ -37,6 +38,14 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       },
     });
 
+    try {
+      revalidateTag('transport', 'max');
+      revalidatePath('/transport');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
+
     return NextResponse.json({ success: true, vehicle: updated });
   } catch (err) {
     console.error('[API /api/admin/transport/vehicles/[id] PUT] Error:', err);
@@ -55,6 +64,14 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
     await prisma.transportVehicle.delete({
       where: { id },
     });
+
+    try {
+      revalidateTag('transport', 'max');
+      revalidatePath('/transport');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

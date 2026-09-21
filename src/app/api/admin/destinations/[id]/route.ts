@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { optimizeCloudinaryUrl, optimizeCloudinaryUrls } from '@/lib/utilities/cloudinary';
@@ -40,6 +41,17 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       },
     });
 
+    try {
+      revalidateTag('destinations', 'max');
+      revalidatePath('/destinations');
+      if (updated.slug) {
+        revalidatePath(`/destinations/${updated.slug}`);
+      }
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
+
     return NextResponse.json({ success: true, destination: updated });
   } catch (err) {
     console.error('[API /api/admin/destinations/[id] PUT] Error:', err);
@@ -58,6 +70,14 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
     await prisma.destination.delete({
       where: { id },
     });
+
+    try {
+      revalidateTag('destinations', 'max');
+      revalidatePath('/destinations');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

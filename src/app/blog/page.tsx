@@ -1,8 +1,10 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock, ArrowRight, BookOpen, Compass, Sparkles } from 'lucide-react';
 import { getAllBlogs } from '@/lib/blogs-service';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 export const metadata: Metadata = {
   title: 'Kashmir Travel Guides, Itinerary Tips & Expert Advice | The Indian Wings Company',
@@ -18,7 +20,11 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogListingPage() {
-  const blogs = await getAllBlogs(false);
+  const [blogs, headersList] = await Promise.all([
+    getAllBlogs(false),
+    headers(),
+  ]);
+  const nonce = headersList.get('x-nonce') ?? undefined;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
   const blogListSchema = {
@@ -42,7 +48,8 @@ export default async function BlogListingPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListSchema) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(blogListSchema) }}
       />
 
       <main className="w-full min-h-screen bg-background text-charcoal pb-16">
@@ -115,7 +122,7 @@ export default async function BlogListingPage() {
                   <div className="pt-3 border-t border-black/6 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="relative w-6 h-6 rounded-full overflow-hidden bg-slate-200">
-                        <Image src={blog.author.avatar} alt={blog.author.name} fill className="object-cover" />
+                        <Image src={blog.author.avatar} alt={blog.author.name} fill sizes="24px" className="object-cover" />
                       </div>
                       <span className="text-[11px] font-bold text-midnight truncate max-w-[120px]">
                         {blog.author.name}

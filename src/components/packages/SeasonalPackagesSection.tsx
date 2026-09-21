@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PackageItem } from '@/data/packages';
@@ -14,37 +14,21 @@ interface SeasonalPackagesSectionProps {
   initialPackages?: PackageItem[];
 }
 
+function applySeasonFallback(packages: PackageItem[]): PackageItem[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return packages.map((p: any) => ({
+    ...p,
+    season: p.season || (p.tag?.toLowerCase().includes('winter') ? 'winter' : p.tag?.toLowerCase().includes('spring') ? 'spring' : p.tag?.toLowerCase().includes('autumn') ? 'autumn' : 'all'),
+  }));
+}
+
+
 export const SeasonalPackagesSection: React.FC<SeasonalPackagesSectionProps> = ({ initialPackages = [] }) => {
   const [activeFilter, setActiveFilter] = useState<SeasonFilter>('all');
-  const [packagesList, setPackagesList] = useState<PackageItem[]>(initialPackages);
+  const [packagesList] = useState<PackageItem[]>(() => applySeasonFallback(initialPackages));
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [isLoaded, setIsLoaded] = useState<boolean>(initialPackages.length > 0);
 
-  useEffect(() => {
-    let isMounted = true;
-    async function load() {
-      try {
-        const res = await fetch('/api/packages?category=seasonal');
-        const json = await res.json();
-        if (json.success && Array.isArray(json.packages) && isMounted) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const mapped = json.packages.map((p: any) => ({
-            ...p,
-            season: p.season || (p.tag?.toLowerCase().includes('winter') ? 'winter' : p.tag?.toLowerCase().includes('spring') ? 'spring' : p.tag?.toLowerCase().includes('autumn') ? 'autumn' : 'all'),
-          }));
-          setPackagesList(mapped);
-        }
-      } catch {
-        // network error
-      } finally {
-        if (isMounted) setIsLoaded(true);
-      }
-    }
-    load();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+
 
   // Filter packages by season
   const filteredPackages = activeFilter === 'all'

@@ -1,24 +1,64 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import https from 'https';
 import fs from 'fs/promises';
 import path from 'path';
 import type { GalleryItem } from '@/lib/gallery-service';
 import { getAllGalleryItems } from '@/lib/gallery-service';
+import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'src', 'data', 'gallery-items.json');
 
-const apiKey = '726715866667296';
-const apiSecret = 'Bu-i6s82MHs6Lmke-2zCFPMYzQU';
-const cloudName = 'wmwdypan';
-const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString('base64');
+interface CloudinaryConfig {
+  apiKey: string;
+  apiSecret: string;
+  cloudName: string;
+  authHeader: string;
+}
 
-function fetchCloudinary(type: 'image' | 'video'): Promise<any[]> {
+function getCloudinaryConfig(): CloudinaryConfig | null {
+  let apiKey = process.env.CLOUDINARY_API_KEY;
+  let apiSecret = process.env.CLOUDINARY_API_SECRET;
+  let cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+  // Fallback: extract credentials from CLOUDINARY_URL if separate variables are not set
+  if ((!apiKey || !apiSecret || !cloudName) && process.env.CLOUDINARY_URL) {
+    try {
+      const sanitizedUrl = process.env.CLOUDINARY_URL.replace('cloudinary://', 'http://');
+      const parsed = new URL(sanitizedUrl);
+      if (!apiKey && parsed.username) {
+        apiKey = decodeURIComponent(parsed.username).replace(/^[<]+|[>]+$/g, '');
+      }
+      if (!apiSecret && parsed.password) {
+        apiSecret = decodeURIComponent(parsed.password).replace(/^[<]+|[>]+$/g, '');
+      }
+      if (!cloudName && parsed.hostname) {
+        cloudName = parsed.hostname;
+      }
+    } catch {
+      // Ignore parse failure; validation below will flag missing parameters
+    }
+  }
+
+  if (!apiKey || !apiSecret || !cloudName) {
+    return null;
+  }
+
+  return {
+    apiKey,
+    apiSecret,
+    cloudName,
+    authHeader: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}`,
+  };
+}
+
+function fetchCloudinary(type: 'image' | 'video', config: CloudinaryConfig): Promise<any[]> {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'api.cloudinary.com',
-      path: `/v1_1/${cloudName}/resources/${type}?max_results=100`,
+      path: `/v1_1/${config.cloudName}/resources/${type}?max_results=100`,
       method: 'GET',
-      headers: { Authorization: `Basic ${auth}` },
+      headers: { Authorization: config.authHeader },
     };
     const req = https.request(options, (res) => {
       let data = '';
@@ -146,9 +186,37 @@ function detectMeta(publicId: string, isVideo = false) {
 
 export async function POST() {
   try {
+    const isAuthed = await isAuthenticatedAdmin();
+    if (!isAuthed) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Guard: filesystem writes are not persistent in serverless/production environments.
+    // Vercel and Cloud Run mount the build artifact as a read-only layer — writes
+    // succeed locally but are silently lost on the next cold start.
+    // Migrate gallery data to the database (Prisma) to enable this feature in production.
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        {
+          error:
+            'sync-cloudinary uses a local JSON filesystem write that is not persistent in production. ' +
+            'Migrate gallery items to the PostgreSQL database to use this feature in production.',
+        },
+        { status: 501 }
+      );
+    }
+
+    const config = getCloudinaryConfig();
+    if (!config) {
+      return NextResponse.json(
+        { error: 'Cloudinary server configuration is missing. Set CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, and CLOUDINARY_CLOUD_NAME (or CLOUDINARY_URL).' },
+        { status: 500 }
+      );
+    }
+
     const [images, videos] = await Promise.all([
-      fetchCloudinary('image'),
-      fetchCloudinary('video'),
+      fetchCloudinary('image', config),
+      fetchCloudinary('video', config),
     ]);
 
     const existingItems = await getAllGalleryItems();
@@ -213,13 +281,20 @@ export async function POST() {
     const merged = [...newItems, ...existingItems];
     await fs.writeFile(DATA_FILE_PATH, JSON.stringify(merged, null, 2), 'utf-8');
 
+    try {
+      revalidateTag('gallery', 'max');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
+
     return NextResponse.json({
       success: true,
       addedCount: newItems.length,
       totalCount: merged.length,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error('[API /api/admin/gallery/sync-cloudinary POST] Error:', err);
-    return NextResponse.json({ error: err.message || 'Failed to sync Cloudinary media' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to sync Cloudinary media' }, { status: 500 });
   }
 }

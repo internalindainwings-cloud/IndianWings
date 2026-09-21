@@ -14,27 +14,10 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialConfig }) => {
-  const [config, setConfig] = useState<HeroHomepageConfig>(initialConfig || defaultHeroConfig);
+  const config = initialConfig || defaultHeroConfig;
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // If initialConfig changes from server revalidation
-  useEffect(() => {
-    if (initialConfig) {
-      setConfig(initialConfig);
-    }
-  }, [initialConfig]);
 
-  // Always sync with latest API config on client mount
-  useEffect(() => {
-    fetch('/api/hero')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && data.hero) {
-          setConfig(data.hero);
-        }
-      })
-      .catch((err) => console.warn('Could not load hero config:', err));
-  }, []);
 
   const slides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
   const slide = slides[currentSlide % slides.length] || slides[0];
@@ -43,28 +26,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
     : (slide.title && slide.title.trim().length > 0)
     ? slide.title.trim()
     : '';
-
-  const [desktopAspectRatio, setDesktopAspectRatio] = useState<number>(1916 / 821);
-
-  // Dynamic aspect ratio calculation on desktop based on active slide image
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const rawMediaUrl = (slide.videoSrc && slide.videoSrc.trim().length > 0)
-      ? slide.videoSrc.trim()
-      : (slide.poster && slide.poster.trim().length > 0)
-      ? slide.poster.trim()
-      : (config.videoUrl || config.posterUrl);
-
-    if (!rawMediaUrl) return;
-
-    const img = new window.Image();
-    img.src = rawMediaUrl;
-    img.onload = () => {
-      if (img.naturalWidth && img.naturalHeight && img.naturalHeight > 0) {
-        setDesktopAspectRatio(img.naturalWidth / img.naturalHeight);
-      }
-    };
-  }, [slide, config]);
 
   // Auto-advance carousel slides based on configured duration
   useEffect(() => {

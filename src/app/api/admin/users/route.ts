@@ -41,20 +41,20 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 });
     }
 
-    // 2. Fetch all Enquiries (ordered latest first)
-    const enquiries = await prisma.enquiry.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
-
-    // 3. Fetch all UserSessions that captured an email (e.g. downloads, leads)
-    const sessions = await prisma.userSession.findMany({
-      where: {
-        email: {
-          not: null,
+    // 2. Fetch all Enquiries and UserSessions concurrently
+    const [enquiries, sessions] = await Promise.all([
+      prisma.enquiry.findMany({
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.userSession.findMany({
+        where: {
+          email: {
+            not: null,
+          },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
 
     // 4. Map and Aggregate unique users by Email (or Phone fallback)
     const userMap = new Map<string, AdminUserRecord>();
@@ -201,16 +201,23 @@ export async function GET() {
       (u) => new Date(u.firstSeen) >= sevenDaysAgo
     ).length;
 
-    return NextResponse.json({
-      success: true,
-      users: allUsers,
-      stats: {
-        totalUsers,
-        usersWithPhone,
-        convertedUsers,
-        newThisWeek,
+    return NextResponse.json(
+      {
+        success: true,
+        users: allUsers,
+        stats: {
+          totalUsers,
+          usersWithPhone,
+          convertedUsers,
+          newThisWeek,
+        },
       },
-    });
+      {
+        headers: {
+          'Cache-Control': 'no-store, private',
+        },
+      }
+    );
   } catch (err) {
     console.error('[API /api/admin/users] Error fetching users list:', err);
     return NextResponse.json({ error: 'Failed to fetch users database' }, { status: 500 });

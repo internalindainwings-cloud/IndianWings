@@ -7,7 +7,11 @@ import { initAttribution } from '@/lib/utilities/attribution';
 import { initOfflineSyncListener } from '@/lib/utilities/offline-queue';
 import { initTelemetryTracker, recordRouteChange } from '@/lib/utilities/telemetry';
 
-export const AnalyticsScripts: React.FC = () => {
+interface AnalyticsScriptsProps {
+  nonce?: string;
+}
+
+export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => {
   const pathname = usePathname();
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
@@ -46,8 +50,9 @@ export const AnalyticsScripts: React.FC = () => {
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
             strategy="afterInteractive"
+            nonce={nonce}
           />
-          <Script id="google-analytics" strategy="afterInteractive">
+          <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -62,11 +67,12 @@ export const AnalyticsScripts: React.FC = () => {
 
       {/* Microsoft Clarity (Heatmaps, Screen Recordings, Drop-offs) */}
       {clarityId && (
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="afterInteractive" nonce={nonce}>
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                ${nonce ? `t.setAttribute('nonce', '${nonce}');` : ''}
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             })(window, document, "clarity", "script", "${clarityId}");
           `}

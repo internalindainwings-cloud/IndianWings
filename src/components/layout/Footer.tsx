@@ -7,6 +7,7 @@ import { Mail, Phone, MapPin, ArrowRight, CheckCircle2, Heart } from 'lucide-rea
 import { siteConfig } from '@/config/site-config';
 import { useEnquiryModal } from '@/context/EnquiryModalContext';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
+import { fetchClientDestinations, fetchClientPackages } from '@/lib/client-data';
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -69,12 +70,11 @@ export const Footer: React.FC = () => {
     let isMounted = true;
 
     // 1. Fetch Destinations
-    fetch('/api/destinations')
-      .then((res) => res.json())
+    fetchClientDestinations()
       .then((data) => {
         if (!isMounted) return;
         if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
-          const links: FooterLinkItem[] = data.destinations.slice(0, 5).map((d: any) => ({
+          const links: FooterLinkItem[] = data.destinations.slice(0, 5).map((d) => ({
             label: d.tagline ? `${d.name} (${d.tagline})` : d.name,
             href: `/destinations/${d.slug}`,
           }));
@@ -91,12 +91,11 @@ export const Footer: React.FC = () => {
       });
 
     // 2. Fetch Packages
-    fetch('/api/packages')
-      .then((res) => res.json())
+    fetchClientPackages()
       .then((data) => {
         if (!isMounted) return;
         if (data.success && Array.isArray(data.packages) && data.packages.length > 0) {
-          const links: FooterLinkItem[] = data.packages.slice(0, 3).map((p: any) => ({
+          const links: FooterLinkItem[] = data.packages.slice(0, 3).map((p) => ({
             label: p.title.length > 36 ? `${p.title.slice(0, 36)}...` : p.title,
             href: `/packages/${p.slug}`,
           }));
@@ -134,6 +133,7 @@ export const Footer: React.FC = () => {
         { label: 'Clothing & Packing Guide', href: '/bucket-list/travel-information#clothing' },
         { label: 'Permits, Prepaid SIMs & ATMs', href: '/bucket-list/travel-information#permits' },
         { label: 'Local Kashmiri Shopping Guide', href: '/bucket-list/shopping' },
+        { label: 'Kashmir Travel Blog & Guides', href: '/blog' },
         { label: 'Explore Kashmir Bucket List →', href: '/bucket-list' },
       ],
     },

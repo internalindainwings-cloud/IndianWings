@@ -8,10 +8,45 @@ export interface PendingLead extends EnquiryInput {
   retryCount: number;
 }
 
-const STORAGE_KEY = 'tiwc_pending_leads';
+const STORAGE_KEY = 'tiwc_pending_leads_v2';
+const LEGACY_STORAGE_KEY = 'tiwc_pending_leads';
 
 /**
- * Layer 1: Synchronously writes lead to localStorage before HTTP request fires
+ * Memory fallback in case sessionStorage is disabled or unavailable
+ */
+let memoryQueue: PendingLead[] = [];
+
+function cleanLegacyLocalStorage(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    if (localStorage.getItem(LEGACY_STORAGE_KEY)) {
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+    }
+  } catch {
+    // Ignore storage access errors
+  }
+}
+
+function encodePayload(data: PendingLead[]): string {
+  try {
+    return btoa(encodeURIComponent(JSON.stringify(data)));
+  } catch {
+    return '';
+  }
+}
+
+function decodePayload(encoded: string): PendingLead[] {
+  try {
+    const json = decodeURIComponent(atob(encoded));
+    return JSON.parse(json);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Synchronously writes pending lead to sessionStorage (ephemeral to the tab session,
+ * not stored indefinitely in cleartext in localStorage).
  */
 export function queueLeadLocally(lead: EnquiryInput): PendingLead {
   const pendingLead: PendingLead = {
@@ -21,45 +56,60 @@ export function queueLeadLocally(lead: EnquiryInput): PendingLead {
     retryCount: 0,
   };
 
+  cleanLegacyLocalStorage();
+
   if (typeof window === 'undefined') return pendingLead;
 
   try {
     const existing = getPendingLeads();
     existing.push(pendingLead);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+    sessionStorage.setItem(STORAGE_KEY, encodePayload(existing));
+    memoryQueue = existing;
   } catch (err) {
-    console.warn('[OfflineQueue] Could not save lead to localStorage:', err);
+    memoryQueue.push(pendingLead);
+    console.warn('[OfflineQueue] Could not save lead to sessionStorage, used memory fallback:', err);
   }
 
   return pendingLead;
 }
 
 /**
- * Removes a successfully persisted lead from localStorage
+ * Removes a successfully persisted lead from local persistence
  */
 export function removePendingLead(tempId: string): void {
+  cleanLegacyLocalStorage();
+  memoryQueue = memoryQueue.filter((item) => item.tempId !== tempId);
+
   if (typeof window === 'undefined') return;
 
   try {
     const existing = getPendingLeads();
     const filtered = existing.filter((item) => item.tempId !== tempId);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    if (filtered.length === 0) {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } else {
+      sessionStorage.setItem(STORAGE_KEY, encodePayload(filtered));
+    }
   } catch (err) {
-    console.warn('[OfflineQueue] Could not remove lead from localStorage:', err);
+    console.warn('[OfflineQueue] Could not remove lead from sessionStorage:', err);
   }
 }
 
 /**
- * Retrieves all pending unsynced leads
+ * Retrieves all pending unsynced leads from sessionStorage
  */
 export function getPendingLeads(): PendingLead[] {
-  if (typeof window === 'undefined') return [];
+  cleanLegacyLocalStorage();
+
+  if (typeof window === 'undefined') return memoryQueue;
 
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return memoryQueue;
+    const decoded = decodePayload(raw);
+    return Array.isArray(decoded) && decoded.length > 0 ? decoded : memoryQueue;
   } catch {
-    return [];
+    return memoryQueue;
   }
 }
 

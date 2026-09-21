@@ -4,19 +4,26 @@ import { getSiteSettings } from '@/lib/settings-service';
 export async function GET() {
   try {
     const settings = await getSiteSettings();
-    return NextResponse.json({
-      success: true,
-      settings: {
-        phone: settings.phone,
-        email: settings.email,
-        whatsapp: settings.whatsapp,
-        address: settings.address,
-        announcementEnabled: settings.announcementEnabled,
-        announcementText: settings.announcementText,
-        announcementLink: settings.announcementLink,
-        siteTitle: settings.siteTitle,
+    return NextResponse.json(
+      {
+        success: true,
+        settings: {
+          phone: settings.phone,
+          email: settings.email,
+          whatsapp: settings.whatsapp,
+          address: settings.address,
+          announcementEnabled: settings.announcementEnabled,
+          announcementText: settings.announcementText,
+          announcementLink: settings.announcementLink,
+          siteTitle: settings.siteTitle,
+        },
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
       }
-    });
+    );
   } catch (err) {
     console.error('[API /api/settings GET] Error:', err);
     return NextResponse.json({

@@ -1,4 +1,5 @@
 import 'server-only';
+import { unstable_cache } from 'next/cache';
 import type { HeroHomepageConfig } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
 import { prisma } from '@/lib/database/prisma';
@@ -7,7 +8,7 @@ import { optimizeCloudinaryUrl } from '@/lib/utilities/cloudinary';
 export type { HeroHomepageConfig };
 export { defaultHeroConfig };
 
-export async function getHeroConfig(): Promise<HeroHomepageConfig> {
+async function fetchHeroConfigFromDb(): Promise<HeroHomepageConfig> {
   try {
     const settings = await prisma.siteSetting.findUnique({
       where: { id: 'global' },
@@ -32,6 +33,12 @@ export async function getHeroConfig(): Promise<HeroHomepageConfig> {
     return defaultHeroConfig;
   }
 }
+
+export const getHeroConfig = unstable_cache(
+  fetchHeroConfigFromDb,
+  ['hero-config'],
+  { tags: ['hero'], revalidate: 3600 }
+);
 
 export async function updateHeroConfig(newConfig: Partial<HeroHomepageConfig>): Promise<HeroHomepageConfig> {
   const current = await getHeroConfig();

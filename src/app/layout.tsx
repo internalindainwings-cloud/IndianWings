@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { headers } from "next/headers";
+import { Manrope, Berkshire_Swash } from "next/font/google";
 import "./globals.css";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
@@ -8,7 +9,15 @@ import { SecurityScripts } from "@/components/security/SecurityScripts";
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  style: ["normal"],
+  display: "swap",
+});
+
+const berkshireSwash = Berkshire_Swash({
+  variable: "--font-berkshire",
+  subsets: ["latin"],
+  weight: ["400"],
   style: ["normal"],
   display: "swap",
 });
@@ -56,31 +65,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') ?? undefined;
+
   return (
     <html
       lang="en"
-      className={`${manrope.variable} h-full antialiased`}
+      className={`${manrope.variable} ${berkshireSwash.variable} h-full antialiased`}
       style={{
         ['--color-midnight' as string]: '#0F4C54',
         ['--color-saffron' as string]: '#F59E0B',
       }}
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Merienda:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        <PublicShell>{children}</PublicShell>
-        <AnalyticsScripts />
+        <PublicShell nonce={nonce}>{children}</PublicShell>
+        <AnalyticsScripts nonce={nonce} />
         <SecurityScripts />
       </body>
     </html>

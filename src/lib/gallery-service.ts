@@ -17,10 +17,18 @@ export async function getAllGalleryItems(): Promise<GalleryItem[]> {
   }
 }
 
-export async function getActiveGalleryItems(): Promise<GalleryItem[]> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchActiveGalleryItems(): Promise<GalleryItem[]> {
   const items = await getAllGalleryItems();
   return items.filter((item) => item.isActive !== false);
 }
+
+export const getActiveGalleryItems = unstable_cache(
+  fetchActiveGalleryItems,
+  ['active-gallery-items'],
+  { tags: ['gallery'], revalidate: 3600 }
+);
 
 export async function createGalleryItem(data: Omit<GalleryItem, 'id' | 'createdAt'>): Promise<GalleryItem> {
   const items = await getAllGalleryItems();

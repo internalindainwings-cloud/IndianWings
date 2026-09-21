@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Merienda:wght@300..900&family=Manrope:wght@200..800&display=swap');
 @import "tailwindcss";
+
 
 :root {
   --background: #FFFFFF;
@@ -33,7 +33,7 @@ body {
 
 /* h1 retains the decorative display font style */
 h1 {
-  font-family: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+  font-family: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
 }
 
 /* Global Typography: Clean Manrope for all standard content */
@@ -106,11 +106,11 @@ button, input, select, textarea, a, span, label, blockquote {
   --font-sans: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-manrope: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-jakarta: var(--font-manrope), "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
-  --font-berkshire: 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
-  --font-serif: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
-  --font-playfair: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
-  --font-cormorant: 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-display: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+  --font-berkshire: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;
+  --font-serif: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-playfair: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
+  --font-cormorant: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", serif;
 
   /* ── Marquee animations (Brands Section) ─────────────────── */
   --animate-marquee-ltr: marquee-ltr 30s linear infinite;

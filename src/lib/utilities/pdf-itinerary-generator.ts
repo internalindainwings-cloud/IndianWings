@@ -1,4 +1,3 @@
-import jsPDF from 'jspdf';
 import type { ItineraryDay } from '@/data/package-defaults';
 import { siteConfig } from '@/config/site-config';
 
@@ -16,8 +15,9 @@ export interface GeneratePdfOptions {
 /**
  * Client-side PDF Generator for Tour Packages
  * Creates an elegant, branded A4 travel itinerary document.
+ * jsPDF is dynamically imported on first use to keep it out of the initial bundle.
  */
-export function generateItineraryPdf({
+export async function generateItineraryPdf({
   packageTitle,
   duration,
   startingPrice,
@@ -26,7 +26,8 @@ export function generateItineraryPdf({
   inclusions = [],
   itinerary,
   travelerName,
-}: GeneratePdfOptions): void {
+}: GeneratePdfOptions): Promise<void> {
+  const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',

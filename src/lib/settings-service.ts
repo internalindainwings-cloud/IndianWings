@@ -28,7 +28,9 @@ export const defaultSettings: SiteSettingsData = {
   announcementLink: '/packages',
 };
 
-export async function getSiteSettings(): Promise<SiteSettingsData> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchSiteSettingsFromDb(): Promise<SiteSettingsData> {
   try {
     const setting = await prisma.siteSetting.findUnique({
       where: { id: 'global' },
@@ -60,6 +62,12 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
     return defaultSettings;
   }
 }
+
+export const getSiteSettings = unstable_cache(
+  fetchSiteSettingsFromDb,
+  ['site-settings-global'],
+  { tags: ['settings'], revalidate: 3600 }
+);
 
 export async function updateSiteSettings(data: Partial<SiteSettingsData>): Promise<SiteSettingsData> {
   try {

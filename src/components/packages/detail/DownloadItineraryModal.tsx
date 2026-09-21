@@ -69,7 +69,7 @@ export const DownloadItineraryModal: React.FC<DownloadItineraryModalProps> = ({
       }
 
       // 2. Automatically generate and download the PDF locally for instantaneous delivery
-      generateItineraryPdf({
+      await generateItineraryPdf({
         packageTitle: pkg.title,
         duration: pkg.duration,
         startingPrice: pkg.startingPrice,
@@ -85,7 +85,7 @@ export const DownloadItineraryModal: React.FC<DownloadItineraryModalProps> = ({
       console.error('Download error:', err);
       // Even if API fails, still attempt to give user their PDF
       try {
-        generateItineraryPdf({
+        await generateItineraryPdf({
           packageTitle: pkg.title,
           duration: pkg.duration,
           startingPrice: pkg.startingPrice,

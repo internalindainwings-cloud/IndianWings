@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getHeroConfig, updateHeroConfig } from '@/lib/hero-service';
 
@@ -32,6 +32,7 @@ export async function PUT(request: NextRequest) {
 
     // Instant revalidation so homepage immediately reflects the changes
     try {
+      revalidateTag('hero', 'max');
       revalidatePath('/');
       revalidatePath('/admin');
     } catch (revErr) {

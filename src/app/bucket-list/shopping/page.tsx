@@ -1,9 +1,11 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight, CheckCircle2, ShieldCheck, MapPin, ShoppingBag, Award, ArrowRight } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
 import { HeroActionBar } from '@/components/trust/HeroActionBar';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 export const metadata: Metadata = {
   title: 'Kashmiri Shopping Guide | Authentic Crafts, Pashmina & Saffron',
@@ -117,9 +119,45 @@ const MARKETS = [
   }
 ];
 
-export default function ShoppingGuidePage() {
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+
+export default async function ShoppingGuidePage() {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') ?? undefined;
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${siteUrl}/`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Bucket List',
+        item: `${siteUrl}/bucket-list`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'Shopping Guide',
+        item: `${siteUrl}/bucket-list/shopping`,
+      },
+    ],
+  };
+
   return (
     <main className="w-full min-h-screen bg-background text-[#222222] flex flex-col">
+      {/* BreadcrumbList Structured Data */}
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbJsonLd) }}
+      />
       {/* 1. Hero Header */}
       <section className="relative w-screen max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden bg-midnight">
         {/* 1. Background Image with Light Natural Scrim */}

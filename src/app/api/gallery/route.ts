@@ -24,28 +24,42 @@ export async function GET(request: NextRequest) {
       const startIndex = (page - 1) * limit;
       const paginatedItems = items.slice(startIndex, startIndex + limit);
 
-      return NextResponse.json({
-        success: true,
-        items: paginatedItems,
-        pagination: {
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
+      return NextResponse.json(
+        {
+          success: true,
+          items: paginatedItems,
+          pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+          },
         },
-      });
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+          },
+        }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      items,
-      pagination: {
-        total,
-        page: 1,
-        limit: total,
-        totalPages: 1,
+    return NextResponse.json(
+      {
+        success: true,
+        items,
+        pagination: {
+          total,
+          page: 1,
+          limit: total,
+          totalPages: 1,
+        },
       },
-    });
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      }
+    );
   } catch (err: any) {
     console.error('[API Gallery] Error fetching items:', err);
     return NextResponse.json({ success: false, error: 'Failed to fetch gallery items' }, { status: 500 });

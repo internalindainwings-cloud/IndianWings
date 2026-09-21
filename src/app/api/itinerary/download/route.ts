@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
-import { checkItineraryRateLimit } from '@/lib/security/rate-limit';
+import { checkItineraryRateLimit, resolveClientIp } from '@/lib/security/rate-limit';
 import { sendItineraryEmail } from '@/lib/services/email-service';
 import { z } from 'zod';
 
@@ -34,12 +34,8 @@ const itineraryDownloadSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const ipAddress =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      req.headers.get('x-real-ip') ||
-      '127.0.0.1';
-
     // Rate limiting via Upstash Redis: Max 8 downloads per 10 mins per IP
+    const ipAddress = resolveClientIp(req);
     const rateLimit = await checkItineraryRateLimit(ipAddress);
 
     if (!rateLimit.success) {
@@ -123,8 +119,9 @@ export async function POST(req: NextRequest) {
       simulated: emailResult.simulated ?? false,
       message: 'Itinerary downloaded and email dispatched successfully!',
     });
-  } catch (error: any) {
-    console.error('[API itinerary/download] Error:', error?.message || error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('[API itinerary/download] Error:', msg);
     return NextResponse.json(
       {
         error: 'Server Error',

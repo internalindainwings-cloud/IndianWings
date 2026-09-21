@@ -107,59 +107,82 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
               key={s.id || idx}
               className={`absolute inset-0 w-full h-full overflow-hidden ${container}`}
             >
-              {/* Mobile View */}
-              <div className="block md:hidden absolute inset-0 w-full h-full pointer-events-none">
-                {isMobileImage ? (
-                  <Image
-                    src={mobileMediaUrl}
-                    alt={s.title || 'Hero Mobile Background'}
-                    fill
-                    priority={idx === 0}
-                    loading={idx === 0 ? undefined : 'lazy'}
+              {idx === 0 && (isImage || isMobileImage) ? (
+                /* Slide 0 LCP: Native responsive picture element to download ONLY the appropriate viewport asset */
+                <picture className="absolute inset-0 w-full h-full pointer-events-none">
+                  {/* Desktop Source: screens >= 768px */}
+                  <source
+                    media="(min-width: 768px)"
+                    srcSet={`/_next/image?url=${encodeURIComponent(mediaUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1200&q=75 1200w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1920&q=75 1920w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=2048&q=75 2048w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=3840&q=75 3840w`}
                     sizes="100vw"
-                    className={`object-cover object-center ${img}`}
                   />
-                ) : (
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload={isActive ? 'auto' : 'metadata'}
-                    poster={mobileMediaUrl}
-                    className="absolute inset-0 w-full h-full object-cover object-center"
-                  >
-                    <source src={mobileMediaUrl} type="video/mp4" />
-                  </video>
-                )}
-              </div>
+                  {/* Mobile Fallback Image: screens < 768px with fetchPriority high */}
+                  <img
+                    src={`/_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1080&q=75`}
+                    srcSet={`/_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=640&q=75 640w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1200&q=75 1200w`}
+                    sizes="100vw"
+                    alt={s.title || 'Hero Background'}
+                    fetchPriority="high"
+                    decoding="async"
+                    className={`absolute inset-0 w-full h-full object-cover object-center ${img}`}
+                  />
+                </picture>
+              ) : (
+                /* Inactive slides (idx > 0) retain existing lazy loading */
+                <>
+                  {/* Mobile View */}
+                  <div className="block md:hidden absolute inset-0 w-full h-full pointer-events-none">
+                    {isMobileImage ? (
+                      <Image
+                        src={mobileMediaUrl}
+                        alt={s.title || 'Hero Mobile Background'}
+                        fill
+                        loading="lazy"
+                        sizes="100vw"
+                        className={`object-cover object-center ${img}`}
+                      />
+                    ) : (
+                      <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload={isActive ? 'auto' : 'none'}
+                        poster={mobileMediaUrl}
+                        className="absolute inset-0 w-full h-full object-cover object-center"
+                      >
+                        <source src={mobileMediaUrl} type="video/mp4" />
+                      </video>
+                    )}
+                  </div>
 
-              {/* Desktop View */}
-              <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
-                {isImage ? (
-                  <Image
-                    src={mediaUrl}
-                    alt={s.title || 'Hero Desktop Background'}
-                    fill
-                    priority={idx === 0}
-                    loading={idx === 0 ? undefined : 'lazy'}
-                    sizes="100vw"
-                    className={`object-cover object-center ${img}`}
-                  />
-                ) : (
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload={isActive ? 'auto' : 'metadata'}
-                    poster={mediaUrl}
-                    className="absolute inset-0 w-full h-full object-cover object-top"
-                  >
-                    <source src={mediaUrl} type="video/mp4" />
-                  </video>
-                )}
-              </div>
+                  {/* Desktop View */}
+                  <div className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
+                    {isImage ? (
+                      <Image
+                        src={mediaUrl}
+                        alt={s.title || 'Hero Desktop Background'}
+                        fill
+                        loading="lazy"
+                        sizes="100vw"
+                        className={`object-cover object-center ${img}`}
+                      />
+                    ) : (
+                      <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload={isActive ? 'auto' : 'none'}
+                        poster={mediaUrl}
+                        className="absolute inset-0 w-full h-full object-cover object-top"
+                      >
+                        <source src={mediaUrl} type="video/mp4" />
+                      </video>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           );
         })}

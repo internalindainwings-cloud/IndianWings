@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getDestinationBySlug, getAllDestinationSlugs } from '@/lib/destinations-service';
 import { getDestinationContentBySlug } from '@/data/destination-content';
@@ -6,6 +7,7 @@ import { DestinationDetailHero } from '@/components/destinations/DestinationDeta
 import { DestinationSubNavigation } from '@/components/destinations/DestinationSubNavigation';
 import { ThingsToSeeDoSection } from '@/components/destinations/ThingsToSeeDoSection';
 import { BestTimeToVisitSection } from '@/components/destinations/BestTimeToVisitSection';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 interface DestinationDetailPageProps {
   params: Promise<{
@@ -69,7 +71,11 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
 
 export default async function DestinationDetailPage({ params }: DestinationDetailPageProps) {
   const { slug } = await params;
-  const destination = await getDestinationBySlug(slug);
+  const [destination, headersList] = await Promise.all([
+    getDestinationBySlug(slug),
+    headers(),
+  ]);
+  const nonce = headersList.get('x-nonce') ?? undefined;
 
   if (!destination) {
     notFound();
@@ -130,7 +136,8 @@ export default async function DestinationDetailPage({ params }: DestinationDetai
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(destinationJsonLd) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(destinationJsonLd) }}
       />
 
       {/* 1. Destination Detail Hero Section (LOCKED & UNTOUCHED) */}

@@ -20,11 +20,18 @@ export async function GET(request: NextRequest) {
       filtered = packages.filter((p) => p.categorySlug.toLowerCase() === category.toLowerCase());
     }
 
-    return NextResponse.json({
-      success: true,
-      packages: filtered,
-      categories,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        packages: filtered,
+        categories,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      }
+    );
   } catch (err) {
     console.error('[API /api/packages GET] Error:', err);
     return NextResponse.json({ error: 'Failed to fetch packages' }, { status: 500 });

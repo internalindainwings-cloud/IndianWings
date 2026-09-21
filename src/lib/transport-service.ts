@@ -73,7 +73,9 @@ export async function ensureTransportSeeded(): Promise<void> {
   }
 }
 
-export async function getAllVehicles(includeDrafts = false): Promise<EnrichedVehicle[]> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchAllVehiclesFromDb(includeDrafts = false): Promise<EnrichedVehicle[]> {
   try {
     await ensureTransportSeeded();
     if ('transportVehicle' in prisma) {
@@ -115,7 +117,20 @@ export async function getAllVehicles(includeDrafts = false): Promise<EnrichedVeh
   }));
 }
 
-export async function getAllRoutes(includeDrafts = false): Promise<EnrichedRoute[]> {
+const getCachedActiveVehicles = unstable_cache(
+  async () => fetchAllVehiclesFromDb(false),
+  ['transport-vehicles-active'],
+  { tags: ['transport'], revalidate: 3600 }
+);
+
+export async function getAllVehicles(includeDrafts = false): Promise<EnrichedVehicle[]> {
+  if (includeDrafts) {
+    return fetchAllVehiclesFromDb(true);
+  }
+  return getCachedActiveVehicles();
+}
+
+async function fetchAllRoutesFromDb(includeDrafts = false): Promise<EnrichedRoute[]> {
   try {
     await ensureTransportSeeded();
     const records = await prisma.transportRoute.findMany({
@@ -151,4 +166,17 @@ export async function getAllRoutes(includeDrafts = false): Promise<EnrichedRoute
     isActive: true,
     sortOrder: idx + 1,
   }));
+}
+
+const getCachedActiveRoutes = unstable_cache(
+  async () => fetchAllRoutesFromDb(false),
+  ['transport-routes-active'],
+  { tags: ['transport'], revalidate: 3600 }
+);
+
+export async function getAllRoutes(includeDrafts = false): Promise<EnrichedRoute[]> {
+  if (includeDrafts) {
+    return fetchAllRoutesFromDb(true);
+  }
+  return getCachedActiveRoutes();
 }

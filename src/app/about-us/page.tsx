@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -11,7 +12,6 @@ import {
   Award,
   HeartHandshake,
   CheckCircle2,
-  Users,
   Compass,
   ArrowRight,
   Sparkles,
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
 import { AboutCtaButtons } from './AboutCtaButtons';
+import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
 const aboutJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'TravelAgency',
-  '@id': `${siteUrl}/about-us#organization`,
+  '@id': `${siteUrl}/#organization`,
   name: 'The Indian Wings Company',
   url: `${siteUrl}/about-us`,
   logo: `${siteUrl}/assets/client_logo.png`,
@@ -80,7 +81,9 @@ const aboutJsonLd = {
   ],
 };
 
-export default function AboutUsPage() {
+export default async function AboutUsPage() {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') ?? undefined;
   const cleanWhatsapp = (siteConfig.contact.whatsapp || '917827743041').replace(/[^0-9]/g, '');
 
   const trustPillars = [
@@ -115,7 +118,8 @@ export default function AboutUsPage() {
       {/* Schema.org JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(aboutJsonLd) }}
       />
 
       {/* ── 1. Hero Header Section ── */}
@@ -306,7 +310,7 @@ export default function AboutUsPage() {
                   fill
                   className="object-cover object-top"
                   sizes="(max-width: 640px) 224px, 256px"
-                  priority
+                  loading="lazy"
                 />
               </div>
             </div>

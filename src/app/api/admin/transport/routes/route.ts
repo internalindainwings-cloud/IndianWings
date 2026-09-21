@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/database/prisma';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 import { getAllRoutes } from '@/lib/transport-service';
@@ -61,6 +62,14 @@ export async function POST(request: NextRequest) {
         sortOrder: Number(sortOrder) || 0,
       },
     });
+
+    try {
+      revalidateTag('transport', 'max');
+      revalidatePath('/transport');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
 
     return NextResponse.json({ success: true, route: created });
   } catch (err) {

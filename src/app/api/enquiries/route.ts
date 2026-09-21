@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/prisma';
 import { enquirySchema } from '@/lib/validations/enquiry';
-import { checkEnquiryRateLimit } from '@/lib/security/rate-limit';
+import { checkEnquiryRateLimit, resolveClientIp } from '@/lib/security/rate-limit';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 
 // Max allowed payload size in bytes (15KB is plenty for a lead)
@@ -36,11 +36,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Client IP Extraction
-    const ipAddress =
-      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-      req.headers.get('x-real-ip') ||
-      '127.0.0.1';
+    // 2. Client IP Extraction (hardened: trusts x-real-ip > rightmost XFF, never leftmost)
+    const ipAddress = resolveClientIp(req);
 
     // 3. Security: Distributed Rate Limiting via Upstash Redis (6 submissions / 10 min / IP)
     const rateLimit = await checkEnquiryRateLimit(ipAddress);
@@ -220,11 +217,18 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      count: enquiries.length,
-      enquiries,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        count: enquiries.length,
+        enquiries,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, private',
+        },
+      }
+    );
   } catch (error: unknown) {
     console.error('[API /api/enquiries GET] Error:', error);
     return NextResponse.json(

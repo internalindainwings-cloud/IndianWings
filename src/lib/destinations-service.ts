@@ -6,14 +6,14 @@ export interface EnrichedDestination extends DestinationItem {
   sortOrder: number;
 }
 
-let hasSeededDestinations = false;
-
 export async function ensureDestinationsSeeded(): Promise<void> {
   // Auto-seeding disabled to prevent dummy destinations from returning
   return;
 }
 
-export async function getAllDestinations(includeDrafts = false): Promise<EnrichedDestination[]> {
+import { unstable_cache } from 'next/cache';
+
+async function fetchAllDestinationsFromDb(includeDrafts = false): Promise<EnrichedDestination[]> {
   try {
     await ensureDestinationsSeeded();
     const records = await prisma.destination.findMany({
@@ -53,7 +53,20 @@ export async function getAllDestinations(includeDrafts = false): Promise<Enriche
   }));
 }
 
-export async function getDestinationBySlug(slug: string): Promise<EnrichedDestination | null> {
+const getCachedActiveDestinations = unstable_cache(
+  async () => fetchAllDestinationsFromDb(false),
+  ['destinations-active'],
+  { tags: ['destinations'], revalidate: 3600 }
+);
+
+export async function getAllDestinations(includeDrafts = false): Promise<EnrichedDestination[]> {
+  if (includeDrafts) {
+    return fetchAllDestinationsFromDb(true);
+  }
+  return getCachedActiveDestinations();
+}
+
+async function fetchDestinationBySlugFromDb(slug: string): Promise<EnrichedDestination | null> {
   try {
     await ensureDestinationsSeeded();
     let r = await prisma.destination.findUnique({
@@ -99,6 +112,16 @@ export async function getDestinationBySlug(slug: string): Promise<EnrichedDestin
 
   const fallback = destinationsData.find((d) => d.slug === slug || d.id === slug);
   return fallback ? { ...fallback, isActive: true, sortOrder: 1 } : null;
+}
+
+const getCachedDestinationBySlug = unstable_cache(
+  async (slug: string) => fetchDestinationBySlugFromDb(slug),
+  ['destination-by-slug'],
+  { tags: ['destinations'], revalidate: 3600 }
+);
+
+export async function getDestinationBySlug(slug: string): Promise<EnrichedDestination | null> {
+  return getCachedDestinationBySlug(slug);
 }
 
 export async function getAllDestinationSlugs(): Promise<string[]> {

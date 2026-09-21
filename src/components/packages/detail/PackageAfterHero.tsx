@@ -634,6 +634,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
                   src={stay.image || '/images/gallery/shikara-dal-lake.jpg'}
                   alt={stay.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -699,6 +700,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
                       src={car.image || '/images/fleet/innova-crysta.jpg'}
                       alt={car.name}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />

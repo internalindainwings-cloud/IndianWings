@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getAllGalleryCategories, addGalleryCategory } from '@/lib/gallery-categories-service';
+import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
 
 export async function GET() {
   try {
+    const isAuthed = await isAuthenticatedAdmin();
+    if (!isAuthed) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const categories = await getAllGalleryCategories();
     return NextResponse.json({ success: true, categories });
   } catch (err) {
@@ -13,6 +20,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const isAuthed = await isAuthenticatedAdmin();
+    if (!isAuthed) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     if (!body || !body.name || typeof body.name !== 'string' || !body.name.trim()) {
       return NextResponse.json({ error: 'Category name is required' }, { status: 400 });
@@ -23,6 +35,13 @@ export async function POST(req: Request) {
       icon: body.icon?.trim() || '🏷️',
       id: body.id?.trim(),
     });
+
+    try {
+      revalidateTag('gallery', 'max');
+      revalidatePath('/');
+    } catch (revErr) {
+      console.warn('Revalidation warning:', revErr);
+    }
 
     return NextResponse.json({ success: true, category: created });
   } catch (err) {

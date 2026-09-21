@@ -11,7 +11,8 @@ export async function GET(
     const { id } = await params;
     const hero = await getPageHeroById(id);
     return NextResponse.json({ success: true, hero });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch (err) {
+    console.error('[API /api/page-heroes/[id] GET] Error:', err);
+    return NextResponse.json({ success: false, error: 'Failed to fetch page hero' }, { status: 500 });
   }
 }

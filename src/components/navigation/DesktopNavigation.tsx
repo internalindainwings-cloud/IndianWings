@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { fetchClientDestinations } from '@/lib/client-data';
 import {
   ChevronDown,
   Home,
@@ -110,12 +111,11 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
 
   React.useEffect(() => {
     let isMounted = true;
-    fetch('/api/destinations')
-      .then(res => res.json())
+    fetchClientDestinations()
       .then(data => {
         if (!isMounted) return;
         if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
-          const items: SubNavItem[] = data.destinations.slice(0, 5).map((d: any) => ({
+          const items: SubNavItem[] = data.destinations.slice(0, 5).map((d) => ({
             name: d.name,
             href: `/destinations/${d.slug}`,
             icon: MapPin,
