@@ -44,6 +44,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
     ? slide.title.trim()
     : '';
 
+  const [desktopAspectRatio, setDesktopAspectRatio] = useState<number>(1916 / 821);
+
+  // Dynamic aspect ratio calculation on desktop based on active slide image
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const rawMediaUrl = (slide.videoSrc && slide.videoSrc.trim().length > 0)
+      ? slide.videoSrc.trim()
+      : (slide.poster && slide.poster.trim().length > 0)
+      ? slide.poster.trim()
+      : (config.videoUrl || config.posterUrl);
+
+    if (!rawMediaUrl) return;
+
+    const img = new window.Image();
+    img.src = rawMediaUrl;
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight && img.naturalHeight > 0) {
+        setDesktopAspectRatio(img.naturalWidth / img.naturalHeight);
+      }
+    };
+  }, [slide, config]);
+
   // Auto-advance carousel slides based on configured duration
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -55,7 +77,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
   }, [slides.length, config.transitionDuration]);
 
   return (
-    <section className="relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px] flex flex-col justify-between overflow-hidden">
+    <section 
+      style={{ '--hero-aspect': `${desktopAspectRatio}` } as React.CSSProperties}
+      className="relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] md:h-auto md:min-h-[500px] md:max-h-[92vh] md:aspect-[var(--hero-aspect)] flex flex-col justify-between overflow-hidden transition-[aspect-ratio] duration-500"
+    >
       {/* Background stays absolutely positioned with smooth multi-slide transitions */}
       <HeroVideoBackground 
         slides={slides}
