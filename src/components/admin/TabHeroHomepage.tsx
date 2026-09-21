@@ -22,6 +22,7 @@ import {
   Star,
   Smartphone,
   MapPin,
+  SlidersHorizontal,
 } from 'lucide-react';
 import type { HeroHomepageConfig, HeroSlide, HeroTrustPill } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
@@ -55,17 +56,19 @@ export const TabHeroHomepage: React.FC = () => {
   }, []);
 
   // Save handler
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (e?: React.FormEvent | React.MouseEvent, overrideConfig?: HeroHomepageConfig) => {
+    if (e && 'preventDefault' in e) e.preventDefault();
     setSaving(true);
     setSaveSuccess(false);
     setErrorMessage(null);
+
+    const payload = overrideConfig || config;
 
     try {
       const res = await fetch('/api/admin/hero', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (data.success) {
@@ -80,6 +83,12 @@ export const TabHeroHomepage: React.FC = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleSetLayoutMode = async (mode: 'original' | 'dynamic') => {
+    const updated: HeroHomepageConfig = { ...config, desktopLayoutMode: mode };
+    setConfig(updated);
+    await handleSave(undefined, updated);
   };
 
   // Slide helpers
@@ -290,6 +299,66 @@ export const TabHeroHomepage: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* DESKTOP HERO SIZING MODE (DYNAMIC VS ORIGINAL) */}
+      <div className="rounded-2xl border border-white/10 bg-[#0B1E24] p-4 sm:p-5 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-saffron flex items-center gap-1.5">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Desktop Hero Sizing Mode
+              </span>
+              <span className="text-[10.5px] px-2 py-0.5 rounded-full bg-white/10 text-white/80 font-medium">
+                Desktop Only
+              </span>
+            </div>
+            <p className="text-xs text-white/70 max-w-xl leading-relaxed">
+              Choose whether the desktop hero automatically expands to fit whatever size image is uploaded (Dynamic), or stays constrained to the original classic viewport height (Original).
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-black/40 border border-white/10 shrink-0">
+            {/* Original Button */}
+            <button
+              type="button"
+              onClick={() => handleSetLayoutMode('original')}
+              disabled={saving}
+              className={`px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                config.desktopLayoutMode === 'original'
+                  ? 'bg-saffron text-midnight shadow-md font-extrabold scale-102 ring-1 ring-saffron/50'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span>📐 Original Fixed Height</span>
+              {config.desktopLayoutMode === 'original' && <CheckCircle2 className="h-3.5 w-3.5" />}
+            </button>
+
+            {/* Dynamic Button */}
+            <button
+              type="button"
+              onClick={() => handleSetLayoutMode('dynamic')}
+              disabled={saving}
+              className={`px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                config.desktopLayoutMode !== 'original'
+                  ? 'bg-saffron text-midnight shadow-md font-extrabold scale-102 ring-1 ring-saffron/50'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <span>✨ Dynamic Image Fit</span>
+              {config.desktopLayoutMode !== 'original' && <CheckCircle2 className="h-3.5 w-3.5" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Status helper text */}
+        <div className="mt-3 pt-3 border-t border-white/8 flex items-center justify-between text-[11.5px] text-white/50">
+          <span>
+            Current mode: <strong className="text-white font-semibold">{config.desktopLayoutMode === 'original' ? 'Original Height (Max 575px)' : 'Dynamic Fit (Auto-adapts to image aspect ratio)'}</strong>
+          </span>
+          <span className="text-emerald-400/90 font-medium">Clicking either button auto-saves &amp; updates instantly</span>
         </div>
       </div>
 

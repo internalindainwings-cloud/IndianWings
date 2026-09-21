@@ -76,81 +76,97 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
     return () => clearInterval(interval);
   }, [slides.length, config.transitionDuration]);
 
+  const isDynamicDesktop = config.desktopLayoutMode !== 'original';
+
   return (
-    <section 
-      style={{ '--hero-aspect': `${desktopAspectRatio}` } as React.CSSProperties}
-      className="relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] md:h-auto md:min-h-[500px] md:max-h-[92vh] md:aspect-[var(--hero-aspect)] flex flex-col justify-between overflow-hidden transition-[aspect-ratio] duration-500"
-    >
-      {/* Background stays absolutely positioned with smooth multi-slide transitions */}
-      <HeroVideoBackground 
-        slides={slides}
-        currentSlide={currentSlide}
-        transitionType={config.transitionType || 'fade'}
-        src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
-        poster={slide.poster || config.posterUrl}
-        mobileSrc={slide.mobileVideoSrc || slide.mobilePoster || config.mobileVideoUrl || config.mobilePosterUrl}
-        mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
-      />
-      
-      {/* Main hero content fills available space — pulled up further towards nav on mobile */}
-      <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-20 sm:-translate-y-7 md:-translate-y-9">
-        <HeroContent 
-          headline={config.headline}
-          badgeText={config.badgeText}
-          subheadline={config.subheadline}
-          primaryCtaText={config.primaryCtaText}
-          secondaryCtaText={config.secondaryCtaText}
-          secondaryCtaLink={config.secondaryCtaLink}
+    <div className="w-full">
+      <section 
+        className={`relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] flex flex-col justify-between overflow-hidden transition-all duration-500 ${
+          isDynamicDesktop
+            ? 'md:h-[calc(100dvh-80px)] min-[1140px]:h-[calc(100dvh-85px)] md:min-h-[620px] md:max-h-none'
+            : 'md:h-[calc(100dvh-150px)] md:min-h-[465px] md:max-h-[575px]'
+        }`}
+      >
+        {/* Background stays absolutely positioned with smooth multi-slide transitions */}
+        <HeroVideoBackground 
+          slides={slides}
+          currentSlide={currentSlide}
+          transitionType={config.transitionType || 'fade'}
+          src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
+          poster={slide.poster || config.posterUrl}
+          mobileSrc={slide.mobileVideoSrc || slide.mobilePoster || config.mobileVideoUrl || config.mobilePosterUrl}
+          mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
         />
         
-        {/* Mobile Slide Indicator Dots */}
-        {slides.length > 1 && (
-          <div className="lg:hidden flex items-center justify-start gap-1.5 mt-3 px-4 sm:px-8 z-20">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setCurrentSlide(idx)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  currentSlide === idx ? 'w-6 bg-[#C5A45E]' : 'w-2 bg-white/40'
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
+        {/* Main hero content fills available space — pulled up further towards nav on mobile */}
+        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-20 sm:-translate-y-7 md:-translate-y-9">
+          <HeroContent 
+            headline={config.headline}
+            badgeText={config.badgeText}
+            subheadline={config.subheadline}
+            primaryCtaText={config.primaryCtaText}
+            secondaryCtaText={config.secondaryCtaText}
+            secondaryCtaLink={config.secondaryCtaLink}
+          />
+          
+          {/* Mobile Slide Indicator Dots */}
+          {slides.length > 1 && (
+            <div className="lg:hidden flex items-center justify-start gap-1.5 mt-3 px-4 sm:px-8 z-20">
+              {slides.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    currentSlide === idx ? 'w-6 bg-[#C5A45E]' : 'w-2 bg-white/40'
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Desktop Slide Indicator Numbers */}
+          {slides.length > 1 && (
+            <div className="hidden lg:block">
+              <HeroSlideIndicator 
+                totalSlides={slides.length} 
+                currentSlide={currentSlide} 
+                onChangeSlide={setCurrentSlide} 
               />
-            ))}
+            </div>
+          )}
+        </div>
+
+        {/* Active Slide Location Tag (Centered in Viewport) */}
+        {slideLocation && (
+          <div 
+            key={slide.id || currentSlide}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center"
+          >
+            <div className="pointer-events-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 transition-transform duration-300 hover:scale-105">
+              <MapPin className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
+              <span className="font-manrope font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl text-white tracking-wide max-w-[90vw] sm:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
+                {slideLocation}
+              </span>
+            </div>
           </div>
         )}
 
-        {/* Desktop Slide Indicator Numbers */}
-        {slides.length > 1 && (
-          <div className="hidden lg:block">
-            <HeroSlideIndicator 
-              totalSlides={slides.length} 
-              currentSlide={currentSlide} 
-              onChangeSlide={setCurrentSlide} 
-            />
+        {/* In Original Mode: Action Bar docked right at bottom edge inside hero */}
+        {!isDynamicDesktop && (
+          <div className="relative z-20 w-full shrink-0">
+            <HeroActionBar trustPills={config.trustPills} />
           </div>
         )}
-      </div>
+      </section>
 
-      {/* Active Slide Location Tag (Centered, no background, prominent text) */}
-      {slideLocation && (
-        <div 
-          key={slide.id || currentSlide}
-          className="absolute left-1/2 -translate-x-1/2 bottom-14 sm:bottom-16 md:bottom-20 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 flex items-center justify-center w-full max-w-fit px-4 text-center"
-        >
-          <div className="inline-flex items-center justify-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-105">
-            <MapPin className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]" />
-            <span className="font-manrope font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl text-white tracking-wide max-w-[90vw] sm:max-w-2xl truncate drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
-              {slideLocation}
-            </span>
-          </div>
+      {/* In Dynamic Mode: Action Bar sits cleanly right BELOW the full viewport */}
+      {isDynamicDesktop && (
+        <div className="relative z-20 w-full shrink-0">
+          <HeroActionBar trustPills={config.trustPills} />
         </div>
       )}
-
-      {/* Action Bar docked right at the bottom edge of hero — hero ends strictly here */}
-      <div className="relative z-20 w-full shrink-0">
-        <HeroActionBar trustPills={config.trustPills} />
-      </div>
-    </section>
+    </div>
   );
 };
