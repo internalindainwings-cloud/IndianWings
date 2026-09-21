@@ -81,10 +81,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
   return (
     <div className="w-full">
       <section 
-        className={`relative w-full max-w-full h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] flex flex-col justify-between overflow-hidden transition-all duration-500 ${
+        className={`relative w-full max-w-full flex flex-col justify-between overflow-hidden transition-all duration-500 ${
           isDynamicDesktop
-            ? 'md:h-[calc(100dvh-80px)] min-[1140px]:h-[calc(100dvh-85px)] md:min-h-[620px] md:max-h-none'
-            : 'md:h-[calc(100dvh-150px)] md:min-h-[465px] md:max-h-[575px]'
+            ? 'h-[calc(100dvh-75px)] min-h-[560px] md:h-[calc(100dvh-80px)] min-[1140px]:h-[calc(100dvh-85px)] md:min-h-[620px]'
+            : 'h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] md:h-[calc(100dvh-150px)] md:min-h-[465px] md:max-h-[575px]'
         }`}
       >
         {/* Background stays absolutely positioned with smooth multi-slide transitions */}
@@ -98,8 +98,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
         />
         
-        {/* Main hero content fills available space — pulled up further towards nav on mobile */}
-        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-20 sm:-translate-y-7 md:-translate-y-9">
+        {/* Main hero content fills available space */}
+        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-4 sm:pt-4 md:pt-1.5 pb-6 sm:pb-8 translate-y-0 md:-translate-y-6 lg:-translate-y-9">
           <HeroContent 
             headline={config.headline}
             badgeText={config.badgeText}
@@ -111,7 +111,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           
           {/* Mobile Slide Indicator Dots */}
           {slides.length > 1 && (
-            <div className="lg:hidden flex items-center justify-start gap-1.5 mt-3 px-4 sm:px-8 z-20">
+            <div className="lg:hidden flex items-center justify-start gap-1.5 mt-4 px-4 sm:px-8 z-20">
               {slides.map((_, idx) => (
                 <button
                   key={idx}
@@ -138,15 +138,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           )}
         </div>
 
-        {/* Active Slide Location Tag (Centered in Viewport) */}
+        {/* Active Slide Location Tag (Viewport Center on Desktop, Non-colliding Bottom on Mobile) */}
         {slideLocation && (
           <div 
             key={slide.id || currentSlide}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center"
+            className={`absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center ${
+              isDynamicDesktop
+                ? 'bottom-6 sm:bottom-8 md:top-1/2 md:bottom-auto md:-translate-y-1/2'
+                : 'bottom-12 sm:bottom-14 md:bottom-16'
+            }`}
           >
-            <div className="pointer-events-auto inline-flex items-center justify-center gap-2.5 sm:gap-3 transition-transform duration-300 hover:scale-105">
-              <MapPin className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
-              <span className="font-manrope font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl text-white tracking-wide max-w-[90vw] sm:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
+            <div className="pointer-events-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
+              <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
+              <span className="font-manrope font-extrabold text-sm sm:text-base md:text-xl lg:text-2xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
                 {slideLocation}
               </span>
             </div>
