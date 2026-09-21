@@ -84,7 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         className={`relative w-full max-w-full flex flex-col justify-between overflow-hidden transition-all duration-500 ${
           isDynamicDesktop
             ? 'h-[calc(100dvh-75px)] min-h-[560px] md:h-[calc(100dvh-80px)] min-[1140px]:h-[calc(100dvh-85px)] md:min-h-[620px]'
-            : 'h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] md:h-[calc(100dvh-150px)] md:min-h-[465px] md:max-h-[575px]'
+            : 'h-[calc(100dvh-115px)] sm:h-[calc(100dvh-110px)] min-h-[435px] max-h-[545px] min-[1140px]:h-[calc(100dvh-150px)] min-[1140px]:min-h-[465px] min-[1140px]:max-h-[575px]'
         }`}
       >
         {/* Background stays absolutely positioned with smooth multi-slide transitions */}
@@ -98,8 +98,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
         />
         
-        {/* Main hero content fills available space — pulled up on desktop for premium visual prominence */}
-        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-4 sm:pt-4 md:pt-1.5 pb-6 sm:pb-8 translate-y-0 md:-translate-y-14 lg:-translate-y-20 xl:-translate-y-24">
+        {/* Main hero content fills available space */}
+        <div 
+          className={`flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 ${
+            isDynamicDesktop
+              ? 'pt-4 sm:pt-4 md:pt-1.5 pb-6 sm:pb-8 translate-y-0 md:-translate-y-14 lg:-translate-y-20 xl:-translate-y-24'
+              : 'pt-0 sm:pt-1 md:pt-1.5 pb-6 sm:pb-8 -translate-y-20 sm:-translate-y-7 md:-translate-y-9'
+          }`}
+        >
           <HeroContent 
             headline={config.headline}
             badgeText={config.badgeText}
@@ -107,11 +113,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
             primaryCtaText={config.primaryCtaText}
             secondaryCtaText={config.secondaryCtaText}
             secondaryCtaLink={config.secondaryCtaLink}
+            layoutMode={isDynamicDesktop ? 'dynamic' : 'original'}
           />
           
           {/* Mobile Slide Indicator Dots */}
           {slides.length > 1 && (
-            <div className="lg:hidden flex items-center justify-start gap-1.5 mt-4 px-4 sm:px-8 z-20">
+            <div className={`lg:hidden flex items-center justify-start gap-1.5 px-4 sm:px-8 z-20 ${
+              isDynamicDesktop ? 'mt-4' : 'mt-3'
+            }`}>
               {slides.map((_, idx) => (
                 <button
                   key={idx}
@@ -138,22 +147,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           )}
         </div>
 
-        {/* Active Slide Location Tag (Viewport Center on Desktop, Non-colliding Bottom on Mobile) */}
+        {/* Active Slide Location Tag */}
         {slideLocation && (
           <div 
             key={slide.id || currentSlide}
-            className={`absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center ${
+            className={
               isDynamicDesktop
-                ? 'bottom-6 sm:bottom-8 md:top-1/2 md:bottom-auto md:-translate-y-1/2'
-                : 'bottom-12 sm:bottom-14 md:bottom-16'
-            }`}
+                ? 'absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center bottom-6 sm:bottom-8 md:top-1/2 md:bottom-auto md:-translate-y-1/2'
+                : 'absolute right-3.5 sm:right-6 md:right-10 lg:right-12 bottom-12 sm:bottom-14 md:bottom-16 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2'
+            }
           >
-            <div className="pointer-events-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
-              <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
-              <span className="font-manrope font-extrabold text-sm sm:text-base md:text-xl lg:text-2xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
-                {slideLocation}
-              </span>
-            </div>
+            {isDynamicDesktop ? (
+              <div className="pointer-events-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
+                <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
+                <span className="font-manrope font-extrabold text-sm sm:text-base md:text-xl lg:text-2xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
+                  {slideLocation}
+                </span>
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#0B1E24]/85 hover:bg-[#0B1E24] backdrop-blur-md border border-[#C5A45E]/50 shadow-[0_4px_20px_rgba(0,0,0,0.6)] transition-transform hover:scale-105">
+                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#C5A45E] fill-[#C5A45E]/20 shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
+                <span className="font-manrope font-extrabold text-[11.5px] sm:text-xs md:text-sm text-white tracking-wide max-w-[55vw] sm:max-w-xs md:max-w-md truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  {slideLocation}
+                </span>
+              </div>
+            )}
           </div>
         )}
 
