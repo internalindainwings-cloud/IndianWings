@@ -85,9 +85,13 @@ export default async function Home() {
     getAllDestinations(false),
   ]);
 
-  const featuredPackages = allPackages.filter((p) => p.categorySlug === 'featured');
-  const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal');
-  const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat');
+  // 1. Featured Packages: Dynamically driven by admin isFeatured toggle (falls back to Classic packages if none selected)
+  const explicitFeatured = allPackages.filter((p) => p.isFeatured && p.isActive);
+  const featuredPackages = explicitFeatured.length > 0
+    ? explicitFeatured
+    : allPackages.filter((p) => p.categorySlug === 'featured' && p.isActive);
+  const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal' && p.isActive);
+  const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat' && p.isActive);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">

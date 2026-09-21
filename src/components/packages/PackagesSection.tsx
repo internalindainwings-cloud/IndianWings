@@ -21,7 +21,7 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({ initialPackage
     let isMounted = true;
     async function load() {
       try {
-        const res = await fetch('/api/packages?category=featured');
+        const res = await fetch('/api/packages?featured=true');
         const json = await res.json();
         if (json.success && Array.isArray(json.packages) && isMounted) {
           setPackagesList(json.packages);

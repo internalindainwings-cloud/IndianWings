@@ -167,7 +167,7 @@ function staticToEnriched(item: PackageItem, categorySlug: string, sortOrder: nu
     highlights: item.highlights || [],
     startingPrice: item.startingPrice,
     originalPrice: item.originalPrice || null,
-    isFeatured: categorySlug === 'featured',
+    isFeatured: false,
     isActive: true,
     sortOrder,
     itinerary,
@@ -185,7 +185,7 @@ function getStaticFallbackPackages(): EnrichedPackage[] {
 }
 
 const defaultCategories: PackageCategoryItem[] = [
-  { id: 'cat-featured', slug: 'featured', name: 'Featured & Classic', description: 'Timeless Kashmir itineraries covering Srinagar, Gulmarg & Pahalgam', sortOrder: 1, isActive: true },
+  { id: 'cat-featured', slug: 'featured', name: 'Classic Kashmir', description: 'Timeless Kashmir itineraries covering Srinagar, Gulmarg & Pahalgam', sortOrder: 1, isActive: true },
   { id: 'cat-seasonal', slug: 'seasonal', name: 'Seasonal Specials', description: 'Handcrafted itineraries for Winter Snow, Tulip Festival & Autumn Chinar', sortOrder: 2, isActive: true },
   { id: 'cat-offbeat', slug: 'offbeat', name: 'Off-Beat Expeditions', description: 'Untouched Himalayan valleys: Gurez, Doodhpathri, Bangus & Sinthan Top', sortOrder: 3, isActive: true },
 ];
@@ -209,6 +209,17 @@ export async function ensureDatabaseSeeded(): Promise<void> {
             sortOrder: cat.sortOrder,
             isActive: true,
           },
+        });
+      }
+    } else {
+      // Auto-migrate "Featured & Classic" to "Classic Kashmir" so category name is distinct from homepage featured status
+      const featuredAndClassic = await prisma.packageCategory.findFirst({
+        where: { slug: 'featured', name: 'Featured & Classic' },
+      });
+      if (featuredAndClassic) {
+        await prisma.packageCategory.update({
+          where: { id: featuredAndClassic.id },
+          data: { name: 'Classic Kashmir' },
         });
       }
     }

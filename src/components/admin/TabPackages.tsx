@@ -159,12 +159,46 @@ export const TabPackages: React.FC = () => {
         p.slug.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesCat =
-        selectedCategory === 'ALL' ||
-        p.categorySlug.toLowerCase() === selectedCategory.toLowerCase();
+        selectedCategory === 'ALL'
+          ? true
+          : selectedCategory === 'FEATURED_ONLY'
+          ? Boolean(p.isFeatured)
+          : p.categorySlug.toLowerCase() === selectedCategory.toLowerCase();
 
       return matchesSearch && matchesCat;
     });
   }, [packages, searchTerm, selectedCategory]);
+
+  // Quick 1-Click Toggle Featured Status
+  const handleToggleFeatured = async (pkg: EnrichedPackage, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextFeatured = !pkg.isFeatured;
+    // Optimistic UI update
+    setPackages((prev) =>
+      prev.map((p) => (p.id === pkg.id ? { ...p, isFeatured: nextFeatured } : p))
+    );
+    try {
+      const res = await fetch(`/api/admin/packages/${pkg.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isFeatured: nextFeatured }),
+      });
+      const json = await res.json();
+      if (!json.success) {
+        // Rollback
+        setPackages((prev) =>
+          prev.map((p) => (p.id === pkg.id ? { ...p, isFeatured: pkg.isFeatured } : p))
+        );
+        alert(json.error || 'Failed to update featured status');
+      }
+    } catch (err) {
+      // Rollback
+      setPackages((prev) =>
+        prev.map((p) => (p.id === pkg.id ? { ...p, isFeatured: pkg.isFeatured } : p))
+      );
+      alert('Network error while updating featured status');
+    }
+  };
 
   // Open Create Modal
   const handleOpenCreate = () => {
@@ -672,6 +706,19 @@ export const TabPackages: React.FC = () => {
             All Packages ({packages.length})
           </button>
 
+          {/* ⭐ Featured Filter Pill */}
+          <button
+            onClick={() => setSelectedCategory('FEATURED_ONLY')}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 ${
+              selectedCategory === 'FEATURED_ONLY'
+                ? 'bg-amber-500 text-midnight shadow-md shadow-amber-500/20'
+                : 'bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20'
+            }`}
+          >
+            <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+            <span>Featured on Homepage ({packages.filter((p) => p.isFeatured).length})</span>
+          </button>
+
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -720,6 +767,7 @@ export const TabPackages: React.FC = () => {
                   <th className="px-5 py-3.5">Category</th>
                   <th className="px-5 py-3.5">Duration</th>
                   <th className="px-5 py-3.5">Starting Price</th>
+                  <th className="px-5 py-3.5">Featured</th>
                   <th className="px-5 py-3.5">Media</th>
                   <th className="px-5 py-3.5">Animation</th>
                   <th className="px-5 py-3.5">Status</th>
@@ -772,6 +820,23 @@ export const TabPackages: React.FC = () => {
                     {/* Starting Price */}
                     <td className="px-5 py-4 font-mono font-bold text-white">
                       ₹{pkg.startingPrice.toLocaleString('en-IN')}
+                    </td>
+
+                    {/* Featured Status Toggle */}
+                    <td className="px-5 py-4">
+                      <button
+                        type="button"
+                        onClick={(e) => handleToggleFeatured(pkg, e)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
+                          pkg.isFeatured
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 shadow-sm shadow-amber-500/10'
+                            : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10 hover:text-white/70'
+                        }`}
+                        title={pkg.isFeatured ? 'Homepage Featured: Click to unfeature' : 'Standard: Click to feature on homepage'}
+                      >
+                        <Star className={`h-3.5 w-3.5 ${pkg.isFeatured ? 'fill-amber-400 text-amber-400' : 'text-white/40'}`} />
+                        <span>{pkg.isFeatured ? 'Featured' : 'Standard'}</span>
+                      </button>
                     </td>
 
                     {/* Media Flags */}
@@ -1066,7 +1131,7 @@ export const TabPackages: React.FC = () => {
                       />
                     </div>
 
-                    <div className="flex items-center gap-6 pt-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-6">
                       <label className="flex items-center gap-2 cursor-pointer text-white">
                         <input
                           type="checkbox"
@@ -1074,17 +1139,18 @@ export const TabPackages: React.FC = () => {
                           onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                           className="h-4 w-4 rounded accent-[#d98f5b]"
                         />
-                        <span>Active (Publicly Visible)</span>
+                        <span className="text-xs">Active (Publicly Visible)</span>
                       </label>
 
-                      <label className="flex items-center gap-2 cursor-pointer text-white">
+                      <label className="flex items-center gap-2 cursor-pointer text-amber-300 font-semibold px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/25 hover:bg-amber-500/15 transition-colors">
                         <input
                           type="checkbox"
                           checked={formData.isFeatured ?? false}
                           onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                          className="h-4 w-4 rounded accent-[#d98f5b]"
+                          className="h-4 w-4 rounded accent-amber-500"
                         />
-                        <span>Homepage Featured</span>
+                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        <span className="text-xs">Homepage Featured (Top Section)</span>
                       </label>
                     </div>
                   </div>
