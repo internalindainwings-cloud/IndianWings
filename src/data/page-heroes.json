@@ -1,0 +1,47 @@
+{
+  "destinations": {
+    "id": "destinations",
+    "name": "Destinations",
+    "route": "/destinations",
+    "desktopImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789975327/dest_hero.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789975327/dest_hero.jpg",
+    "heading": "Explore Iconic Kashmir",
+    "updatedAt": "2026-09-21T07:42:17.041Z"
+  },
+  "packages": {
+    "id": "packages",
+    "name": "Tour Packages",
+    "route": "/packages",
+    "desktopImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976764/pk1.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976691/pk_hero.jpg",
+    "heading": "Curated Kashmir Packages",
+    "updatedAt": "2026-09-21T07:46:17.186Z"
+  },
+  "transport": {
+    "id": "transport",
+    "name": "Transport & Fleet",
+    "route": "/transport",
+    "desktopImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976818/transport.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976818/transport.jpg",
+    "heading": "Verified Mountain Fleet",
+    "updatedAt": "2026-09-21T07:47:25.235Z"
+  },
+  "activities": {
+    "id": "activities",
+    "name": "Adventure & Activities",
+    "route": "/activities",
+    "desktopImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976895/adv.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976895/adv.jpg",
+    "heading": "Thrilling Valley Adventures",
+    "updatedAt": "2026-09-21T07:48:54.423Z"
+  },
+  "bucket-list": {
+    "id": "bucket-list",
+    "name": "Kashmir Bucket List",
+    "route": "/bucket-list/travel-information",
+    "desktopImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976998/bucket.jpg",
+    "mobileImageUrl": "https://res.cloudinary.com/wmwdypan/image/upload/v1789976998/bucket.jpg",
+    "heading": "Essential Kashmir Guide",
+    "updatedAt": "2026-09-21T07:50:11.846Z"
+  }
+}

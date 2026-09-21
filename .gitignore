@@ -48,3 +48,6 @@ next-env.d.ts
 backup_*.json
 recover.json
 
+# uploaded assets
+public/uploads/*
+!public/uploads/**/.gitkeep

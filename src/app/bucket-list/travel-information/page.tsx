@@ -5,6 +5,7 @@ import TravelInfoQuickTips from '@/components/travel-info/TravelInfoQuickTips';
 import TravelInfoDetailedSections from '@/components/travel-info/TravelInfoDetailedSections';
 import TravelInfoFaqAccordion from '@/components/travel-info/TravelInfoFaqAccordion';
 import TravelInfoCta from '@/components/travel-info/TravelInfoCta';
+import { getPageHeroById } from '@/lib/page-heroes-service';
 
 export const metadata: Metadata = {
   title: 'Kashmir Travel Information & Guidelines | The Indian Wings Company',
@@ -29,11 +30,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TravelInformationPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function TravelInformationPage() {
+  const hero = await getPageHeroById('bucket-list');
+
   return (
     <main className="w-full min-h-screen bg-background text-[#222222] flex flex-col">
       {/* 1. Hero Header */}
-      <TravelInfoHero />
+      <TravelInfoHero initialHero={hero} />
 
       {/* 2. Sticky Sub Navigation */}
       <TravelInfoSubNav />

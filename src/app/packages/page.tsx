@@ -6,6 +6,7 @@ import SeasonalPackagesSection from '@/components/packages/SeasonalPackagesSecti
 import OffBeatPackagesSection from '@/components/packages/OffBeatPackagesSection';
 import PackagesCta from '@/components/packages/PackagesCta';
 import { getAllPackages } from '@/lib/packages-service';
+import { getPageHeroById } from '@/lib/page-heroes-service';
 
 export const metadata: Metadata = {
   title: 'Kashmir Tour Packages & Holiday Itineraries | The Indian Wings Company',
@@ -31,7 +32,10 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function PackagesPage() {
-  const allPackages = await getAllPackages(false);
+  const [allPackages, hero] = await Promise.all([
+    getAllPackages(false),
+    getPageHeroById('packages')
+  ]);
   const featuredPackages = allPackages.filter((p) => p.categorySlug === 'featured');
   const seasonalPackages = allPackages.filter((p) => p.categorySlug === 'seasonal');
   const offBeatPackages = allPackages.filter((p) => p.categorySlug === 'offbeat');
@@ -39,7 +43,7 @@ export default async function PackagesPage() {
   return (
     <main className="w-full min-h-screen bg-background text-charcoal flex flex-col">
       {/* 1. Hero Header */}
-      <PackagesPageHero />
+      <PackagesPageHero initialHero={hero} />
 
       {/* 2. Sub-Nav to jump between categories */}
       <PackagesSubNav />

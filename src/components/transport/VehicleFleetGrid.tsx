@@ -24,9 +24,13 @@ const CATEGORIES: CategoryFilter[] = [
   'Adventure 4x4'
 ];
 
-export const VehicleFleetGrid: React.FC = () => {
+interface VehicleFleetGridProps {
+  initialVehicles?: VehicleFleetItem[];
+}
+
+export const VehicleFleetGrid: React.FC<VehicleFleetGridProps> = ({ initialVehicles }) => {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
-  const [fleetList, setFleetList] = useState<VehicleFleetItem[]>(VEHICLE_FLEET);
+  const [fleetList, setFleetList] = useState<VehicleFleetItem[]>(initialVehicles || VEHICLE_FLEET);
   const { openModal } = useEnquiryModal();
 
   useEffect(() => {
@@ -154,9 +158,20 @@ export const VehicleFleetGrid: React.FC = () => {
                 {/* Card Body */}
                 <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
                   <div className="space-y-2">
-                    <h3 className="font-serif text-base sm:text-lg font-semibold text-[#0B1F2A] group-hover:text-saffron transition-colors">
-                      {vehicle.name}
-                    </h3>
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-serif text-base sm:text-lg font-semibold text-[#0B1F2A] group-hover:text-saffron transition-colors">
+                        {vehicle.name}
+                      </h3>
+                      {vehicle.pricePerDay && (
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] uppercase font-manrope font-semibold text-[#64748B] block leading-none">From</span>
+                          <span className="font-manrope font-bold text-xs sm:text-sm text-emerald-700">
+                            ₹{vehicle.pricePerDay.toLocaleString('en-IN')}
+                            <span className="text-[10px] text-[#64748B] font-normal">/day</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Bullet Tags */}
                     <ul className="space-y-1.5 pt-0.5">

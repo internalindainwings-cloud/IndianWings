@@ -75,40 +75,41 @@ export async function ensureTransportSeeded(): Promise<void> {
 
 export async function getAllVehicles(includeDrafts = false): Promise<EnrichedVehicle[]> {
   try {
-    await cleanupMockVehicles();
     await ensureTransportSeeded();
-    const records = await prisma.transportVehicle.findMany({
-      where: includeDrafts ? {} : { isActive: true },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
-    });
+    if ('transportVehicle' in prisma) {
+      const records = await (prisma as any).transportVehicle.findMany({
+        where: includeDrafts ? {} : { isActive: true },
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+      });
 
-    if (records && records.length > 0) {
-      return records.map((r) => ({
-        id: r.id,
-        slug: r.slug,
-        name: r.name,
-        category: r.category as VehicleFleetItem['category'],
-        seats: r.seats,
-        bags: r.bags,
-        ac: r.ac,
-        fuel: r.fuel,
-        imageUrl: r.imageUrl,
-        tags: r.tags,
-        badge: r.badge || undefined,
-        pricePerDay: r.pricePerDay,
-        isActive: r.isActive,
-        sortOrder: r.sortOrder,
-      }));
+      if (records && records.length > 0) {
+        return records.map((r: any) => ({
+          id: r.id,
+          slug: r.slug,
+          name: r.name,
+          category: r.category as VehicleFleetItem['category'],
+          seats: r.seats,
+          bags: r.bags,
+          ac: r.ac,
+          fuel: r.fuel,
+          imageUrl: r.imageUrl,
+          tags: r.tags,
+          badge: r.badge || undefined,
+          pricePerDay: r.pricePerDay,
+          isActive: r.isActive,
+          sortOrder: r.sortOrder,
+        }));
+      }
     }
   } catch (err) {
     console.warn('[TransportService] DB vehicles query failed, using fallback:', err);
   }
 
-  // Fallback
+  // Fallback to verified 1-card-per-category fleet
   return VEHICLE_FLEET.map((v, idx) => ({
     ...v,
     slug: v.id,
-    pricePerDay: 3500,
+    pricePerDay: v.pricePerDay || 3500,
     isActive: true,
     sortOrder: idx + 1,
   }));

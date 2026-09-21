@@ -140,6 +140,7 @@ export const Footer: React.FC = () => {
     {
       heading: 'Company',
       links: [
+        { label: 'About Us', href: '/about-us' },
         { label: 'Why Travel With Us', href: '/#why-us' },
         { label: 'Client Stories & Reviews', href: '/#reviews' },
         { label: 'Safety & Hospitality Standards', href: '/activities#safety' },
@@ -259,12 +260,18 @@ export const Footer: React.FC = () => {
                 </div>
                 <span>{settings.email || siteConfig.contact.email}</span>
               </a>
-              <div className="flex items-center gap-3 text-sm text-warm-white/80">
-                <div className="w-8 h-8 rounded-full bg-warm-white/5 flex items-center justify-center text-saffron shrink-0">
+              <Link
+                href="/about-us#office"
+                className="flex items-start gap-3 text-sm text-warm-white/80 hover:text-saffron transition-colors group"
+                title="View our Srinagar registered office and directions"
+              >
+                <div className="w-8 h-8 rounded-full bg-warm-white/5 group-hover:bg-saffron/20 flex items-center justify-center text-saffron shrink-0 transition-colors mt-0.5">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <span>{settings.address || 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar'}</span>
-              </div>
+                <span className="leading-snug">
+                  {settings.address || 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar, Jammu & Kashmir, 190003'}
+                </span>
+              </Link>
             </div>
 
             {/* Social Icons */}

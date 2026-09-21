@@ -9,6 +9,7 @@ export interface VehicleFleetItem {
   imageUrl: string;
   tags: string[];
   badge?: string;
+  pricePerDay?: number;
 }
 
 export interface PickupDropRoute {
@@ -24,8 +25,94 @@ export interface PickupDropRoute {
   isPopular?: boolean;
 }
 
-// All vehicle fleet items are loaded dynamically from the database.
-export const VEHICLE_FLEET: VehicleFleetItem[] = [];
+// Exactly 1 curated, verified vehicle card per category (concise & clean)
+export const VEHICLE_FLEET: VehicleFleetItem[] = [
+  {
+    id: 'swift-dzire',
+    name: 'Maruti Suzuki Dzire',
+    category: 'Sedan / Hatch',
+    seats: '4 Seats',
+    bags: '2 Bags',
+    ac: 'Air Conditioned',
+    fuel: 'Petrol / Diesel',
+    imageUrl: '/images/fleet/swift-dzire.jpg',
+    tags: [
+      'Ideal for couples & small families',
+      'Smooth ride on 4-lane NH44 highway',
+      '100% Sanitized with experienced driver'
+    ],
+    badge: 'Best for Couples',
+    pricePerDay: 2500
+  },
+  {
+    id: 'innova-crysta',
+    name: 'Toyota Innova Crysta',
+    category: 'Luxury MPV',
+    seats: '6–7 Seats',
+    bags: '4 Bags',
+    ac: 'Dual-Zone AC',
+    fuel: 'Diesel Turbo',
+    imageUrl: '/images/fleet/innova-crysta.jpg',
+    tags: [
+      'Captain seats with premium legroom',
+      'Top choice for family vacations',
+      'Smooth hill-climb suspension'
+    ],
+    badge: 'Most Popular',
+    pricePerDay: 3800
+  },
+  {
+    id: 'fortuner-4x4',
+    name: 'Toyota Fortuner 4x4',
+    category: 'VIP SUV',
+    seats: '6 Seats',
+    bags: '3 Bags',
+    ac: 'Climate Control',
+    fuel: '4x4 Diesel',
+    imageUrl: '/images/fleet/fortuner.jpg',
+    tags: [
+      'VIP travel & high-profile protocol',
+      'Dominant road presence & safety',
+      'All-weather mountain capability'
+    ],
+    badge: 'VIP Luxury',
+    pricePerDay: 6500
+  },
+  {
+    id: 'tempo-traveller',
+    name: 'Force Tempo Traveller',
+    category: 'Group Traveller',
+    seats: '12–17 Seats',
+    bags: '10+ Bags',
+    ac: 'Individual AC Vents',
+    fuel: 'Diesel Heavy',
+    imageUrl: '/images/fleet/tempo-traveller.jpg',
+    tags: [
+      'Pushback ergonomic luxury seats',
+      'Dedicated high luggage capacity',
+      'Perfect for large families & groups'
+    ],
+    badge: 'Group Choice',
+    pricePerDay: 5500
+  },
+  {
+    id: 'thar-4x4',
+    name: 'Mahindra Thar 4x4',
+    category: 'Adventure 4x4',
+    seats: '4 Seats',
+    bags: '2 Bags',
+    ac: 'Air Conditioned',
+    fuel: '4x4 Turbo',
+    imageUrl: '/images/fleet/thar.jpg',
+    tags: [
+      'Equipped for snow & winter ice roads',
+      'Rugged high-pass trails & off-roading',
+      'Unmatched Himalayan terrain control'
+    ],
+    badge: 'Snow & Off-Road',
+    pricePerDay: 4800
+  }
+];
 
 
 export const PICKUP_DROP_ROUTES: PickupDropRoute[] = [

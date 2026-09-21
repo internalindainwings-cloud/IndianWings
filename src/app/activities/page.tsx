@@ -4,6 +4,7 @@ import ActivityCardsGrid from '@/components/activities/ActivityCardsGrid';
 import ActivitiesSafetyPillars from '@/components/activities/ActivitiesSafetyPillars';
 import ActivitiesFaq from '@/components/activities/ActivitiesFaq';
 import ActivitiesCta from '@/components/activities/ActivitiesCta';
+import { getPageHeroById } from '@/lib/page-heroes-service';
 
 export const metadata: Metadata = {
   title: 'Kashmir Adventure Activities & Sports | The Indian Wings Company',
@@ -27,11 +28,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ActivitiesPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function ActivitiesPage() {
+  const hero = await getPageHeroById('activities');
+
   return (
     <main className="w-full min-h-screen bg-background text-[#222222] flex flex-col">
       {/* 1. Hero */}
-      <ActivitiesHero />
+      <ActivitiesHero initialHero={hero} />
 
       {/* 2. Activities Grid (Sleek, Minimal Cards with Category Filter) */}
       <ActivityCardsGrid />

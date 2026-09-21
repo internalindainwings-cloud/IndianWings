@@ -4,6 +4,8 @@ import VehicleFleetGrid from '@/components/transport/VehicleFleetGrid';
 import TransportTrustBadges from '@/components/transport/TransportTrustBadges';
 import TransportFaq from '@/components/transport/TransportFaq';
 import TransportCta from '@/components/transport/TransportCta';
+import { getPageHeroById } from '@/lib/page-heroes-service';
+import { getAllVehicles } from '@/lib/transport-service';
 
 export const metadata: Metadata = {
   title: 'Jammu, Katra, Srinagar & Udhampur Cabs & Car Rental | The Indian Wings Company',
@@ -28,14 +30,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TransportPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function TransportPage() {
+  const [hero, vehicles] = await Promise.all([
+    getPageHeroById('transport'),
+    getAllVehicles(false)
+  ]);
+
   return (
     <main className="w-full min-h-screen bg-background text-charcoal flex flex-col">
       {/* 1. Hero Section */}
-      <TransportHero />
+      <TransportHero initialHero={hero} />
 
-      {/* 2. Our Luxury Fleet (Innova, Swift, Fortuner, Urbania, Tempo Traveller, Thar) */}
-      <VehicleFleetGrid />
+      {/* 2. Our Luxury Fleet (1 verified card per category) */}
+      <VehicleFleetGrid initialVehicles={vehicles} />
 
       {/* 4. Trust Pillars & Assurances */}
       <TransportTrustBadges />

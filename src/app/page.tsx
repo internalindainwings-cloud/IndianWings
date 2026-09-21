@@ -8,6 +8,7 @@ import { SeasonalPackagesSection } from "@/components/packages/SeasonalPackagesS
 import { OffBeatPackagesSection } from "@/components/packages/OffBeatPackagesSection";
 import { DestinationsSection } from "@/components/destinations/DestinationsSection";
 import { BrandsSection } from "@/components/brands/BrandsSection";
+import { HomeGallerySection } from "@/components/gallery/HomeGallerySection";
 import { FounderMessage } from "@/components/team/FounderMessage";
 import { getAllPackages } from "@/lib/packages-service";
 import { getAllDestinations } from "@/lib/destinations-service";
@@ -115,7 +116,10 @@ export default async function Home() {
       {/* 5. Trusted Partners Marquee Bar (Compact, No Giant Heading) */}
       <BrandsSection />
 
-      {/* 6. Founder's Message — Mrs. Komal */}
+      {/* 6. Curated Media Gallery (Images & Videos) */}
+      <HomeGallerySection />
+
+      {/* 7. Founder's Message — Mrs. Komal */}
       <FounderMessage />
     </main>
   );

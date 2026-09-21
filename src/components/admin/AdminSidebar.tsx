@@ -18,6 +18,8 @@ import {
   Sparkles,
   Mail,
   ChevronDown,
+  Image as ImageIcon,
+  Monitor,
 } from 'lucide-react';
 
 export type AdminSection =
@@ -25,6 +27,7 @@ export type AdminSection =
   | 'leads'
   | 'users'
   | 'herohomepage'
+  | 'pageheroes'
   | 'packages'
   | 'destinations'
   | 'activities'
@@ -34,6 +37,7 @@ export type AdminSection =
   | 'bucket-shopping'
   | 'bucket-things-to-do'
   | 'reviews'
+  | 'gallery'
   | 'seo'
   | 'settings'
   | 'activity'
@@ -120,6 +124,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       icon: <Sparkles className="h-[18px] w-[18px] text-saffron" />,
     },
     {
+      id: 'pageheroes',
+      label: 'Page Hero Banners',
+      icon: <Monitor className="h-[18px] w-[18px] text-[#F59E0B]" />,
+    },
+    {
       id: 'destinations',
       label: 'Destinations',
       icon: <Mountain className="h-[18px] w-[18px]" />,
@@ -157,6 +166,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       id: 'reviews',
       label: 'Customer Reviews',
       icon: <Star className="h-[18px] w-[18px]" />,
+    },
+    {
+      id: 'gallery',
+      label: 'Media Gallery',
+      icon: <ImageIcon className="h-[18px] w-[18px] text-[#F59E0B]" />,
     },
     {
       id: 'seo',
