@@ -36,12 +36,12 @@ export const HeroContent: React.FC<HeroContentProps> = ({
         )}
 
         {/* Main Heading — Luxury Sand Gold #C5A45E */}
-        <h1 className="font-manrope font-extrabold text-2xl min-[360px]:text-[26px] min-[400px]:text-[28px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-[1.15] tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2.5 sm:mb-3.5">
+        <h1 className="font-manrope font-extrabold text-2xl min-[360px]:text-[26px] min-[400px]:text-[28px] sm:text-3xl md:text-4xl lg:text-[44px] xl:text-[50px] text-[#C5A45E] leading-[1.14] md:leading-[1.1] tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2 md:mb-2.5">
           {headline}
         </h1>
 
         {subheadline && (
-          <p className="font-manrope text-white/90 text-xs sm:text-sm max-w-lg mb-3.5 sm:mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed line-clamp-2">
+          <p className="font-manrope text-white/90 text-xs sm:text-sm md:text-base max-w-lg mb-4 sm:mb-5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed line-clamp-2">
             {subheadline}
           </p>
         )}

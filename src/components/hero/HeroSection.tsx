@@ -98,8 +98,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
         />
         
-        {/* Main hero content fills available space */}
-        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-4 sm:pt-4 md:pt-1.5 pb-6 sm:pb-8 translate-y-0 md:-translate-y-6 lg:-translate-y-9">
+        {/* Main hero content fills available space — pulled up on desktop for premium visual prominence */}
+        <div className="flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 pt-4 sm:pt-4 md:pt-1.5 pb-6 sm:pb-8 translate-y-0 md:-translate-y-14 lg:-translate-y-20 xl:-translate-y-24">
           <HeroContent 
             headline={config.headline}
             badgeText={config.badgeText}
