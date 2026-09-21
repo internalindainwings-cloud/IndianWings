@@ -107,15 +107,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         )}
       </div>
 
-      {/* Active Slide Location Tag (Centered, no background, larger text) */}
+      {/* Active Slide Location Tag (Centered, no background, prominent text) */}
       {slideLocation && (
         <div 
           key={slide.id || currentSlide}
-          className="absolute left-1/2 -translate-x-1/2 bottom-11 sm:bottom-13 md:bottom-15 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 flex items-center justify-center w-full max-w-fit px-4 text-center"
+          className="absolute left-1/2 -translate-x-1/2 bottom-14 sm:bottom-16 md:bottom-20 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 flex items-center justify-center w-full max-w-fit px-4 text-center"
         >
-          <div className="inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
-            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#C5A45E] fill-[#C5A45E]/20 shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" />
-            <span className="font-manrope font-extrabold text-sm sm:text-base md:text-lg lg:text-xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+          <div className="inline-flex items-center justify-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-105">
+            <MapPin className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]" />
+            <span className="font-manrope font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl text-white tracking-wide max-w-[90vw] sm:max-w-2xl truncate drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
               {slideLocation}
             </span>
           </div>
