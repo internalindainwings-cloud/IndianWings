@@ -107,15 +107,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         )}
       </div>
 
-      {/* Active Slide Location Tag (Bold with Location Pin Icon at Bottom Right) */}
+      {/* Active Slide Location Tag (Centered, no background, larger text) */}
       {slideLocation && (
         <div 
           key={slide.id || currentSlide}
-          className="absolute right-3.5 sm:right-6 md:right-10 lg:right-12 bottom-12 sm:bottom-14 md:bottom-16 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2"
+          className="absolute left-1/2 -translate-x-1/2 bottom-11 sm:bottom-13 md:bottom-15 z-30 pointer-events-auto select-none transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 flex items-center justify-center w-full max-w-fit px-4 text-center"
         >
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-[#0B1E24]/85 hover:bg-[#0B1E24] backdrop-blur-md border border-[#C5A45E]/50 shadow-[0_4px_20px_rgba(0,0,0,0.6)] transition-transform hover:scale-105">
-            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#C5A45E] fill-[#C5A45E]/20 shrink-0 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
-            <span className="font-manrope font-extrabold text-[11.5px] sm:text-xs md:text-sm text-white tracking-wide max-w-[55vw] sm:max-w-xs md:max-w-md truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          <div className="inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
+            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#C5A45E] fill-[#C5A45E]/20 shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]" />
+            <span className="font-manrope font-extrabold text-sm sm:text-base md:text-lg lg:text-xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
               {slideLocation}
             </span>
           </div>
