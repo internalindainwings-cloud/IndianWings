@@ -7,7 +7,7 @@ export const writtenReviews: WrittenReview[] = [
     city: 'Pune',
     review: 'Well-organized trip, verified cabs and local private stays were top notch.',
     rating: 5,
-    avatarUrl: '/images/reviews/avatar_karan.jpg'
+    avatarUrl: ''
   },
   {
     id: 'wr-2',
@@ -15,7 +15,7 @@ export const writtenReviews: WrittenReview[] = [
     city: 'Mumbai',
     review: 'Personalized itinerary and luxury houseboat stay made our Kashmir trip unforgettable.',
     rating: 5,
-    avatarUrl: '/images/reviews/avatar_priya.jpg'
+    avatarUrl: ''
   },
   {
     id: 'wr-3',
@@ -23,7 +23,7 @@ export const writtenReviews: WrittenReview[] = [
     city: 'Delhi',
     review: 'Super friendly local team in Srinagar with seamless cab coordination throughout.',
     rating: 5,
-    avatarUrl: '/images/reviews/avatar_aditya.jpg'
+    avatarUrl: ''
   },
   {
     id: 'wr-4',
@@ -31,6 +31,6 @@ export const writtenReviews: WrittenReview[] = [
     city: 'Chandigarh',
     review: 'Pristine Gulmarg & Pahalgam experience. Everything was on time and stress-free.',
     rating: 5,
-    avatarUrl: '/images/reviews/avatar_neha.jpg'
+    avatarUrl: ''
   }
 ];
