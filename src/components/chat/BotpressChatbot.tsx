@@ -12,25 +12,33 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
         sessionStorage.setItem('bp_auto_opens', newCount.toString());
       }
       
-      // Wait a small moment to ensure script is injected
-      setTimeout(() => {
+      let attempts = 0;
+      // Retry every 500ms for up to 5 seconds if script is slow to load on mobile
+      const interval = setInterval(() => {
+        attempts++;
         try {
           if (typeof window !== 'undefined') {
             // @ts-ignore
             if (window.botpress && window.botpress.open) {
               // @ts-ignore
               window.botpress.open();
+              clearInterval(interval);
             } 
             // @ts-ignore
             else if (window.botpressWebChat) {
               // @ts-ignore
               window.botpressWebChat.sendEvent({ type: 'show' });
+              clearInterval(interval);
             }
           }
         } catch (e) {
           console.error('Failed to auto-open chatbot:', e);
         }
-      }, 800);
+        
+        if (attempts >= 10) {
+          clearInterval(interval); // Give up after 5 seconds
+        }
+      }, 500);
     };
 
     const handleScroll = () => {
