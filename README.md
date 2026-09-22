@@ -147,7 +147,5 @@ Health check will be available at [http://localhost:3001/health](http://localhos
 
 ## 📖 Complete Documentation
 
-For the comprehensive engineering manual, schema diagrams, zero-loss lead engine specifications, and phase history, open:
-- **PDF Manual**: [`.planning/Project_Documentation.pdf`](.planning/Project_Documentation.pdf)
-- **Markdown Specification**: [`.planning/Project_Documentation.md`](.planning/Project_Documentation.md)
-- **Deployment Runbook**: [`docs/production/production-deployment-runbook.md`](docs/production/production-deployment-runbook.md)
+For the comprehensive engineering manual, schema diagrams, zero-loss lead engine specifications, and phase history, open the master documentation file:
+- **Master Documentation**: [`docs/PROJECT_DOCUMENTATION.md`](docs/PROJECT_DOCUMENTATION.md)
