@@ -103,7 +103,7 @@ const mobileNavLinks: NavItem[] = [
   },
   {
     name: 'Gallery',
-    href: '/gallery',
+    href: '/#gallery',
     icon: ImageIcon,
   },
 ];

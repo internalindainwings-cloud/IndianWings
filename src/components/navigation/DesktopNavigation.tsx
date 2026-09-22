@@ -150,7 +150,7 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
 
   return (
     <nav className="flex items-center gap-1 lg:gap-1.5 xl:gap-2 ml-auto">
-      <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 no-scrollbar overflow-x-auto font-manrope text-[11px] lg:text-[12px] xl:text-[12.5px] font-semibold tracking-wide transition-all duration-300 rounded-full px-1.5 lg:px-2 xl:px-2.5 py-1 lg:py-1.5 border border-warm-white/10 bg-midnight/60 backdrop-blur-md text-warm-white">
+      <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 font-manrope text-[11px] lg:text-[12px] xl:text-[12.5px] font-semibold tracking-wide transition-all duration-300 rounded-full px-1.5 lg:px-2 xl:px-2.5 py-1 lg:py-1.5 border border-warm-white/10 bg-midnight/60 backdrop-blur-md text-warm-white">
         {linksToRender.map((link) => {
           const isActive = pathname === link.href || link.children?.some(child => pathname === child.href);
           const Icon = link.icon;
