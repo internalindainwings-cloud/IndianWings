@@ -348,25 +348,25 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Row 2: Developer Credit & Made in Kashmir */}
-          <div className="pt-3 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-[11.5px] text-warm-white/50">
-            <div className="flex items-center gap-1.5 flex-wrap justify-center sm:justify-start">
+          <div className="pt-3 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11.5px] text-warm-white/50 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-1.5 justify-center sm:justify-start">
               <span>Designed &amp; Developed by</span>
               <a
                 href="mailto:bhatubaid341@gmail.com"
-                className="text-[#F5A623] font-bold hover:underline transition-colors inline-flex items-center gap-1"
+                className="text-[#F5A623] font-bold hover:underline transition-colors"
               >
                 Ubaid Ahmad Bhat
               </a>
-              <span className="text-warm-white/30">|</span>
+              <span className="hidden sm:inline text-warm-white/30">|</span>
               <a
                 href="mailto:bhatubaid341@gmail.com"
-                className="text-warm-white/70 hover:text-[#F5A623] transition-colors"
+                className="hidden sm:inline text-warm-white/70 hover:text-[#F5A623] transition-colors"
               >
                 bhatubaid341@gmail.com
               </a>
             </div>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center gap-2.5">
               <span className="inline-flex items-center gap-1">
                 <span>Made with</span>
                 <Heart className="w-3 h-3 text-[#F5A623] fill-[#F5A623]" />
