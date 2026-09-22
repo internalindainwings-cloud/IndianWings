@@ -5,6 +5,7 @@ export interface HeroSlide {
   poster: string;
   mobilePoster?: string;
   mobileVideoSrc?: string;
+  location?: string;
 }
 
 export interface HeroTrustPill {

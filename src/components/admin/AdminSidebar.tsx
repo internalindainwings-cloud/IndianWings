@@ -42,7 +42,8 @@ export type AdminSection =
   | 'settings'
   | 'heatmaps'
   | 'marketing'
-  | 'brands';
+  | 'brands'
+  | 'activity';
 
 interface SubNavItem {
   id: AdminSection;
