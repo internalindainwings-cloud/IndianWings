@@ -16,6 +16,8 @@ export async function GET() {
           announcementText: settings.announcementText,
           announcementLink: settings.announcementLink,
           siteTitle: settings.siteTitle,
+          logoUrl: settings.logoUrl,
+          heroImageUrl: settings.heroImageUrl,
         },
       },
       {
@@ -36,6 +38,8 @@ export async function GET() {
         announcementEnabled: false,
         announcementText: '',
         announcementLink: '/packages',
+        logoUrl: null,
+        heroImageUrl: null,
       }
     });
   }
