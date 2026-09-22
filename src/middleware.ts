@@ -115,10 +115,7 @@ export async function middleware(request: NextRequest) {
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
   const isAdminSubdomain = hostname.startsWith('admin.');
 
-  if (!isLocalhost && !isAdminSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
-    url.pathname = '/';
-    return NextResponse.redirect(url);
-  }
+  // Admin Panel is now live on the main domain at /admin (protected by authentication)
 
   let isRewrittenToAdmin = false;
   if (isAdminSubdomain) {
