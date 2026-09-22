@@ -24,12 +24,27 @@ export const Navbar = () => {
   const settings = useSiteSettings();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    let rafId: number | null = null;
+    
+    const checkScroll = () => {
+      const nextValue = window.scrollY > 20;
+      setIsScrolled((prev) => (prev === nextValue ? prev : nextValue));
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
+    };
+
+    checkScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (

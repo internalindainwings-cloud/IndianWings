@@ -35,7 +35,9 @@ export const HomeGallerySection: React.FC = () => {
   const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
-    const handleResize = () => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    
+    const checkResize = () => {
       if (window.innerWidth < 640) {
         setItemsPerPage(4);
       } else if (window.innerWidth < 1024) {
@@ -44,10 +46,21 @@ export const HomeGallerySection: React.FC = () => {
         setItemsPerPage(8); // Reduced from 12 to make it less cluttered on desktop
       }
     };
+    
+    const handleResize = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        checkResize();
+      }, 200);
+    };
+    
     if (typeof window !== 'undefined') {
-      handleResize();
+      checkResize();
       window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (timeoutId) clearTimeout(timeoutId);
+      };
     }
   }, []);
 

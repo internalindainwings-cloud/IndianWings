@@ -10,17 +10,31 @@ export const FloatingContactActions: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let rafId: number | null = null;
+    
+    const checkScroll = () => {
       // Appear only after scrolling down 1.3 viewports
       const threshold = window.innerHeight * 1.3;
-      setIsVisible(window.scrollY > threshold);
+      const nextValue = window.scrollY > threshold;
+      setIsVisible((prev) => (prev === nextValue ? prev : nextValue));
+    };
+
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
     };
 
     // Initial check on mount
-    handleScroll();
+    checkScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (

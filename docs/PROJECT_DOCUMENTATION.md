@@ -7,6 +7,10 @@
 - **Current project status**: Production Release Ready (v2.0)
 - **Repository/project structure overview**: Monorepo structure with Next.js App Router for frontend/admin UI and a standalone Express Node.js application in `backend/` for the REST API.
 
+## Feature Inventory
+For a comprehensive, up-to-date inventory of all implemented features across the public website, admin panel, SEO systems, and performance optimizations, please refer to the dedicated feature document:
+- **[Feature Documentation](FEATURES.md)**
+
 ## 2. Technology Stack
 **Frontend**:
 - Next.js 16 (App Router)

@@ -36,7 +36,9 @@ export const TravelInfoSubNav: React.FC = () => {
   const [activeId, setActiveId] = useState<string>('quick-tips');
 
   useEffect(() => {
-    const handleScroll = () => {
+    let rafId: number | null = null;
+
+    const checkScroll = () => {
       const scrollPosition = window.scrollY + 180;
 
       for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
@@ -45,17 +47,28 @@ export const TravelInfoSubNav: React.FC = () => {
         if (element) {
           const top = element.offsetTop;
           if (scrollPosition >= top) {
-            setActiveId(item.id);
+            setActiveId((prev) => (prev === item.id ? prev : item.id));
             break;
           }
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    checkScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

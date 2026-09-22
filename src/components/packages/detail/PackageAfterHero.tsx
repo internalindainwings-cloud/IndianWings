@@ -112,8 +112,9 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
   // ScrollSpy: Update active tab highlight as user scrolls through sections
   useEffect(() => {
     const sectionIds: NavTab[] = ['overview', 'itinerary', 'stay', 'transport', 'inclusions', 'faqs', 'cancellation'];
+    let rafId: number | null = null;
 
-    const handleScroll = () => {
+    const checkScroll = () => {
       const scrollPosition = window.scrollY + 180;
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
@@ -122,16 +123,29 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
         if (el) {
           const top = el.offsetTop;
           if (scrollPosition >= top) {
-            setActiveTab(id);
+            setActiveTab((prev) => (prev === id ? prev : id));
             return;
           }
         }
       }
-      setActiveTab('overview');
+      setActiveTab((prev) => (prev === 'overview' ? prev : 'overview'));
+    };
+
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    checkScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // IntersectionObserver: Update active day destination image on scroll

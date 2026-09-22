@@ -14,25 +14,39 @@ export const DestinationSubNavigation: React.FC<DestinationSubNavigationProps> =
 
   // Scrollspy to detect active section in view
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 200;
+    let rafId: number | null = null;
+
+    const checkScroll = () => {
+      const scrollPosition = window.scrollY + 180;
 
       const thingsSection = document.getElementById('things-to-do');
       const bestTimeSection = document.getElementById('best-time');
       const staySection = document.getElementById('stay');
 
       if (staySection && scrollPosition >= staySection.offsetTop) {
-        setActiveSection('stay');
+        setActiveSection((prev) => (prev === 'stay' ? prev : 'stay'));
       } else if (bestTimeSection && scrollPosition >= bestTimeSection.offsetTop) {
-        setActiveSection('best-time');
+        setActiveSection((prev) => (prev === 'best-time' ? prev : 'best-time'));
       } else if (thingsSection && scrollPosition >= thingsSection.offsetTop) {
-        setActiveSection('things-to-do');
+        setActiveSection((prev) => (prev === 'things-to-do' ? prev : 'things-to-do'));
       }
     };
 
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    checkScroll();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const scrollToSection = (id: string) => {

@@ -8,7 +8,13 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
   const [isPermanentlyHidden, setIsPermanentlyHidden] = useState(false);
 
   useEffect(() => {
+    let rafId: number | null = null;
+
+    // We do NOT want to show the webchat on the /admin routes
     const checkIsHidden = () => {
+      if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+        return true;
+      }
       const opensCount = parseInt(
         typeof localStorage !== 'undefined' ? localStorage.getItem('tiw_chat_opens') || '0' : '0'
       );
@@ -53,14 +59,18 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
       }, 500);
     };
 
-    const handleScroll = () => {
-      if (checkIsHidden()) return; // Failsafe
+    const checkScroll = () => {
+      if (typeof window === 'undefined') return;
+      if (checkIsHidden()) {
+        setIsPermanentlyHidden(true);
+        return;
+      }
 
       const scrollY = window.scrollY;
-      const loadThreshold = window.innerHeight * 0.8;
+      const loadThreshold = window.innerHeight * 0.5;
       
       const threshold1 = window.innerHeight * 1.2;
-      const threshold2 = window.innerHeight * 3.0; 
+      const threshold2 = window.innerHeight * 2.5; 
 
       if (scrollY > loadThreshold) {
         setShouldLoad(true);
@@ -78,9 +88,20 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
       }
     };
 
-    handleScroll();
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        checkScroll();
+      });
+    };
+
+    checkScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
