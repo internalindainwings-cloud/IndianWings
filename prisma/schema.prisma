@@ -165,6 +165,7 @@ model SiteSetting {
   announcementText    String   @default("Special Seasonal Offer: Enjoy exclusive seasonal discounts on advance Kashmir holiday bookings!")
   announcementLink    String   @default("/packages")
   heroConfig          Json?
+  pageHeroesConfig    Json?
   logoUrl             String?
   heroImageUrl        String?
   updatedAt           DateTime @updatedAt

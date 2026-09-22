@@ -1,19 +1,25 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { PageHeroConfig, DEFAULT_PAGE_HEROES } from './page-heroes-constants';
+import { prisma } from './database/prisma';
 
 export type { PageHeroConfig };
 export { DEFAULT_PAGE_HEROES };
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'src', 'data', 'page-heroes.json');
-
 export async function getAllPageHeroes(): Promise<Record<string, PageHeroConfig>> {
   try {
-    const raw = await fs.readFile(DATA_FILE_PATH, 'utf-8');
-    const parsed = JSON.parse(raw);
-    return { ...DEFAULT_PAGE_HEROES, ...parsed };
+    const settings = await prisma.siteSetting.findUnique({
+      where: { id: 'global' },
+    });
+    
+    if (settings && settings.pageHeroesConfig) {
+      const parsed = typeof settings.pageHeroesConfig === 'string' 
+        ? JSON.parse(settings.pageHeroesConfig) 
+        : settings.pageHeroesConfig;
+      return { ...DEFAULT_PAGE_HEROES, ...(parsed as any) };
+    }
+    
+    return DEFAULT_PAGE_HEROES;
   } catch (err) {
-    console.error('[PageHeroesService] Failed to read page-heroes.json, using defaults:', err);
+    console.error('[PageHeroesService] Failed to read pageHeroesConfig from DB, using defaults:', err);
     return DEFAULT_PAGE_HEROES;
   }
 }
@@ -49,6 +55,17 @@ export async function updatePageHero(
     updatedAt: new Date().toISOString(),
   };
 
-  await fs.writeFile(DATA_FILE_PATH, JSON.stringify(all, null, 2), 'utf-8');
+  await prisma.siteSetting.upsert({
+    where: { id: 'global' },
+    create: {
+      id: 'global',
+      pageHeroesConfig: all as any,
+    },
+    update: {
+      pageHeroesConfig: all as any,
+    },
+  });
+
   return all[id];
 }
+
