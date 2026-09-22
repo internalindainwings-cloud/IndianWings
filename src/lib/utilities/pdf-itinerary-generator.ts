@@ -112,7 +112,7 @@ export async function generateItineraryPdf({
   doc.setFontSize(8);
   doc.setTextColor(200, 210, 220);
   doc.text(`Helpline: ${siteConfig.contact.displayPhone}`, pageWidth - margin, 14, { align: 'right' });
-  doc.text('theindianwings.com', pageWidth - margin, 20, { align: 'right' });
+  doc.text('tourpackageskashmir.com', pageWidth - margin, 20, { align: 'right' });
 
   y = 46;
 

@@ -119,7 +119,7 @@ const MARKETS = [
   }
 ];
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
 export default async function ShoppingGuidePage() {
   const headersList = await headers();

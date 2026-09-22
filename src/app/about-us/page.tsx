@@ -21,7 +21,7 @@ import { siteConfig } from '@/config/site-config';
 import { AboutCtaButtons } from './AboutCtaButtons';
 import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
 import { getSiteSettings } from '@/lib/settings-service';
 

@@ -25,7 +25,7 @@ export default async function BlogListingPage() {
     headers(),
   ]);
   const nonce = headersList.get('x-nonce') ?? undefined;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
   const blogListSchema = {
     '@context': 'https://schema.org',

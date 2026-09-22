@@ -39,7 +39,7 @@ export interface BucketExperienceItem {
 // All bucket experiences are loaded dynamically
 const BUCKET_EXPERIENCES: BucketExperienceItem[] = [];
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
 export default async function ThingsToDoPage() {
   const headersList = await headers();

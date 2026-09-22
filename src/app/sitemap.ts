@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
   const now = new Date();
 
   // 1. Static Core & Category Landing Pages

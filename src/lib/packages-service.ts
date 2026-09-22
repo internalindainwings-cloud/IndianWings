@@ -174,7 +174,7 @@ function staticToEnriched(item: PackageItem, categorySlug: string, sortOrder: nu
     metaTitle: `${item.title} (${item.duration}) | Best Kashmir Packages`,
     metaDescription: `Book ${item.title} for ${item.duration} starting at ₹${item.startingPrice.toLocaleString('en-IN')}/person. Includes ${item.inclusions.slice(0, 3).join(', ')}. 100% verified stays.`,
     keywords: [item.title, 'Kashmir tour package', ...item.destinations.map((d) => `${d} tour`), 'Kashmir itinerary'],
-    canonicalUrl: `https://theindianwings.com/packages/${slug}`,
+    canonicalUrl: `https://tourpackageskashmir.com/packages/${slug}`,
     noIndex: false,
   };
 }
@@ -322,7 +322,7 @@ async function fetchAllPackagesFromDb(includeDrafts = false): Promise<EnrichedPa
           metaTitle: r.metaTitle || `${r.title} | The Indian Wings Company`,
           metaDescription: r.metaDescription || `Book ${r.title} with verified stays and private transport.`,
           keywords: r.keywords,
-          canonicalUrl: r.canonicalUrl || `https://theindianwings.com/packages/${r.slug}`,
+          canonicalUrl: r.canonicalUrl || `https://tourpackageskashmir.com/packages/${r.slug}`,
           noIndex: r.noIndex,
           updatedAt: r.updatedAt,
         };
@@ -405,7 +405,7 @@ async function fetchPackageBySlugFromDb(slug: string): Promise<EnrichedPackage |
         metaTitle: r.metaTitle || `${r.title} | The Indian Wings Company`,
         metaDescription: r.metaDescription || `Book ${r.title} with verified stays and private transport.`,
         keywords: r.keywords,
-        canonicalUrl: r.canonicalUrl || `https://theindianwings.com/packages/${r.slug}`,
+        canonicalUrl: r.canonicalUrl || `https://tourpackageskashmir.com/packages/${r.slug}`,
         noIndex: r.noIndex,
         updatedAt: r.updatedAt,
       };

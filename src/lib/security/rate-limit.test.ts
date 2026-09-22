@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Rate-Limiter IP Resolution Security Tests
  *
  * Uses Node.js built-in test runner (node:test + node:assert). No new dependencies.

@@ -2047,7 +2047,7 @@ export const TabPackages: React.FC = () => {
 
                     <div className="space-y-1">
                       <div className="text-[11px] text-[#202124]">
-                        https://theindianwings.com/packages/{formData.slug || 'package-slug'}
+                        https://tourpackageskashmir.com/packages/{formData.slug || 'package-slug'}
                       </div>
                       <h4 className="text-base font-medium text-[#1a0dab] hover:underline cursor-pointer line-clamp-1">
                         {formData.metaTitle || `${formData.title || 'Package Title'} (${formData.duration}) | The Indian Wings Company`}

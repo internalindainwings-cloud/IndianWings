@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
         metaTitle: metaTitle || `${title} (${duration}) | The Indian Wings Company`,
         metaDescription: metaDescription || `Book ${title} in Kashmir with verified stays and private cab.`,
         keywords: Array.isArray(keywords) ? keywords : [],
-        canonicalUrl: canonicalUrl || `https://theindianwings.com/packages/${slug}`,
+        canonicalUrl: canonicalUrl || `https://tourpackageskashmir.com/packages/${slug}`,
         noIndex: Boolean(noIndex),
       },
     });
