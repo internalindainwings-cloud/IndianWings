@@ -144,9 +144,6 @@ export const Footer: React.FC = () => {
         { label: 'Why Travel With Us', href: '/#why-us' },
         { label: 'Client Stories & Reviews', href: '/#reviews' },
         { label: 'Safety & Hospitality Standards', href: '/activities#safety' },
-        { label: 'Terms & Conditions', href: '/terms-and-conditions' },
-        { label: 'Privacy Policy', href: '/privacy-policy' },
-        { label: 'Cancellation & Refunds', href: '/cancellation-refund-policy' },
       ],
     },
   ];
