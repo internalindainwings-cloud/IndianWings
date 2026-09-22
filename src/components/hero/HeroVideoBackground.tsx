@@ -113,17 +113,14 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                   {/* Desktop Source: screens >= 768px */}
                   <source
                     media="(min-width: 768px)"
-                    srcSet={`/_next/image?url=${encodeURIComponent(mediaUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1200&q=75 1200w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=1920&q=75 1920w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=2048&q=75 2048w, /_next/image?url=${encodeURIComponent(mediaUrl)}&w=3840&q=75 3840w`}
-                    sizes="100vw"
+                    srcSet={mediaUrl}
                   />
                   {/* Mobile Fallback Image: screens < 768px with fetchPriority high */}
                   <img
-                    src={`/_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1080&q=75`}
-                    srcSet={`/_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=640&q=75 640w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mobileMediaUrl)}&w=1200&q=75 1200w`}
-                    sizes="100vw"
+                    src={mobileMediaUrl}
                     alt={s.title || 'Hero Background'}
                     fetchPriority="high"
-                    decoding="async"
+                    decoding="sync"
                     className={`absolute inset-0 w-full h-full object-cover object-center ${img}`}
                   />
                 </picture>

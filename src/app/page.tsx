@@ -145,18 +145,14 @@ export default async function Home() {
             rel="preload"
             as="image"
             media="(min-width: 768px)"
-            href={`/_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1920&q=75`}
-            imageSrcSet={`/_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1200&q=75 1200w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=1920&q=75 1920w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=2048&q=75 2048w, /_next/image?url=${encodeURIComponent(desktopLcpUrl)}&w=3840&q=75 3840w`}
-            imageSizes="100vw"
+            href={desktopLcpUrl}
             fetchPriority="high"
           />
           <link
             rel="preload"
             as="image"
             media="(max-width: 767px)"
-            href={`/_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1080&q=75`}
-            imageSrcSet={`/_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=640&q=75 640w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=750&q=75 750w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=828&q=75 828w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1080&q=75 1080w, /_next/image?url=${encodeURIComponent(mobileLcpUrl)}&w=1200&q=75 1200w`}
-            imageSizes="100vw"
+            href={mobileLcpUrl}
             fetchPriority="high"
           />
         </>
