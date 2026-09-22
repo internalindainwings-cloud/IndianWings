@@ -69,5 +69,5 @@ export async function getAllBlogSlugs(): Promise<string[]> {
     where: { isPublished: true },
     select: { slug: true },
   });
-  return blogs.map((b) => b.slug);
+  return blogs.map((b: { slug: string }) => b.slug);
 }

@@ -45,17 +45,17 @@ export const HeroActionBar: React.FC<HeroActionBarProps> = ({ trustPills }) => {
 
   return (
     <section 
-      className="w-full border-y py-[7px] sm:py-[6px] px-2 sm:px-4 relative z-20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-all duration-300"
+      className="w-full border-y py-[7px] sm:py-[6px] relative z-20 shadow-[0_4px_20px_rgba(0,0,0,0.2)] backdrop-blur-xl transition-all duration-300"
       style={{
         backgroundColor: 'color-mix(in srgb, var(--color-midnight) 45%, transparent)',
         borderColor: 'rgba(197, 164, 94, 0.25)'
       }}
     >
-      <div className="w-fit max-w-full mx-auto flex items-center justify-center gap-1 sm:gap-2 flex-wrap sm:flex-nowrap">
+      <div className="w-full max-w-full mx-auto flex items-center justify-start md:justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 overflow-x-auto no-scrollbar">
         {items.map((pill, idx) => (
           <div 
             key={pill.id || idx}
-            className="group font-manrope flex items-center gap-1 sm:gap-1.5 py-[4.5px] sm:py-[5px] px-2 sm:px-2.5 rounded-md sm:rounded-lg backdrop-blur-md sm:backdrop-blur-lg bg-black/30 hover:bg-black/45 border border-[#C5A45E]/40 hover:border-[#C5A45E]/80 shadow-[0_2px_10px_rgba(197,164,94,0.12)] hover:-translate-y-0.5 transition-all duration-200 text-left cursor-default select-none shrink-0"
+            className="group font-manrope flex items-center gap-1 sm:gap-1.5 py-[4.5px] sm:py-[5px] px-2 sm:px-2.5 rounded-md sm:rounded-lg backdrop-blur-md sm:backdrop-blur-lg bg-black/30 hover:bg-black/45 border border-[#C5A45E]/40 hover:border-[#C5A45E]/80 shadow-[0_2px_10px_rgba(197,164,94,0.12)] hover:-translate-y-0.5 transition-all duration-200 text-left cursor-default select-none shrink-0 snap-center"
           >
             <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-[4px] sm:rounded-md flex items-center justify-center shrink-0 bg-[#C5A45E]/15 border border-[#C5A45E]/30 shadow-[inset_0_1px_0_rgba(197,164,94,0.2)] group-hover:scale-105 transition-transform">
               {renderIcon(pill.icon)}

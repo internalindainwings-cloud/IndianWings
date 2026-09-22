@@ -33,8 +33,8 @@ const defaultState: SiteSettingsState = {
 
 const SiteSettingsContext = createContext<SiteSettingsState>(defaultState);
 
-export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<SiteSettingsState>(defaultState);
+export const SiteSettingsProvider: React.FC<{ children: React.ReactNode; initialSettings?: Partial<SiteSettingsState> }> = ({ children, initialSettings }) => {
+  const [settings, setSettings] = useState<SiteSettingsState>({ ...defaultState, ...initialSettings });
 
   useEffect(() => {
     let mounted = true;

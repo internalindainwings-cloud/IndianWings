@@ -17,7 +17,7 @@ const EnquiryModal = dynamic(
 
 
 
-export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; isAdminOverride?: boolean }> = ({ children, nonce, isAdminOverride }) => {
+export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; isAdminOverride?: boolean; initialSettings?: any }> = ({ children, nonce, isAdminOverride, initialSettings }) => {
   const pathname = usePathname();
   const isAdmin = isAdminOverride || (pathname ? pathname.startsWith('/admin') : false);
 
@@ -40,7 +40,7 @@ export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; 
   }
 
   return (
-    <SiteSettingsProvider>
+    <SiteSettingsProvider initialSettings={initialSettings}>
       <EnquiryModalProvider>
         <Navbar />
         <main className="flex-1">{children}</main>

@@ -42,8 +42,8 @@ export const HeroContent: React.FC<HeroContentProps> = ({
         <h1 
           className={
             isOriginal
-              ? 'font-manrope font-extrabold text-[19px] min-[360px]:text-[22px] min-[400px]:text-[24px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2.5 sm:mb-4'
-              : 'font-manrope font-extrabold text-2xl min-[360px]:text-[26px] min-[400px]:text-[28px] sm:text-3xl md:text-4xl lg:text-[44px] xl:text-[50px] text-[#C5A45E] leading-[1.14] md:leading-[1.1] tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2 md:mb-2.5'
+              ? 'font-manrope font-extrabold text-[22px] min-[360px]:text-[26px] min-[400px]:text-[28px] sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] text-[#C5A45E] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2.5 sm:mb-4'
+              : 'font-manrope font-extrabold text-[26px] min-[360px]:text-[30px] min-[400px]:text-[32px] sm:text-4xl md:text-5xl lg:text-[44px] xl:text-[50px] text-[#C5A45E] leading-[1.14] md:leading-[1.1] tracking-tight whitespace-normal sm:whitespace-nowrap break-words drop-shadow-[0_3px_16px_rgba(0,0,0,0.85)] mb-2 md:mb-2.5'
           }
         >
           {headline}
@@ -53,8 +53,8 @@ export const HeroContent: React.FC<HeroContentProps> = ({
           <p 
             className={
               isOriginal
-                ? 'font-manrope text-[#C5A45E] text-xs sm:text-sm max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2'
-                : 'font-manrope text-white/90 text-xs sm:text-sm md:text-base max-w-lg mb-4 sm:mb-5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed line-clamp-2'
+                ? 'font-manrope text-[#C5A45E] text-sm sm:text-base font-medium max-w-lg mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2'
+                : 'font-manrope text-white/90 text-sm sm:text-base md:text-lg font-medium max-w-lg mb-4 sm:mb-5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] leading-relaxed line-clamp-2'
             }
           >
             {subheadline}
