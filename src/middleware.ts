@@ -113,18 +113,18 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set('Content-Security-Policy', cspHeader);
 
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
-  const isAdminSubdomain = hostname.startsWith('admin.');
+  const isDashboardSubdomain = hostname.startsWith('dashboard.');
 
   // Block access to /admin on the main website domain for security and separation
-  if (!isLocalhost && !isAdminSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
+  if (!isLocalhost && !isDashboardSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
   let isRewrittenToAdmin = false;
   
-  // If user visits admin.tourpackageskashmir.com, seamlessly route them to the admin panel
-  if (isAdminSubdomain) {
+  // If user visits dashboard.tourpackageskashmir.com, seamlessly route them to the admin panel
+  if (isDashboardSubdomain) {
     if (pathname === '/') {
       url.pathname = '/admin';
       isRewrittenToAdmin = true;
