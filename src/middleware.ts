@@ -140,6 +140,7 @@ export async function middleware(request: NextRequest) {
   const effectivePath = url.pathname;
 
   if (effectivePath.startsWith('/admin')) {
+    requestHeaders.set('x-is-admin', 'true');
     const isLoginPage = effectivePath === '/admin/login';
     const token = request.cookies.get(COOKIE_NAME)?.value;
     const isSessionValid = await isValidAdminSession(token);

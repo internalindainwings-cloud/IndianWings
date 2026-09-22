@@ -17,9 +17,9 @@ const EnquiryModal = dynamic(
 
 
 
-export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string }> = ({ children, nonce }) => {
+export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; isAdminOverride?: boolean }> = ({ children, nonce, isAdminOverride }) => {
   const pathname = usePathname();
-  const isAdmin = pathname ? pathname.startsWith('/admin') : false;
+  const isAdmin = isAdminOverride || (pathname ? pathname.startsWith('/admin') : false);
 
   useEffect(() => {
     // Ensure clean application of client-chosen original theme: #0F4C54 (High Alpine Cyan) & #F59E0B (Mughal Marigold) on all devices
