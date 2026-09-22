@@ -21,7 +21,7 @@ import {
 import type { EnrichedVehicle, EnrichedRoute } from '@/lib/transport-service';
 
 export const TabTransport: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'vehicles' | 'routes'>('vehicles');
+  const [activeTab, setActiveTab] = useState<'vehicles' | 'routes' | 'hero'>('vehicles');
   const [vehicles, setVehicles] = useState<EnrichedVehicle[]>([]);
   const [routes, setRoutes] = useState<EnrichedRoute[]>([]);
   const [loading, setLoading] = useState(true);
@@ -254,7 +254,7 @@ export const TabTransport: React.FC = () => {
               <Plus className="h-4 w-4" />
               <span>Add Vehicle</span>
             </button>
-          ) : (
+          ) : activeTab === 'routes' ? (
             <button
               onClick={handleOpenCreateRoute}
               className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#d98f5b] to-[#EA580C] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-[#d98f5b]/20 transition-all hover:brightness-110 active:scale-95"
@@ -262,7 +262,7 @@ export const TabTransport: React.FC = () => {
               <Plus className="h-4 w-4" />
               <span>Add Transfer Route</span>
             </button>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -290,7 +290,23 @@ export const TabTransport: React.FC = () => {
           <Route className="h-4 w-4" />
           <span>Transfer Routes ({routes.length})</span>
         </button>
+        <button
+          onClick={() => setActiveTab('hero')}
+          className={`flex items-center gap-2 py-3 px-4 border-b-2 transition-all ${
+            activeTab === 'hero'
+              ? 'border-[#d98f5b] text-[#d98f5b]'
+              : 'border-transparent text-white/50 hover:text-white'
+          }`}
+        >
+          <Snowflake className="h-4 w-4" />
+          <span>Hero Banner</span>
+        </button>
       </div>
+
+      {/* ── Tab Content: Hero Banner ── */}
+      {activeTab === 'hero' && (
+        <TransportHeroManager />
+      )}
 
       {/* ── Tab Content: Vehicles ── */}
       {activeTab === 'vehicles' && (
@@ -840,3 +856,96 @@ export const TabTransport: React.FC = () => {
     </div>
   );
 };
+
+const TransportHeroManager: React.FC = () => {
+  const [hero, setHero] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/page-heroes/transport')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) setHero(data.hero);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/page-heroes/transport', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(hero),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Hero banner updated successfully');
+      } else {
+        alert(data.error || 'Failed to update hero');
+      }
+    } catch (err) {
+      alert('Network error');
+    }
+    setSaving(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-12 text-white/50">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0B1F2A]/60 shadow-xl backdrop-blur-md p-6">
+      <h3 className="text-lg font-bold text-white mb-4">Transport Page Hero Banner</h3>
+      <form onSubmit={handleSave} className="space-y-4 max-w-2xl">
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-white/50">Hero Heading</label>
+          <input
+            type="text"
+            required
+            value={hero?.heading || ''}
+            onChange={e => setHero({ ...hero, heading: e.target.value })}
+            className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-white focus:border-[#d98f5b] focus:outline-none"
+            placeholder="e.g. Private Kashmir Cabs & Fleet"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-white/50">Desktop Background URL (16:9)</label>
+          <input
+            type="text"
+            required
+            value={hero?.desktopImageUrl || ''}
+            onChange={e => setHero({ ...hero, desktopImageUrl: e.target.value })}
+            className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-white focus:border-[#d98f5b] focus:outline-none"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-semibold text-white/50">Mobile Background URL (9:16)</label>
+          <input
+            type="text"
+            required
+            value={hero?.mobileImageUrl || ''}
+            onChange={e => setHero({ ...hero, mobileImageUrl: e.target.value })}
+            className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-white focus:border-[#d98f5b] focus:outline-none"
+          />
+        </div>
+        
+        <button
+          type="submit"
+          disabled={saving}
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#d98f5b] to-[#EA580C] px-6 py-2.5 text-xs font-bold text-white transition-all hover:brightness-110 disabled:opacity-50"
+        >
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          <span>Save Banner</span>
+        </button>
+      </form>
+    </div>
+  );
+};
+
