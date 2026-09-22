@@ -177,7 +177,7 @@ export async function sendItineraryEmail({
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {
-      const from = process.env.RESEND_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
+      const from = process.env.RESEND_FROM || process.env.SMTP_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -200,6 +200,7 @@ export async function sendItineraryEmail({
           messageId: resData.id,
         };
       }
+      console.error('[Resend API Error]', resData);
       return {
         success: false,
         error: resData.message || 'Resend API failed',
@@ -460,7 +461,7 @@ export async function sendAdminEnquiryNotificationEmail(
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {
-      const from = process.env.RESEND_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
+      const from = process.env.RESEND_FROM || process.env.SMTP_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -483,6 +484,7 @@ export async function sendAdminEnquiryNotificationEmail(
           messageId: resData.id,
         };
       }
+      console.error('[Resend API Error]', resData);
       return {
         success: false,
         error: resData.message || 'Resend API failed',
