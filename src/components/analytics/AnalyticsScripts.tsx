@@ -49,10 +49,10 @@ export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => 
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             nonce={nonce}
           />
-          <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
+          <Script id="google-analytics" strategy="lazyOnload" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -67,7 +67,7 @@ export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => 
 
       {/* Microsoft Clarity (Heatmaps, Screen Recordings, Drop-offs) */}
       {clarityId && (
-        <Script id="microsoft-clarity" strategy="afterInteractive" nonce={nonce}>
+        <Script id="microsoft-clarity" strategy="lazyOnload" nonce={nonce}>
           {`
             (function(c,l,a,r,i,t,y){
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

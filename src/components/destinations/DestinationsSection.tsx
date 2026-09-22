@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { DestinationItem } from '@/data/destinations';
 import { DestinationCard } from './DestinationCard';
@@ -10,10 +8,8 @@ interface DestinationsSectionProps {
 }
 
 export const DestinationsSection: React.FC<DestinationsSectionProps> = ({ initialDestinations = [] }) => {
-  const [destinationsList] = useState<DestinationItem[]>(initialDestinations);
-
   // Show the first 3 destinations
-  const iconicDestinations = destinationsList.slice(0, 3);
+  const iconicDestinations = initialDestinations.slice(0, 3);
 
   return (
     <section id="destinations" className="w-full bg-white pt-4 sm:pt-6 pb-6 sm:pb-8 relative overflow-hidden border-t border-black/6 scroll-mt-20">
