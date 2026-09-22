@@ -55,6 +55,29 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
   const [error, setError] = useState('');
   const [hasTrackedStart, setHasTrackedStart] = useState(false);
 
+  // Auto-reset the success state after 7 seconds if not inside a modal (which would have onSuccess)
+  React.useEffect(() => {
+    if (submitted && !onSuccess) {
+      const timer = setTimeout(() => {
+        setSubmitted(false);
+        setSubmittedWhatsAppUrl('');
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          travelDate: '',
+          nights: '',
+          guests: '2-4 Guests',
+          tripType: defaultTripType || 'Kashmir Classic',
+          message: defaultPackageTitle ? `Inquiry regarding ${defaultPackageTitle}` : '',
+          hpField: '',
+        });
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, onSuccess, defaultTripType, defaultPackageTitle]);
+
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
