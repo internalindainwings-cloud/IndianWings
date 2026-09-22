@@ -5,15 +5,27 @@ import Script from 'next/script';
 
 export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [isPermanentlyHidden, setIsPermanentlyHidden] = useState(false);
 
   useEffect(() => {
+    const checkIsHidden = () => {
+      const opensCount = parseInt(
+        typeof localStorage !== 'undefined' ? localStorage.getItem('tiw_chat_opens') || '0' : '0'
+      );
+      return opensCount >= 2;
+    };
+
+    if (checkIsHidden()) {
+      setIsPermanentlyHidden(true);
+      return;
+    }
+
     const triggerAutoOpen = (newCount: number) => {
-      if (typeof sessionStorage !== 'undefined') {
-        sessionStorage.setItem('bp_auto_opens', newCount.toString());
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('tiw_chat_opens', newCount.toString());
       }
       
       let attempts = 0;
-      // Retry every 500ms for up to 5 seconds if script is slow to load on mobile
       const interval = setInterval(() => {
         attempts++;
         try {
@@ -36,75 +48,69 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
         }
         
         if (attempts >= 10) {
-          clearInterval(interval); // Give up after 5 seconds
+          clearInterval(interval);
         }
       }, 500);
     };
 
     const handleScroll = () => {
+      if (checkIsHidden()) return; // Failsafe
+
       const scrollY = window.scrollY;
       const loadThreshold = window.innerHeight * 0.8;
       
-      // Threshold 1: Lead Form (approx 1.2 viewports down)
       const threshold1 = window.innerHeight * 1.2;
-      // Threshold 2: Packages section (approx 3 viewports down)
       const threshold2 = window.innerHeight * 3.0; 
 
-      // Load widget early
       if (scrollY > loadThreshold) {
         setShouldLoad(true);
       }
 
-      // Check how many times we've auto-opened in this session
       const opensCount = parseInt(
-        typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('bp_auto_opens') || '0' : '0'
+        typeof localStorage !== 'undefined' ? localStorage.getItem('tiw_chat_opens') || '0' : '0'
       );
 
-      // Auto-open 1st time at Lead Form
       if (scrollY > threshold1 && opensCount === 0) {
         triggerAutoOpen(1);
       } 
-      // Auto-open 2nd time at Packages
       else if (scrollY > threshold2 && opensCount === 1) {
         triggerAutoOpen(2);
       }
-      // If opensCount is 2 or more, it will never auto-open again in this session
     };
 
-    // Initial check on mount
     handleScroll();
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      {/* Approved Positioning Overrides: Mobile bottom: 84px, right: 16px; Desktop bottom: 24px, right: 24px */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          .bp-widget-web,
-          #bp-webchat-container,
-          .bpw-widget-btn,
-          div[class*="bp-widget"] {
-            bottom: 84px !important;
-            right: 16px !important;
-            z-index: 45 !important;
-          }
-          @media (min-width: 640px) {
+      {!isPermanentlyHidden && (
+        <style dangerouslySetInnerHTML={{
+          __html: `
             .bp-widget-web,
             #bp-webchat-container,
             .bpw-widget-btn,
             div[class*="bp-widget"] {
-              bottom: 24px !important;
-              right: 24px !important;
+              bottom: 84px !important;
+              right: 16px !important;
+              z-index: 45 !important;
             }
-          }
-        `
-      }} />
+            @media (min-width: 640px) {
+              .bp-widget-web,
+              #bp-webchat-container,
+              .bpw-widget-btn,
+              div[class*="bp-widget"] {
+                bottom: 24px !important;
+                right: 24px !important;
+              }
+            }
+          `
+        }} />
+      )}
 
       {/* Official Botpress Webchat v5.0 Engine - Injected once browser is idle or user interacts */}
-      {shouldLoad && (
+      {shouldLoad && !isPermanentlyHidden && (
         <Script
           id="botpress-webchat-inject"
           src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"
