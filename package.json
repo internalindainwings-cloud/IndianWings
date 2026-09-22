@@ -14,7 +14,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@prisma/adapter-pg": "7.10.0",
-    "@prisma/client": "7.10.0",
+    "@prisma/client": "^7.10.0",
     "@types/nodemailer": "^8.0.2",
     "@upstash/ratelimit": "^2.1.0",
     "@upstash/redis": "^1.38.4",
@@ -25,7 +25,7 @@
     "next-cloudinary": "^6.18.8",
     "nodemailer": "^10.0.10",
     "pg": "^8.13.3",
-    "prisma": "^8.0.0-rc.15",
+    "prisma": "^7.10.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.87.0",
