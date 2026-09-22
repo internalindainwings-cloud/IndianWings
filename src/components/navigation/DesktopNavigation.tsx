@@ -160,8 +160,8 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
                 href={link.href}
                 className={`inline-flex items-center gap-1.5 transition-all duration-200 px-2 lg:px-2.5 xl:px-3 py-0.5 lg:py-1 rounded-full ${
                   isActive 
-                    ? 'bg-[#C5A45E] text-midnight font-bold shadow-[0_4px_16px_rgba(197,164,94,0.6),0_2px_4px_rgba(0,0,0,0.3)]' 
-                    : 'text-warm-white/90 hover:text-[#C5A45E] hover:bg-warm-white/10 hover:shadow-[0_3px_10px_rgba(197,164,94,0.45)]'
+                    ? 'bg-[#C5A45E] text-midnight font-bold' 
+                    : 'text-warm-white/90 hover:text-[#C5A45E] hover:bg-warm-white/10'
                 }`}
               >
                 <Icon className={`w-[17px] h-[17px] shrink-0 text-current ${
@@ -185,7 +185,7 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
               {/* Dropdown Menu */}
               {link.children && (
                 <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-50">
-                  <div className="bg-midnight/95 backdrop-blur-md rounded-lg shadow-[0_16px_36px_rgba(0,0,0,0.7),0_4px_12px_rgba(0,0,0,0.5)] border border-warm-white/10 py-2 min-w-[190px] lg:min-w-[210px] flex flex-col">
+                  <div className="bg-midnight/95 backdrop-blur-md rounded-lg border border-warm-white/10 py-2 min-w-[190px] lg:min-w-[210px] flex flex-col">
                     {link.children.map(child => {
                       const ChildIcon = child.icon;
                       return (
@@ -199,7 +199,7 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
                           }`}
                         >
                           {ChildIcon && (
-                            <ChildIcon className={`w-[17px] h-[17px] shrink-0 text-current drop-shadow-[0_2px_3px_rgba(245,158,11,0.85)] transition-transform duration-150 ${
+                            <ChildIcon className={`w-[17px] h-[17px] shrink-0 text-current transition-transform duration-150 ${
                               child.isViewAll ? 'group-hover/item:translate-x-0.5' : ''
                             }`} />
                           )}
@@ -219,10 +219,10 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
         <button
           type="button"
           onClick={() => openModal({ source: 'desktop_nav_cta' })}
-          className="inline-flex items-center gap-1 font-manrope text-[11px] lg:text-[12px] xl:text-[13px] font-bold text-midnight bg-[#C5A45E] rounded-full hover:bg-[#b5944e] transition-all shadow-[0_4px_16px_rgba(197,164,94,0.6),0_2px_6px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_22px_rgba(197,164,94,0.75)] whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-2.5 py-1.5 lg:px-3 lg:py-1.5 xl:px-4 xl:py-1.5"
+          className="inline-flex items-center gap-1 font-manrope text-[11px] lg:text-[12px] xl:text-[13px] font-bold text-midnight bg-[#C5A45E] rounded-full hover:bg-[#b5944e] transition-all whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-2.5 py-1.5 lg:px-3 lg:py-1.5 xl:px-4 xl:py-1.5"
         >
           <span>Plan Your Trip</span>
-          <ArrowRight className="w-[16px] h-[16px] shrink-0 text-current drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)] transition-transform duration-200 group-hover:translate-x-0.5" />
+          <ArrowRight className="w-[16px] h-[16px] shrink-0 text-current transition-transform duration-200 group-hover:translate-x-0.5" />
         </button>
       </div>
     </nav>

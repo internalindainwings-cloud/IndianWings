@@ -67,7 +67,7 @@ export const Navbar = () => {
                 alt="The Indian Wings Logo"
                 width={500}
                 height={293}
-                className={`object-contain w-auto drop-shadow-md hover:scale-105 transition-all duration-300 origin-left ${
+                className={`object-contain w-auto hover:scale-105 transition-all duration-300 origin-left ${
                   isScrolled ? 'h-8 md:h-9 xl:h-9.5' : 'h-8.5 md:h-9.5 xl:h-10'
                 }`} 
                 loading="eager"

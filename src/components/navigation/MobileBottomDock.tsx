@@ -29,7 +29,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
       className="fixed bottom-3.5 sm:bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[410px] lg:hidden select-none pointer-events-auto"
     >
       <nav 
-        className="bg-midnight/95 backdrop-blur-md rounded-full border border-warm-white/15 px-2 py-1.5 shadow-[0_14px_36px_rgba(0,0,0,0.75),0_4px_14px_rgba(0,0,0,0.5)] flex items-center justify-between gap-1"
+        className="bg-midnight/95 backdrop-blur-md rounded-full border border-warm-white/15 px-2 py-1.5 flex items-center justify-between gap-1"
         style={{
           backgroundColor: 'color-mix(in srgb, var(--color-midnight) 95%, transparent)'
         }}
@@ -39,7 +39,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
           href="/"
           className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-200 active:scale-95 ${
             pathname === '/' && !isMenuOpen
-              ? 'bg-white/10 text-saffron font-bold shadow-[0_2px_10px_rgba(245,158,11,0.5)]'
+              ? 'bg-white/10 text-saffron font-bold'
               : 'text-warm-white/75 hover:text-saffron'
           }`}
         >
@@ -54,7 +54,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
           href="/packages"
           className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-200 active:scale-95 ${
             pathname.startsWith('/packages') && !isMenuOpen
-              ? 'bg-white/10 text-saffron font-bold shadow-[0_2px_10px_rgba(245,158,11,0.5)]'
+              ? 'bg-white/10 text-saffron font-bold'
               : 'text-warm-white/75 hover:text-saffron'
           }`}
         >
@@ -68,7 +68,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
         <button
           type="button"
           onClick={() => openModal({ source: 'mobile_dock_center_quote' })}
-          className="flex-[1.2] flex flex-col items-center justify-center py-1.5 px-2 rounded-full font-manrope font-bold shadow-[0_4px_16px_rgba(245,158,11,0.6),0_2px_4px_rgba(0,0,0,0.3)] transition-all duration-200 hover:brightness-105 active:scale-95 cursor-pointer -my-0.5"
+          className="flex-[1.2] flex flex-col items-center justify-center py-1.5 px-2 rounded-full font-manrope font-bold transition-all duration-200 hover:brightness-105 active:scale-95 cursor-pointer -my-0.5"
           style={{
             backgroundColor: 'var(--color-saffron)',
             color: 'var(--color-midnight)'
@@ -76,7 +76,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
           aria-label="Get instant custom quote"
         >
           <div className="flex items-center justify-center gap-1">
-            <Sparkles size={14} className="shrink-0 drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)]" />
+            <Sparkles size={14} className="shrink-0" />
             <span className="text-[11px] tracking-wide font-extrabold uppercase leading-none">
               Quote
             </span>
@@ -91,7 +91,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
           href="/destinations"
           className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-200 active:scale-95 ${
             pathname.startsWith('/destinations') && !isMenuOpen
-              ? 'bg-white/10 text-saffron font-bold shadow-[0_2px_10px_rgba(245,158,11,0.5)]'
+              ? 'bg-white/10 text-saffron font-bold'
               : 'text-warm-white/75 hover:text-saffron'
           }`}
         >
@@ -108,7 +108,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
           aria-label={isMenuOpen ? 'Close navigation drawer' : 'Open more navigation links'}
           className={`flex-1 flex flex-col items-center justify-center py-1.5 px-1 rounded-full transition-all duration-200 active:scale-95 cursor-pointer ${
             isMoreActive
-              ? 'bg-white/10 text-saffron font-bold shadow-[0_2px_10px_rgba(245,158,11,0.5)]'
+              ? 'bg-white/10 text-saffron font-bold'
               : 'text-warm-white/75 hover:text-saffron'
           }`}
         >

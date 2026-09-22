@@ -160,16 +160,16 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
                     <button
                       type="button"
                       onClick={() => toggleSection(link.name)}
-                      className={`w-full text-2xl font-light tracking-wide hover:text-saffron transition-colors flex items-center justify-between py-1 text-left cursor-pointer ${
+                      className={`w-full text-[22px] font-light tracking-wide hover:text-saffron transition-colors flex items-center justify-between py-1 text-left cursor-pointer ${
                         isCurrent || isExpanded ? 'text-saffron font-medium' : ''
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className="w-[23px] h-[23px] shrink-0 text-current drop-shadow-[0_2px_3px_rgba(245,158,11,0.85)]" />
+                        <Icon className="w-[23px] h-[23px] shrink-0 text-current" />
                         <span>{link.name}</span>
                       </div>
                       <ChevronDown
-                        className={`w-[20px] h-[20px] transition-transform duration-300 shrink-0 text-current drop-shadow-[0_2px_3px_rgba(245,158,11,0.85)] ${
+                        className={`w-[20px] h-[20px] transition-transform duration-300 shrink-0 text-current ${
                           isExpanded ? 'rotate-180 text-saffron' : 'text-warm-white/50'
                         }`}
                       />
@@ -193,7 +193,7 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
                                 <Link
                                   href={child.href}
                                   onClick={onClose}
-                                  className={`text-lg font-normal hover:text-saffron transition-colors flex items-center gap-2.5 py-1 ${
+                                  className={`text-base font-normal hover:text-saffron transition-colors flex items-center gap-2.5 py-1 ${
                                     isChildActive
                                       ? 'text-saffron font-semibold'
                                       : 'text-warm-white/80'
@@ -204,7 +204,7 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
                                   }`}
                                 >
                                   {ChildIcon && (
-                                    <ChildIcon className="w-[19px] h-[19px] shrink-0 text-current drop-shadow-[0_2px_3px_rgba(245,158,11,0.85)]" />
+                                    <ChildIcon className="w-[19px] h-[19px] shrink-0 text-current" />
                                   )}
                                   <span>{child.name}</span>
                                 </Link>
@@ -220,12 +220,12 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
                   <Link
                     href={link.href}
                     onClick={onClose}
-                    className={`text-2xl font-light tracking-wide hover:text-saffron transition-colors flex items-center justify-between py-1 ${
+                    className={`text-[22px] font-light tracking-wide hover:text-saffron transition-colors flex items-center justify-between py-1 ${
                       isCurrent ? 'text-saffron font-medium' : ''
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="w-[23px] h-[23px] shrink-0 text-current drop-shadow-[0_2px_3px_rgba(245,158,11,0.85)]" />
+                      <Icon className="w-[23px] h-[23px] shrink-0 text-current" />
                       <span>{link.name}</span>
                     </div>
                   </Link>
@@ -248,10 +248,10 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
             onClose();
             openModal({ source: 'mobile_drawer_cta' });
           }}
-          className="w-full inline-flex items-center justify-center gap-2 font-manrope font-bold text-midnight bg-[#C5A45E] px-6 py-3.5 rounded-full hover:bg-[#b5944e] transition-all text-base shadow-[0_6px_22px_rgba(197,164,94,0.6),0_2px_6px_rgba(0,0,0,0.3)] active:scale-98 cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-2 font-manrope font-bold text-midnight bg-[#C5A45E] px-6 py-3.5 rounded-full hover:bg-[#b5944e] transition-all text-base active:scale-98 cursor-pointer"
         >
           <span>Plan Your Trip</span>
-          <ArrowRight className="w-[19px] h-[19px] shrink-0 text-current drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.45)]" />
+          <ArrowRight className="w-[19px] h-[19px] shrink-0 text-current" />
         </button>
       </motion.div>
     </motion.div>
