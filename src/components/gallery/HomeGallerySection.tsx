@@ -41,7 +41,7 @@ export const HomeGallerySection: React.FC = () => {
       } else if (window.innerWidth < 1024) {
         setItemsPerPage(6);
       } else {
-        setItemsPerPage(12);
+        setItemsPerPage(8); // Reduced from 12 to make it less cluttered on desktop
       }
     };
     if (typeof window !== 'undefined') {
