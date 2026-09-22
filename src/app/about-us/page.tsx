@@ -27,7 +27,7 @@ import { getSiteSettings } from '@/lib/settings-service';
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
-  const heroImage = settings.heroImageUrl || '/assets/hero.png';
+  const heroImage = settings.heroImageUrl || 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png';
 
   return {
     title: 'About Us | The Indian Wings Company — Kashmir Travel Specialists',
@@ -66,7 +66,7 @@ export default async function AboutUsPage() {
     '@id': `${siteUrl}/#organization`,
     name: 'The Indian Wings Company',
     url: `${siteUrl}/about-us`,
-    logo: settings.logoUrl || `${siteUrl}/assets/client_logo.png`,
+    logo: settings.logoUrl || `${siteUrl}https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png`,
     description:
       'Premier local travel agency headquartered in Srinagar, specializing in handcrafted Kashmir holiday itineraries, verified luxury houseboats, and mountain transportation.',
     telephone: settings.phone || '+919811808387',

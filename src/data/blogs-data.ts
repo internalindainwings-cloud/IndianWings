@@ -52,7 +52,7 @@ Kashmir is celebrated as "Paradise on Earth" throughout the year, but every seas
     author: {
       name: 'Mrs. Komal & Team',
       role: 'Founder & Valley Specialist',
-      avatar: '/assets/client_logo.png',
+      avatar: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
     },
     publishedAt: '2026-01-15',
     readTime: '6 min read',
@@ -84,7 +84,7 @@ The Gulmarg Gondola is the world's second-highest cable car project, soaring to 
     author: {
       name: 'Srinagar Operations Desk',
       role: 'High-Altitude Ground Coordinator',
-      avatar: '/assets/client_logo.png',
+      avatar: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
     },
     publishedAt: '2026-02-01',
     readTime: '5 min read',
@@ -121,7 +121,7 @@ Kashmir winters are enchanting, with temperatures dropping between 5Â°C and -12Â
     author: {
       name: 'Mrs. Komal & Team',
       role: 'Founder & Valley Specialist',
-      avatar: '/assets/client_logo.png',
+      avatar: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
     },
     publishedAt: '2026-02-10',
     readTime: '4 min read',
@@ -158,7 +158,7 @@ If your tour is 6 days or longer, spend **2 nights in Pahalgam** and take a scen
     author: {
       name: 'Srinagar Operations Desk',
       role: 'Handcrafted Itinerary Curator',
-      avatar: '/assets/client_logo.png',
+      avatar: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
     },
     publishedAt: '2026-02-18',
     readTime: '5 min read',

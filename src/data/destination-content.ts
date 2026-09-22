@@ -48,7 +48,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Hills & Mountains',
         subtitle: 'Home to Rare Species',
         description: 'Sanctuary nestled amid dense coniferous forests, home to the endangered musk deer, Himalayan brown bear, and exotic avifauna.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Half Day',
       },
       {
@@ -102,7 +102,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Most Loved Places',
         subtitle: 'Victorian Architecture (1902)',
         description: 'Century-old British Victorian stone church perched peacefully on a rolling knoll, presenting enchanting snowy silhouettes in winter.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: '1 Hour',
       },
       {
@@ -181,7 +181,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Hills & Mountains',
         subtitle: 'Terraced Imperial Sanctuaries',
         description: 'Centuries-old terraced gardens cascading toward the lakeshore, framed by ancient Chinar trees, fountains, and vibrant seasonal blossoms.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: '2–3 Hours',
       },
       {
@@ -208,7 +208,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Adventure',
         subtitle: 'Ancient Stone Shrine & Vistas',
         description: 'Perched at 1,100 ft atop Takht-i-Sulaiman hill, this 9th-century stone temple offers an unmatched 360-degree panorama of Srinagar city.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: '2 Hours',
       },
       {
@@ -287,7 +287,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Hills & Mountains',
         subtitle: 'Eco-Tourism Haven',
         description: 'Picturesque village nestled 12 km upstream from Pahalgam, serving as base camp for trekking expeditions to Kolahoi Glacier and Tarsar Lake.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Half Day',
       },
       {
@@ -397,7 +397,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Resorts & Stays',
         subtitle: 'Luxury Riverside Glamping',
         description: 'Boutique all-weather luxury safari tents set along the gushing Sindh River with direct views of snow-draped alpine peaks.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Overnight',
       },
       {
@@ -415,7 +415,7 @@ export const destinationDetailContentData: Record<string, DestinationDetailConte
         category: 'Adventure',
         subtitle: 'Kashmir’s Ultimate Alpine Trek',
         description: 'Starting point for the legendary Kashmir Great Lakes trek traversing Vishansar, Gadsar, and Satsar alpine water bodies.',
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Multi-Day Expedition',
       },
       {
@@ -609,7 +609,7 @@ export function getDestinationContentBySlug(slug: string, name: string): Destina
         category: 'Resorts & Stays',
         subtitle: 'Rustic Mountain Hospitality',
         description: `Peaceful wooden eco-lodges and comfortable alpine camping setups designed to immerse travelers in nature.`,
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Overnight',
       },
       {
@@ -636,7 +636,7 @@ export function getDestinationContentBySlug(slug: string, name: string): Destina
         category: 'Memorable Experience',
         subtitle: 'Pristine Night Skies',
         description: `Zero light pollution allows breathtaking views of the Milky Way, shooting stars, and crisp mountain constellations.`,
-        imageUrl: '/assets/hero.png',
+        imageUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         duration: 'Evening',
       },
     ],

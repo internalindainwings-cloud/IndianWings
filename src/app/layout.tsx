@@ -28,7 +28,7 @@ import { getSiteSettings } from '@/lib/settings-service';
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
-  const heroImage = settings.heroImageUrl || '/assets/hero.png';
+  const heroImage = settings.heroImageUrl || 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png';
 
   return {
     metadataBase: new URL(siteUrl),
