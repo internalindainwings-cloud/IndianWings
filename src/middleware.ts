@@ -115,7 +115,10 @@ export async function middleware(request: NextRequest) {
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
   const isAdminSubdomain = hostname.startsWith('admin.');
 
-  // Admin Panel is now live on the main domain at /admin (protected by authentication)
+  if (!isLocalhost && !isAdminSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
+    url.pathname = '/';
+    return NextResponse.redirect(url);
+  }
 
   let isRewrittenToAdmin = false;
   if (isAdminSubdomain) {
@@ -171,15 +174,15 @@ export async function middleware(request: NextRequest) {
 
   const response = isRewrittenToAdmin
     ? NextResponse.rewrite(url, {
-        request: {
-          headers: requestHeaders,
-        },
-      })
+      request: {
+        headers: requestHeaders,
+      },
+    })
     : NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
+      request: {
+        headers: requestHeaders,
+      },
+    });
 
   response.headers.set('Content-Security-Policy', cspHeader);
   return response;
@@ -187,13 +190,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public assets (images, icons, etc.)
-     */
+
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
