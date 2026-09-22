@@ -40,7 +40,7 @@ export const FloatingContactActions: React.FC = () => {
   return (
     <aside 
       aria-label="Quick contact and social links" 
-      className={`hidden xl:flex fixed left-6 bottom-8 z-40 flex-col gap-3 items-center transition-all duration-300 ease-out ${
+      className={`flex fixed left-3 sm:left-6 bottom-20 sm:bottom-8 z-50 flex-col gap-2 sm:gap-3 items-center transition-all duration-300 ease-out ${
         isVisible 
           ? 'opacity-100 translate-x-0 pointer-events-auto' 
           : 'opacity-0 -translate-x-6 pointer-events-none'
@@ -52,10 +52,10 @@ export const FloatingContactActions: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 hover:bg-[#20bd5a] active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
+        className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 hover:bg-[#20bd5a] active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
       >
         <svg
-          className="w-5 h-5 fill-current"
+          className="w-4 h-4 sm:w-5 sm:h-5 fill-current"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -67,9 +67,9 @@ export const FloatingContactActions: React.FC = () => {
       <a
         href={`tel:${settings.phone || siteConfig.contact.phone}`}
         aria-label="Call The Indian Wings Company"
-        className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-midnight text-saffron border border-saffron/40 hover:border-saffron hover:text-warm-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 hover:bg-[#102a3a] active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
+        className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-midnight text-saffron border border-saffron/40 hover:border-saffron hover:text-warm-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 hover:bg-[#102a3a] active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
       >
-        <Phone size={20} strokeWidth={2.2} aria-hidden="true" />
+        <Phone className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.2} aria-hidden="true" />
       </a>
 
       {/* 3. Instagram — Official Brand Gradient */}
@@ -78,10 +78,10 @@ export const FloatingContactActions: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Open Instagram"
-        className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[linear-gradient(45deg,#f09433_0%,#e6683c_25%,#dc2743_50%,#cc2366_75%,#bc1888_100%)] text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-105 active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#bc1888]"
+        className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[linear-gradient(45deg,#f09433_0%,#e6683c_25%,#dc2743_50%,#cc2366_75%,#bc1888_100%)] text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-105 active:scale-95 motion-reduce:transform-none motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#bc1888]"
       >
         <svg
-          className="w-5 h-5"
+          className="w-4 h-4 sm:w-5 sm:h-5"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
