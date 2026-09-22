@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         content,
         excerpt: metaDescription || '',
         category,
-        featuredImage,
+        imageUrl: featuredImage,
         authorName,
         seoTitle: `${title} | The Indian Wings`,
         seoDescription: metaDescription || '',
