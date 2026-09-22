@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Manrope, Berkshire_Swash } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
@@ -14,13 +14,7 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const berkshireSwash = Berkshire_Swash({
-  variable: "--font-berkshire",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal"],
-  display: "swap",
-});
+
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
@@ -84,7 +78,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${berkshireSwash.variable} h-full antialiased`}
+      className={`${manrope.variable} h-full antialiased`}
       style={{
         ['--color-midnight' as string]: '#0F4C54',
         ['--color-saffron' as string]: '#F59E0B',
