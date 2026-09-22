@@ -230,7 +230,7 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-4 group">
               <Image
-                src="/assets/client_logo.png"
+                src={settings.logoUrl || '/assets/client_logo.png'}
                 alt="The Indian Wings Company"
                 width={200}
                 height={70}

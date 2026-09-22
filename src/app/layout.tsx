@@ -24,46 +24,53 @@ const berkshireSwash = Berkshire_Swash({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: 'The Indian Wings Company | Premium Kashmir Travel & Tour Packages',
-    template: '%s | The Indian Wings Company',
-  },
-  description: 'Experience breathtaking landscapes, luxury houseboats, and authentic Kashmir hospitality. Handcrafted itineraries with verified private chauffeurs.',
-  alternates: {
-    canonical: './',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_IN',
-    url: siteUrl,
-    siteName: 'The Indian Wings Company',
-    title: 'The Indian Wings Company | Premium Kashmir Travel & Tour Packages',
+import { getSiteSettings } from '@/lib/settings-service';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const heroImage = settings.heroImageUrl || '/assets/hero.png';
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: 'The Indian Wings Company | Premium Kashmir Travel & Tour Packages',
+      template: '%s | The Indian Wings Company',
+    },
     description: 'Experience breathtaking landscapes, luxury houseboats, and authentic Kashmir hospitality. Handcrafted itineraries with verified private chauffeurs.',
-    images: [
-      {
-        url: '/assets/hero.png',
-        width: 1200,
-        height: 630,
-        alt: 'The Indian Wings Company - Premium Kashmir Travel',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'The Indian Wings Company | Premium Kashmir Travel',
-    description: 'Handcrafted Kashmir tour packages with verified stays and 24/7 ground assistance.',
-    images: ['/assets/hero.png'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    'max-image-preview': 'large',
-    'max-snippet': -1,
-    'max-video-preview': -1,
-  },
-};
+    alternates: {
+      canonical: './',
+    },
+    openGraph: {
+      type: 'website',
+      locale: 'en_IN',
+      url: siteUrl,
+      siteName: 'The Indian Wings Company',
+      title: 'The Indian Wings Company | Premium Kashmir Travel & Tour Packages',
+      description: 'Experience breathtaking landscapes, luxury houseboats, and authentic Kashmir hospitality. Handcrafted itineraries with verified private chauffeurs.',
+      images: [
+        {
+          url: heroImage,
+          width: 1200,
+          height: 630,
+          alt: 'The Indian Wings Company - Premium Kashmir Travel',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'The Indian Wings Company | Premium Kashmir Travel',
+      description: 'Handcrafted Kashmir tour packages with verified stays and 24/7 ground assistance.',
+      images: [heroImage],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

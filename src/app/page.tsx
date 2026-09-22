@@ -32,76 +32,84 @@ const HomeGallerySection = nextDynamic(
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
-export const metadata: Metadata = {
-  title: 'The Indian Wings Company | Premium Kashmir Tour Packages & Holidays',
-  description: 'Book customized Kashmir holiday packages with local valley experts. Srinagar houseboats, Gulmarg gondola tours, Pahalgam valleys, private transport, and 24/7 on-ground assistance.',
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'The Indian Wings Company | Premium Kashmir Tour Packages & Holidays',
-    description: 'Book customized Kashmir holiday packages with local valley experts. Srinagar houseboats, Gulmarg skiing, Pahalgam valleys, and private sanitized transport.',
-    url: siteUrl,
-    siteName: 'The Indian Wings Company',
-    images: [
-      {
-        url: '/assets/hero.png',
-        width: 1200,
-        height: 630,
-        alt: 'The Indian Wings Company - Handcrafted Kashmir Holidays',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'The Indian Wings Company | Premium Kashmir Tour Packages',
-    description: 'Customized Kashmir tour packages, verified luxury houseboats, and private cabs.',
-    images: ['/assets/hero.png'],
-  },
-};
+import { getSiteSettings } from '@/lib/settings-service';
 
-const homeJsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'TravelAgency',
-      '@id': `${siteUrl}/#organization`,
-      name: 'The Indian Wings Company',
-      url: siteUrl,
-      logo: `${siteUrl}/assets/client_logo.png`,
-      description: 'Premier travel agency specializing in handcrafted Kashmir holiday itineraries, verified houseboat stays, and private mountain transport.',
-      telephone: '+919811808387',
-      email: 'info@theindianwingscompany.com',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Sheikh Palace, 2nd Floor, Kanyar Chowk',
-        addressLocality: 'Srinagar',
-        addressRegion: 'Jammu & Kashmir',
-        postalCode: '190003',
-        addressCountry: 'IN',
-      },
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const heroImage = settings.heroImageUrl || '/assets/hero.png';
+
+  return {
+    title: 'The Indian Wings Company | Premium Kashmir Tour Packages & Holidays',
+    description: 'Book customized Kashmir holiday packages with local valley experts. Srinagar houseboats, Gulmarg gondola tours, Pahalgam valleys, private transport, and 24/7 on-ground assistance.',
+    alternates: {
+      canonical: '/',
     },
-    {
-      '@type': 'WebSite',
-      '@id': `${siteUrl}/#website`,
+    openGraph: {
+      title: 'The Indian Wings Company | Premium Kashmir Tour Packages & Holidays',
+      description: 'Book customized Kashmir holiday packages with local valley experts. Srinagar houseboats, Gulmarg skiing, Pahalgam valleys, and private sanitized transport.',
       url: siteUrl,
-      name: 'The Indian Wings Company',
-      publisher: {
-        '@id': `${siteUrl}/#organization`,
-      },
+      siteName: 'The Indian Wings Company',
+      images: [
+        {
+          url: heroImage,
+          width: 1200,
+          height: 630,
+          alt: 'The Indian Wings Company - Handcrafted Kashmir Holidays',
+        },
+      ],
     },
-  ],
-};
+    twitter: {
+      card: 'summary_large_image',
+      title: 'The Indian Wings Company | Premium Kashmir Tour Packages',
+      description: 'Customized Kashmir tour packages, verified luxury houseboats, and private cabs.',
+      images: [heroImage],
+    },
+  };
+}
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const [heroConfig, allPackages, allDestinations, headersList] = await Promise.all([
+  const [heroConfig, allPackages, allDestinations, headersList, settings] = await Promise.all([
     getHeroConfig(),
     getAllPackages(false),
     getAllDestinations(false),
     headers(),
+    getSiteSettings()
   ]);
+
+  const homeJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'TravelAgency',
+        '@id': `${siteUrl}/#organization`,
+        name: 'The Indian Wings Company',
+        url: siteUrl,
+        logo: settings.logoUrl || `${siteUrl}/assets/client_logo.png`,
+        description: 'Premier travel agency specializing in handcrafted Kashmir holiday itineraries, verified houseboat stays, and private mountain transport.',
+        telephone: settings.phone || '+919811808387',
+        email: settings.email || 'info@theindianwingscompany.com',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: settings.address || 'Sheikh Palace, 2nd Floor, Kanyar Chowk',
+          addressLocality: 'Srinagar',
+          addressRegion: 'Jammu & Kashmir',
+          postalCode: '190003',
+          addressCountry: 'IN',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        url: siteUrl,
+        name: 'The Indian Wings Company',
+        publisher: {
+          '@id': `${siteUrl}/#organization`,
+        },
+      },
+    ],
+  };
   const nonce = headersList.get('x-nonce') ?? undefined;
 
   // 1. Featured Packages: Dynamically driven by admin isFeatured toggle (falls back to Classic packages if none selected)

@@ -30,6 +30,8 @@ export const TabSettings: React.FC = () => {
   const [announcementEnabled, setAnnouncementEnabled] = useState(false);
   const [announcementText, setAnnouncementText] = useState('');
   const [announcementLink, setAnnouncementLink] = useState('/packages');
+  const [logoUrl, setLogoUrl] = useState('');
+  const [heroImageUrl, setHeroImageUrl] = useState('');
 
   const loadSettings = async () => {
     setLoading(true);
@@ -45,6 +47,8 @@ export const TabSettings: React.FC = () => {
         setAnnouncementEnabled(Boolean(json.settings.announcementEnabled));
         setAnnouncementText(json.settings.announcementText || '');
         setAnnouncementLink(json.settings.announcementLink || '/packages');
+        setLogoUrl(json.settings.logoUrl || '');
+        setHeroImageUrl(json.settings.heroImageUrl || '');
       }
     } catch (err) {
       console.error('Failed to load settings:', err);
@@ -74,6 +78,8 @@ export const TabSettings: React.FC = () => {
           announcementEnabled,
           announcementText: announcementText.trim(),
           announcementLink: announcementLink.trim(),
+          logoUrl: logoUrl.trim(),
+          heroImageUrl: heroImageUrl.trim(),
         }),
       });
 
@@ -275,6 +281,51 @@ export const TabSettings: React.FC = () => {
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk, Srinagar"
                 className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-red-400 focus:outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* ── 3. Site Images Section ── */}
+        <div className="rounded-2xl border border-white/10 bg-[#0B1F2A]/60 p-6 backdrop-blur-md shadow-xl space-y-4">
+          <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
+              <Eye className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="font-playfair text-base font-bold text-white">
+                Global Site Images
+              </h3>
+              <p className="text-xs text-white/50 mt-0.5">
+                Update the main logo and the default fallback hero image across the website.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label className="block text-white/60 mb-1 font-medium">
+                Site Logo URL (Cloudinary)
+              </label>
+              <input
+                type="text"
+                value={logoUrl}
+                onChange={(e) => setLogoUrl(e.target.value)}
+                placeholder="https://res.cloudinary.com/..."
+                className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-purple-400 focus:outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-white/60 mb-1 font-medium">
+                Default Hero/Preview Image URL (Cloudinary)
+              </label>
+              <input
+                type="text"
+                value={heroImageUrl}
+                onChange={(e) => setHeroImageUrl(e.target.value)}
+                placeholder="https://res.cloudinary.com/..."
+                className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-purple-400 focus:outline-none font-mono"
               />
             </div>
           </div>

@@ -13,6 +13,8 @@ interface SiteSettingsState {
   announcementEnabled: boolean;
   announcementText: string;
   announcementLink: string;
+  logoUrl: string | null;
+  heroImageUrl: string | null;
 }
 
 const defaultState: SiteSettingsState = {
@@ -25,6 +27,8 @@ const defaultState: SiteSettingsState = {
   announcementEnabled: false,
   announcementText: '',
   announcementLink: '/packages',
+  logoUrl: null,
+  heroImageUrl: null,
 };
 
 const SiteSettingsContext = createContext<SiteSettingsState>(defaultState);
@@ -52,6 +56,8 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ 
             announcementEnabled: Boolean(s.announcementEnabled),
             announcementText: s.announcementText || '',
             announcementLink: s.announcementLink || '/packages',
+            logoUrl: s.logoUrl || null,
+            heroImageUrl: s.heroImageUrl || null,
           });
         }
       } catch {

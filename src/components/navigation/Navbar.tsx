@@ -16,9 +16,12 @@ const MobileMenu = dynamic(
 
 
 
+import { useSiteSettings } from '@/context/SiteSettingsContext';
+
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const settings = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +48,7 @@ export const Navbar = () => {
           <div className="w-[115px] sm:w-[130px] lg:w-[145px] xl:w-[165px] h-8 md:h-10 relative flex items-center shrink-0">
             <Link href="/" className="absolute top-1/2 -translate-y-1/2 left-0 z-50 mt-[1px]">
               <Image
-                src="/assets/client_logo.png"
+                src={settings.logoUrl || '/assets/client_logo.png'}
                 alt="The Indian Wings Logo"
                 width={500}
                 height={293}

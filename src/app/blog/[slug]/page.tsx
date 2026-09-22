@@ -7,6 +7,7 @@ import { Calendar, Clock, ArrowLeft, ArrowRight, Share2, Sparkles, CheckCircle2,
 import { getBlogBySlug, getAllBlogs } from '@/lib/blogs-service';
 import { siteConfig } from '@/config/site-config';
 import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
+import { getSiteSettings } from '@/lib/settings-service';
 
 interface BlogDetailPageProps {
   params: Promise<{
@@ -73,6 +74,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
   const articleUrl = `${siteUrl}/blog/${blog.slug}`;
 
+  const settings = await getSiteSettings();
+  
   // Schema 1: BlogPosting Schema (Google Search Central)
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -96,7 +99,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       name: 'The Indian Wings Company',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/assets/client_logo.png`,
+        url: settings.logoUrl || `${siteUrl}/assets/client_logo.png`,
       },
     },
     keywords: blog.tags.join(', '),

@@ -12,6 +12,8 @@ export interface SiteSettingsData {
   announcementEnabled: boolean;
   announcementText: string;
   announcementLink: string;
+  logoUrl: string | null;
+  heroImageUrl: string | null;
 }
 
 export const defaultSettings: SiteSettingsData = {
@@ -26,6 +28,8 @@ export const defaultSettings: SiteSettingsData = {
   announcementEnabled: false,
   announcementText: 'Special Seasonal Offer: Enjoy exclusive discounts on advance Kashmir holiday bookings!',
   announcementLink: '/packages',
+  logoUrl: null,
+  heroImageUrl: null,
 };
 
 import { unstable_cache } from 'next/cache';
@@ -49,6 +53,8 @@ async function fetchSiteSettingsFromDb(): Promise<SiteSettingsData> {
         announcementEnabled: setting.announcementEnabled,
         announcementText: setting.announcementText,
         announcementLink: setting.announcementLink,
+        logoUrl: (setting as any).logoUrl,
+        heroImageUrl: (setting as any).heroImageUrl,
       };
     }
 
@@ -56,7 +62,21 @@ async function fetchSiteSettingsFromDb(): Promise<SiteSettingsData> {
     const created = await prisma.siteSetting.create({
       data: defaultSettings,
     });
-    return created;
+    return {
+      id: created.id,
+      siteTitle: created.siteTitle,
+      siteDesc: created.siteDesc,
+      robotsTxtCustom: created.robotsTxtCustom,
+      phone: created.phone,
+      email: created.email,
+      whatsapp: created.whatsapp,
+      address: created.address,
+      announcementEnabled: created.announcementEnabled,
+      announcementText: created.announcementText,
+      announcementLink: created.announcementLink,
+      logoUrl: (created as any).logoUrl,
+      heroImageUrl: (created as any).heroImageUrl,
+    };
   } catch (err) {
     console.warn('[SettingsService] Using default fallback settings:', err);
     return defaultSettings;
@@ -84,13 +104,29 @@ export async function updateSiteSettings(data: Partial<SiteSettingsData>): Promi
         ...(data.announcementEnabled !== undefined && { announcementEnabled: data.announcementEnabled }),
         ...(data.announcementText !== undefined && { announcementText: data.announcementText }),
         ...(data.announcementLink !== undefined && { announcementLink: data.announcementLink }),
+        ...(data.logoUrl !== undefined && { logoUrl: data.logoUrl }),
+        ...(data.heroImageUrl !== undefined && { heroImageUrl: data.heroImageUrl }),
       },
       create: {
         ...defaultSettings,
         ...data,
       },
     });
-    return updated;
+    return {
+      id: updated.id,
+      siteTitle: updated.siteTitle,
+      siteDesc: updated.siteDesc,
+      robotsTxtCustom: updated.robotsTxtCustom,
+      phone: updated.phone,
+      email: updated.email,
+      whatsapp: updated.whatsapp,
+      address: updated.address,
+      announcementEnabled: updated.announcementEnabled,
+      announcementText: updated.announcementText,
+      announcementLink: updated.announcementLink,
+      logoUrl: (updated as any).logoUrl,
+      heroImageUrl: (updated as any).heroImageUrl,
+    };
   } catch (err) {
     console.error('[SettingsService] Failed to update settings in DB:', err);
     throw err;

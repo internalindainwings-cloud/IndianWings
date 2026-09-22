@@ -23,68 +23,76 @@ import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
 
-export const metadata: Metadata = {
-  title: 'About Us | The Indian Wings Company — Kashmir Travel Specialists',
-  description:
-    'Discover The Indian Wings Company, your trusted local travel specialist based in Srinagar, Kashmir. Meet Founder Mrs. Komal Rai, our valley heritage, verified luxury houseboats, private fleet, and official registered office in Kanyar Chowk, Srinagar.',
-  alternates: {
-    canonical: '/about-us',
-  },
-  openGraph: {
+import { getSiteSettings } from '@/lib/settings-service';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const heroImage = settings.heroImageUrl || '/assets/hero.png';
+
+  return {
     title: 'About Us | The Indian Wings Company — Kashmir Travel Specialists',
     description:
-      'Discover The Indian Wings Company, your trusted local travel specialist based in Srinagar, Kashmir. Meet Founder Mrs. Komal Rai, our valley heritage, and official office in Srinagar.',
-    url: `${siteUrl}/about-us`,
-    siteName: 'The Indian Wings Company',
-    images: [
-      {
-        url: '/assets/hero.png',
-        width: 1200,
-        height: 630,
-        alt: 'The Indian Wings Company - Handcrafted Kashmir Holidays',
-      },
-    ],
-  },
-};
-
-const aboutJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'TravelAgency',
-  '@id': `${siteUrl}/#organization`,
-  name: 'The Indian Wings Company',
-  url: `${siteUrl}/about-us`,
-  logo: `${siteUrl}/assets/client_logo.png`,
-  description:
-    'Premier local travel agency headquartered in Srinagar, specializing in handcrafted Kashmir holiday itineraries, verified luxury houseboats, and mountain transportation.',
-  telephone: '+919811808387',
-  email: 'info@theindianwingscompany.com',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk',
-    addressLocality: 'Srinagar',
-    addressRegion: 'Jammu & Kashmir',
-    postalCode: '190003',
-    addressCountry: 'IN',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 34.0900,
-    longitude: 74.8100,
-  },
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-      opens: '09:00',
-      closes: '21:00',
+      'Discover The Indian Wings Company, your trusted local travel specialist based in Srinagar, Kashmir. Meet Founder Mrs. Komal Rai, our valley heritage, verified luxury houseboats, private fleet, and official registered office in Kanyar Chowk, Srinagar.',
+    alternates: {
+      canonical: '/about-us',
     },
-  ],
-};
+    openGraph: {
+      title: 'About Us | The Indian Wings Company — Kashmir Travel Specialists',
+      description:
+        'Discover The Indian Wings Company, your trusted local travel specialist based in Srinagar, Kashmir. Meet Founder Mrs. Komal Rai, our valley heritage, and official office in Srinagar.',
+      url: `${siteUrl}/about-us`,
+      siteName: 'The Indian Wings Company',
+      images: [
+        {
+          url: heroImage,
+          width: 1200,
+          height: 630,
+          alt: 'The Indian Wings Company - Handcrafted Kashmir Holidays',
+        },
+      ],
+    },
+  };
+}
 
 export default async function AboutUsPage() {
   const headersList = await headers();
   const nonce = headersList.get('x-nonce') ?? undefined;
   const cleanWhatsapp = (siteConfig.contact.whatsapp || '917827743041').replace(/[^0-9]/g, '');
+  const settings = await getSiteSettings();
+
+  const aboutJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TravelAgency',
+    '@id': `${siteUrl}/#organization`,
+    name: 'The Indian Wings Company',
+    url: `${siteUrl}/about-us`,
+    logo: settings.logoUrl || `${siteUrl}/assets/client_logo.png`,
+    description:
+      'Premier local travel agency headquartered in Srinagar, specializing in handcrafted Kashmir holiday itineraries, verified luxury houseboats, and mountain transportation.',
+    telephone: settings.phone || '+919811808387',
+    email: settings.email || 'info@theindianwingscompany.com',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: settings.address || 'The Indian Wings Travels, Sheikh Palace, 2nd Floor, Kanyar Chowk',
+      addressLocality: 'Srinagar',
+      addressRegion: 'Jammu & Kashmir',
+      postalCode: '190003',
+      addressCountry: 'IN',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 34.0900,
+      longitude: 74.8100,
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '09:00',
+        closes: '21:00',
+      },
+    ],
+  };
 
   const trustPillars = [
     {
