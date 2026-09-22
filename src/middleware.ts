@@ -113,6 +113,29 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set('Content-Security-Policy', cspHeader);
 
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
+  const isDashboardSubdomain = hostname.startsWith('dashboard.');
+
+  // Block access to /admin on the main website domain for security and separation
+  if (!isLocalhost && !isDashboardSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
+    url.pathname = '/';
+    return NextResponse.redirect(url);
+  }
+
+  let isRewrittenToAdmin = false;
+  
+  // If user visits dashboard.theindianwings.com, seamlessly route them to the admin panel
+  if (isDashboardSubdomain) {
+    if (pathname === '/') {
+      url.pathname = '/admin';
+      isRewrittenToAdmin = true;
+    } else if (pathname === '/login') {
+      url.pathname = '/admin/login';
+      isRewrittenToAdmin = true;
+    } else if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+      url.pathname = `/admin${pathname}`;
+      isRewrittenToAdmin = true;
+    }
+  }
 
   const effectivePath = url.pathname;
 
@@ -152,11 +175,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  const response = isRewrittenToAdmin
+    ? NextResponse.rewrite(url, {
+      request: {
+        headers: requestHeaders,
+      },
+    })
+    : NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
 
   response.headers.set('Content-Security-Policy', cspHeader);
   return response;
