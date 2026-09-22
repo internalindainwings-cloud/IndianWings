@@ -7,23 +7,28 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    let hasOpened = false;
+    // Only auto-open once per session
+    let hasOpened = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('bp_auto_opened') === 'true';
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const loadThreshold = window.innerHeight * 0.8;
-      const openThreshold = window.innerHeight * 2.5; // Trigger auto-open deeper down the page
+      // Trigger when scrolling past 2.5 viewports (approx lead form/packages area)
+      const openThreshold = window.innerHeight * 2.5; 
 
       // Load widget early
       if (scrollY > loadThreshold) {
         setShouldLoad(true);
       }
 
-      // Auto-open widget once user scrolls past packages/leads
+      // Auto-open widget once user scrolls deep
       if (scrollY > openThreshold && !hasOpened) {
-        hasOpened = true; // Only do this once
+        hasOpened = true; 
+        if (typeof sessionStorage !== 'undefined') {
+          sessionStorage.setItem('bp_auto_opened', 'true');
+        }
         
-        // Wait a small moment to ensure script is injected and ready if they scrolled very fast
+        // Wait a small moment to ensure script is injected
         setTimeout(() => {
           try {
             if (typeof window !== 'undefined') {
