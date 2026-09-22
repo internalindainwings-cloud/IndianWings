@@ -23,17 +23,33 @@ import { optimizeCloudinaryUrl } from '@/lib/utilities/cloudinary';
 
 const emptySubscribe = () => () => {};
 
-const ITEMS_PER_PAGE = 12;
-
 export const HomeGallerySection: React.FC = () => {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [categories, setCategories] = useState<GalleryCategory[]>(DEFAULT_GALLERY_CATEGORIES);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const { openModal } = useEnquiryModal();
 
   const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerPage(4);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(6);
+      } else {
+        setItemsPerPage(12);
+      }
+    };
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
 
   // 1. Fetch Dynamic Categories
   useEffect(() => {
@@ -78,13 +94,13 @@ export const HomeGallerySection: React.FC = () => {
   }, [items, activeFilter]);
 
   // 4. Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / itemsPerPage));
   const safeCurrentPage = Math.min(currentPage, totalPages);
 
   const paginatedItems = useMemo(() => {
-    const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
-    return filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredItems, safeCurrentPage]);
+    const startIndex = (safeCurrentPage - 1) * itemsPerPage;
+    return filteredItems.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredItems, safeCurrentPage, itemsPerPage]);
 
   const activeItem = selectedIndex !== null ? filteredItems[selectedIndex] : null;
 
@@ -271,9 +287,9 @@ export const HomeGallerySection: React.FC = () => {
           {totalPages > 1 && (
             <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-black/8 pt-6">
               <div className="text-xs text-gray-500 font-medium">
-                Showing <span className="text-midnight font-bold">{(safeCurrentPage - 1) * ITEMS_PER_PAGE + 1}</span> to{' '}
+                Showing <span className="text-midnight font-bold">{(safeCurrentPage - 1) * itemsPerPage + 1}</span> to{' '}
                 <span className="text-midnight font-bold">
-                  {Math.min(safeCurrentPage * ITEMS_PER_PAGE, filteredItems.length)}
+                  {Math.min(safeCurrentPage * itemsPerPage, filteredItems.length)}
                 </span>{' '}
                 of <span className="text-midnight font-bold">{filteredItems.length}</span> gallery items
               </div>
