@@ -63,6 +63,11 @@ export async function generateMetadata(): Promise<Metadata> {
       'max-snippet': -1,
       'max-video-preview': -1,
     },
+    icons: {
+      icon: 'https://res.cloudinary.com/wmwdypan/image/upload/v1790098650/favicon-96x96.png',
+      shortcut: 'https://res.cloudinary.com/wmwdypan/image/upload/v1790098650/favicon-96x96.png',
+      apple: 'https://res.cloudinary.com/wmwdypan/image/upload/v1790098650/favicon-96x96.png',
+    }
   };
 }
 
