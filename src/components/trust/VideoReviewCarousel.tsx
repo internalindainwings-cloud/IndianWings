@@ -9,27 +9,31 @@ interface VideoReviewCarouselProps {
 }
 
 export default function VideoReviewCarousel({ reviews }: VideoReviewCarouselProps) {
-  // A scalable approach: this renders a horizontally scrollable list on mobile,
-  // and a grid on desktop. For 300+ videos, we'd add pagination or virtualization here.
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  
   return (
     <div className="w-full overflow-x-auto pb-4 hide-scrollbar">
       <div className="flex flex-nowrap lg:grid lg:grid-cols-1 gap-4 md:gap-6 min-w-max lg:min-w-0 h-full">
         {reviews.map((review) => (
-          <SmallVideoCard key={review.id} review={review} />
+          <SmallVideoCard 
+            key={review.id} 
+            review={review} 
+            isPlaying={playingId === review.id}
+            onPlay={() => setPlayingId(review.id)}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function SmallVideoCard({ review }: { review: VideoReview }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+function SmallVideoCard({ review, isPlaying, onPlay }: { review: VideoReview, isPlaying: boolean, onPlay: () => void }) {
   const [imgError, setImgError] = useState(false);
 
   return (
     <div 
       className="relative w-[280px] sm:w-[320px] lg:w-full aspect-video rounded-[16px] overflow-hidden group cursor-pointer flex-shrink-0 bg-[#0B1F2A]"
-      onClick={() => setIsPlaying(true)}
+      onClick={onPlay}
     >
       {!isPlaying || !review.videoUrl ? (
         review.posterUrl && !imgError ? (
