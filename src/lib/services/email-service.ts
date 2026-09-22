@@ -177,7 +177,7 @@ export async function sendItineraryEmail({
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {
-      const from = process.env.RESEND_FROM || 'The Indian Wings Company <hello@tourpackageskashmir.com>';
+      const from = process.env.RESEND_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -461,7 +461,7 @@ export async function sendAdminEnquiryNotificationEmail(
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {
-      const from = process.env.RESEND_FROM || 'The Indian Wings Company <hello@tourpackageskashmir.com>';
+      const from = process.env.RESEND_FROM || 'The Indian Wings Company <onboarding@resend.dev>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
