@@ -149,8 +149,8 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
   }, [destSubItems]);
 
   return (
-    <nav className="flex items-center gap-1 lg:gap-1.5 xl:gap-2 ml-auto">
-      <ul className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 font-manrope text-[11px] lg:text-[12px] xl:text-[12.5px] font-semibold tracking-wide transition-all duration-300 rounded-full px-1.5 lg:px-2 xl:px-2.5 py-1 lg:py-1.5 border border-warm-white/10 bg-midnight/60 backdrop-blur-md text-warm-white">
+    <nav className="flex items-center gap-0.5 lg:gap-1 xl:gap-1.5 ml-auto">
+      <ul className="flex items-center gap-0 lg:gap-0.5 xl:gap-1 font-manrope text-[11px] lg:text-[11.5px] xl:text-[12px] font-semibold tracking-wide transition-all duration-300 rounded-full px-1.5 lg:px-2 xl:px-2 py-1 lg:py-1.5 border border-warm-white/10 bg-midnight/60 backdrop-blur-md text-warm-white">
         {linksToRender.map((link) => {
           const isActive = pathname === link.href || link.children?.some(child => pathname === child.href);
           const Icon = link.icon;
@@ -215,11 +215,11 @@ export const DesktopNavigation = ({ isScrolled: _isScrolled = false }: { isScrol
         })}
       </ul>
       
-      <div className="flex items-center pl-1 lg:pl-1.5 xl:pl-2 border-l border-warm-white/30 shrink-0">
+      <div className="flex items-center pl-1 lg:pl-1 xl:pl-1.5 border-l border-warm-white/30 shrink-0">
         <button
           type="button"
           onClick={() => openModal({ source: 'desktop_nav_cta' })}
-          className="inline-flex items-center gap-1 font-manrope text-[11px] lg:text-[12px] xl:text-[13px] font-bold text-midnight bg-[#C5A45E] rounded-full hover:bg-[#b5944e] transition-all whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-2.5 py-1.5 lg:px-3 lg:py-1.5 xl:px-4 xl:py-1.5"
+          className="inline-flex items-center gap-1 font-manrope text-[11px] lg:text-[11.5px] xl:text-[12px] font-bold text-midnight bg-[#C5A45E] rounded-full hover:bg-[#b5944e] transition-all whitespace-nowrap hover:-translate-y-0.5 shrink-0 cursor-pointer group px-2.5 py-1.5 lg:px-3 lg:py-1.5 xl:px-3 xl:py-1.5"
         >
           <span>Plan Your Trip</span>
           <ArrowRight className="w-[16px] h-[16px] shrink-0 text-current transition-transform duration-200 group-hover:translate-x-0.5" />

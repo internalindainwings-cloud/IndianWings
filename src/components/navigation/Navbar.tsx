@@ -60,14 +60,14 @@ export const Navbar = () => {
         <AnnouncementBar />
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-6 xl:px-9 flex items-center justify-between gap-2">
           {/* LOGO */}
-          <div className="w-[115px] sm:w-[130px] lg:w-[145px] xl:w-[165px] h-8 md:h-10 relative flex items-center shrink-0">
+          <div className="w-[100px] sm:w-[115px] lg:w-[125px] xl:w-[140px] h-8 md:h-10 relative flex items-center shrink-0">
             <Link href="/" className="absolute top-1/2 -translate-y-1/2 left-0 z-50 mt-[1px]">
               <Image
                 src={settings.logoUrl || 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png'}
                 alt="The Indian Wings Logo"
                 width={500}
                 height={293}
-                className={`object-contain w-auto scale-[1.35] sm:scale-[1.45] lg:scale-[1.55] xl:scale-[1.65] hover:scale-[1.4] sm:hover:scale-[1.5] lg:hover:scale-[1.6] xl:hover:scale-[1.7] transition-all duration-300 origin-left ${
+                className={`object-contain w-auto scale-[1.1] sm:scale-[1.15] lg:scale-[1.25] xl:scale-[1.35] hover:scale-[1.15] sm:hover:scale-[1.2] lg:hover:scale-[1.3] xl:hover:scale-[1.4] transition-all duration-300 origin-left ${
                   isScrolled ? 'h-8 md:h-9 xl:h-9.5' : 'h-8.5 md:h-9.5 xl:h-10'
                 }`} 
                 loading="eager"
