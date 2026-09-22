@@ -1,8 +1,8 @@
-import type { Brand } from '@/data/brands';
+import type { PartnerBrand } from '@prisma/client';
 import BrandLogoCard from './BrandLogoCard';
 
 interface BrandsMarqueeRowProps {
-  brands: Brand[];
+  brands: PartnerBrand[];
   direction: 'ltr' | 'rtl';
   rowAriaLabel: string;
 }
@@ -12,9 +12,9 @@ export default function BrandsMarqueeRow({
   direction,
   rowAriaLabel,
 }: BrandsMarqueeRowProps) {
-  // Duplicate the array 6× so the track always overflows the viewport
-  // (with only 3 cards, 2× isn't enough to fill a wide screen)
-  const track = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
+  // Duplicate the array 2x so the track overflows the viewport gracefully
+  // (With 11 items, 2x is plenty to ensure continuous looping)
+  const track = [...brands, ...brands];
 
   const animationClass =
     direction === 'ltr' ? 'animate-marquee-ltr' : 'animate-marquee-rtl';

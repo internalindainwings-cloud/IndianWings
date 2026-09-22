@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapPin } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { HeroVideoBackground } from './HeroVideoBackground';
 import { HeroContent } from './HeroContent';
 import { HeroSlideIndicator } from './HeroSlideIndicator';
@@ -21,21 +21,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
 
   const slides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
   const slide = slides[currentSlide % slides.length] || slides[0];
-  const slideLocation = (slide.location && slide.location.trim().length > 0)
-    ? slide.location.trim()
-    : (slide.title && slide.title.trim().length > 0)
-    ? slide.title.trim()
-    : '';
 
-  // Auto-advance carousel slides based on configured duration
-  useEffect(() => {
+
+  const nextSlide = () => {
     if (slides.length <= 1) return;
-    const duration = config.transitionDuration || 5500;
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, duration);
-    return () => clearInterval(interval);
-  }, [slides.length, config.transitionDuration]);
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    if (slides.length <= 1) return;
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
 
   const isDynamicDesktop = config.desktopLayoutMode !== 'original';
 
@@ -52,13 +48,35 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         <HeroVideoBackground 
           slides={slides}
           currentSlide={currentSlide}
-          transitionType={config.transitionType || 'fade'}
+
           src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
           poster={slide.poster || config.posterUrl}
           mobileSrc={slide.mobileVideoSrc || slide.mobilePoster || config.mobileVideoUrl || config.mobilePosterUrl}
           mobilePoster={slide.mobilePoster || config.mobilePosterUrl}
         />
         
+        {/* Navigation Arrows */}
+        {slides.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/20 hover:bg-black/50 text-white/70 hover:text-white backdrop-blur-sm transition-all border border-white/10"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/20 hover:bg-black/50 text-white/70 hover:text-white backdrop-blur-sm transition-all border border-white/10"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+          </>
+        )}
+
         {/* Main hero content fills available space */}
         <div 
           className={`flex-1 flex flex-col relative z-10 w-full justify-center min-h-0 ${
@@ -75,6 +93,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
             secondaryCtaText={config.secondaryCtaText}
             secondaryCtaLink={config.secondaryCtaLink}
             layoutMode={isDynamicDesktop ? 'dynamic' : 'original'}
+
           />
           
           {/* Mobile Slide Indicator Dots */}
@@ -107,25 +126,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
             </div>
           )}
         </div>
-
-        {/* Active Slide Location Tag (Viewport Center on Desktop, Non-colliding Bottom on Mobile, Transparent No-BG) */}
-        {slideLocation && (
-          <div 
-            key={slide.id || currentSlide}
-            className={`absolute left-1/2 -translate-x-1/2 z-30 pointer-events-none select-none transition-all duration-500 animate-in fade-in zoom-in-95 flex items-center justify-center w-full max-w-fit px-4 text-center md:top-1/2 md:bottom-auto md:-translate-y-1/2 ${
-              isDynamicDesktop
-                ? 'bottom-6 sm:bottom-8'
-                : 'bottom-16 sm:bottom-18'
-            }`}
-          >
-            <div className="pointer-events-auto inline-flex items-center justify-center gap-2 sm:gap-2.5 transition-transform duration-300 hover:scale-105">
-              <MapPin className="h-4.5 w-4.5 sm:h-5 sm:w-5 md:h-7 md:w-7 text-[#C5A45E] fill-[#C5A45E]/25 shrink-0 drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]" />
-              <span className="font-manrope font-extrabold text-sm sm:text-base md:text-xl lg:text-2xl text-white tracking-wide max-w-[85vw] sm:max-w-xl md:max-w-2xl truncate drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
-                {slideLocation}
-              </span>
-            </div>
-          </div>
-        )}
 
         {/* In Original Mode: Action Bar docked right at bottom edge inside hero */}
         {!isDynamicDesktop && (

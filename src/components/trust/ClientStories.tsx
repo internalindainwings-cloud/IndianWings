@@ -33,7 +33,7 @@ export function ClientStories() {
               name: r.name,
               city: r.city,
               duration: r.videoDuration || '00:00',
-              posterUrl: r.imageUrl || '',
+              posterUrl: (r.videoUrl && r.videoUrl.trim() !== '') ? r.videoUrl.replace(/\.(mp4|webm|mov)$/i, '.jpg') : (r.imageUrl || ''),
               videoUrl: r.videoUrl || '',
               featured: r.featured
             }));

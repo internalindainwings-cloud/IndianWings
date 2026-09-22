@@ -23,6 +23,7 @@ import { TabAllUsers } from '@/components/admin/TabAllUsers';
 import { TabBucketList } from '@/components/admin/TabBucketList';
 import { TabGallery } from '@/components/admin/TabGallery';
 import { TabPageHeroes } from '@/components/admin/TabPageHeroes';
+import TabBrands from '@/components/admin/TabBrands';
 
 interface AdminData {
   stats: {
@@ -60,6 +61,7 @@ const validTabs: AdminSection[] = [
   'activity',
   'heatmaps',
   'marketing',
+  'brands',
 ];
 
 function parseTab(param: string | null): AdminSection {
@@ -223,6 +225,8 @@ function AdminDashboardContent() {
         return (
           <TabMarketing campaigns={data?.campaigns || []} />
         );
+      case 'brands':
+        return <TabBrands />;
       default:
         return null;
     }

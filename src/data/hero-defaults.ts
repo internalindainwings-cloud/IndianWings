@@ -1,7 +1,6 @@
 export interface HeroSlide {
   id: string;
   title: string;
-  location?: string;
   videoSrc: string;
   poster: string;
   mobilePoster?: string;
@@ -15,7 +14,6 @@ export interface HeroTrustPill {
   label: string;
 }
 
-export type HeroTransitionType = 'fade' | 'ken-burns' | 'slide' | 'blur-fade';
 
 export interface HeroHomepageConfig {
   headline: string;
@@ -28,8 +26,6 @@ export interface HeroHomepageConfig {
   posterUrl: string;
   mobilePosterUrl?: string;
   mobileVideoUrl?: string;
-  transitionType?: HeroTransitionType;
-  transitionDuration?: number;
   slides: HeroSlide[];
   trustPills: HeroTrustPill[];
   desktopLayoutMode?: 'original' | 'dynamic';
@@ -43,28 +39,23 @@ export const defaultHeroConfig: HeroHomepageConfig = {
   secondaryCtaLink: '/packages',
   videoUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
   posterUrl: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
-  transitionType: 'fade',
-  transitionDuration: 5500,
   desktopLayoutMode: 'dynamic',
   slides: [
     {
       id: 'dal-lake',
       title: 'Shree Vaishno Devi Sacred Valley',
-      location: 'Shree Mata Vaishno Devi, Katra',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },
     {
       id: 'gulmarg',
       title: 'Gulmarg Alpine Meadows',
-      location: 'Gulmarg Meadow of Flowers, Kashmir',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },
     {
       id: 'pahalgam',
       title: 'Pahalgam Valley & Lidder River',
-      location: 'Pahalgam Valley & Betaab Valley, Kashmir',
       videoSrc: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
       poster: 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png',
     },

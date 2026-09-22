@@ -62,6 +62,7 @@ export interface EnrichedPackage {
   highlights: string[];
   startingPrice: number;
   originalPrice?: number | null;
+  priceUnit?: string;
   isFeatured: boolean;
   isActive: boolean;
   sortOrder: number;

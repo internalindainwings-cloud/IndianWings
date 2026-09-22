@@ -16,6 +16,7 @@ export interface PackageItem {
   inclusions: string[];
   startingPrice: number;
   originalPrice?: number | null;
+  priceUnit?: string;
   highlights: string[];
   slug?: string;
   categorySlug?: string;

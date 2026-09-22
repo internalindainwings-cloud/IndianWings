@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PackageDetailPageProps): Prom
   const title = pkg.metaTitle || `${pkg.title} (${pkg.duration}) | The Indian Wings Company`;
   const description =
     pkg.metaDescription ||
-    `Book ${pkg.title} for ${pkg.duration} starting at ₹${pkg.startingPrice.toLocaleString('en-IN')}/person. Includes verified stays, private cab, and 24/7 ground assistance.`;
+    `Book ${pkg.title} for ${pkg.duration} starting at ₹${pkg.startingPrice.toLocaleString('en-IN')}/${pkg.priceUnit || 'per person'}. Includes verified stays, private cab, and 24/7 ground assistance.`;
 
   return {
     metadataBase: new URL(siteUrl),

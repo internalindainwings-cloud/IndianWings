@@ -1,7 +1,10 @@
-import { partners } from '@/data/brands';
+import { getActiveBrands } from '@/lib/brands-service';
 import BrandsMarqueeRow from './BrandsMarqueeRow';
 
-export function BrandsSection() {
+export async function BrandsSection() {
+  const partners = await getActiveBrands();
+
+  if (!partners || partners.length === 0) return null;
   return (
     <section
       id="brands"

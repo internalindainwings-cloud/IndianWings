@@ -13,6 +13,7 @@ export interface HeroContentProps {
   secondaryCtaText?: string;
   secondaryCtaLink?: string;
   layoutMode?: 'original' | 'dynamic';
+  location?: string | null;
 }
 
 export const HeroContent: React.FC<HeroContentProps> = ({
@@ -23,6 +24,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({
   secondaryCtaText = 'Explore Packages',
   secondaryCtaLink = '/packages',
   layoutMode = 'dynamic',
+  location,
 }) => {
   const { openModal } = useEnquiryModal();
   const isOriginal = layoutMode === 'original';
@@ -100,11 +102,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({
           </div>
         )}
 
-        {/* Location Pin */}
-        <div className="mt-4 sm:mt-5 flex items-center gap-1.5 text-white/95 font-manrope text-sm sm:text-base font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-          <MapPin size={16} className="text-[#C5A45E]" strokeWidth={2.5} />
-          <span>Srinagar, Kashmir</span>
-        </div>
+
 
       </div>
     </div>

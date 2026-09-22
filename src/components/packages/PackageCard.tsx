@@ -349,8 +349,8 @@ export const PackageCard: React.FC<PackageCardProps> = ({ pkg }) => {
                 <span className="text-[#E11D48] text-[17px] sm:text-[18px] font-extrabold tracking-tight leading-none ml-0.5">
                   {pkg.startingPrice.toLocaleString('en-IN')}
                 </span>
-                <span className="text-[10px] text-slate-500 font-sans ml-0.5">
-                  Per Person <span className="text-[#E11D48]">*</span>
+                <span className="text-[10px] text-slate-500 font-sans ml-0.5 capitalize">
+                  {pkg.priceUnit || 'per person'} <span className="text-[#E11D48]">*</span>
                 </span>
               </div>
 

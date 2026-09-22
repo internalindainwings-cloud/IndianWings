@@ -1,12 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
-import type { HeroSlide, HeroTransitionType } from '@/data/hero-defaults';
+import type { HeroSlide } from '@/data/hero-defaults';
 import { optimizeCloudinaryUrl } from '@/lib/utilities/cloudinary';
 
 interface HeroVideoBackgroundProps {
   slides?: HeroSlide[];
   currentSlide?: number;
-  transitionType?: HeroTransitionType;
   src?: string;
   mobileSrc?: string;
   poster?: string;
@@ -16,56 +15,21 @@ interface HeroVideoBackgroundProps {
 const DEFAULT_DESKTOP_MEDIA = 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789666008/vishnav_devi.png';
 
 function getTransitionStyles(
-  transitionType: HeroTransitionType = 'fade',
   isActive: boolean,
   idx: number,
   currentSlide: number
 ): { container: string; img: string } {
-  switch (transitionType) {
-    case 'ken-burns':
-      return {
-        container: `transition-opacity duration-1000 ease-in-out ${
-          isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-        }`,
-        img: `transition-transform duration-[6500ms] ease-out ${
-          isActive ? 'scale-108' : 'scale-100'
-        }`,
-      };
-    case 'slide':
-      return {
-        container: `transition-transform duration-700 ease-in-out ${
-          isActive
-            ? 'translate-x-0 z-10'
-            : idx < currentSlide
-            ? '-translate-x-full z-0 pointer-events-none'
-            : 'translate-x-full z-0 pointer-events-none'
-        }`,
-        img: 'scale-[1.02]',
-      };
-    case 'blur-fade':
-      return {
-        container: `transition-all duration-1000 ease-in-out ${
-          isActive
-            ? 'opacity-100 blur-0 z-10'
-            : 'opacity-0 blur-md z-0 pointer-events-none'
-        }`,
-        img: 'scale-[1.02]',
-      };
-    case 'fade':
-    default:
-      return {
-        container: `transition-opacity duration-1000 ease-in-out ${
-          isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-        }`,
-        img: 'scale-[1.02]',
-      };
-  }
+  return {
+    container: `transition-opacity duration-1000 ease-in-out ${
+      isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+    }`,
+    img: 'scale-[1.02]',
+  };
 }
 
 export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({ 
   slides,
   currentSlide = 0,
-  transitionType = 'fade',
   src, 
   mobileSrc,
   poster,
@@ -100,7 +64,17 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
           const mobileMediaUrl = optimizeCloudinaryUrl(rawMobileUrl);
           const isMobileImage = mobileMediaUrl.match(/\.(jpeg|jpg|png|webp|avif)$/i) || mobileMediaUrl.includes('/image/upload/');
 
-          const { container, img } = getTransitionStyles(transitionType, isActive, idx, currentSlide);
+          // Derive posters for videos (replace .mp4 with .jpg for Cloudinary)
+          const fallbackString = 'vishnav_devi.png';
+          const validDesktopPoster = (s.poster && s.poster.trim().length > 0 && !s.poster.includes(fallbackString))
+            ? optimizeCloudinaryUrl(s.poster.trim())
+            : mediaUrl.replace(/\.(mp4|webm|mov)$/i, '.jpg');
+            
+          const validMobilePoster = (s.mobilePoster && s.mobilePoster.trim().length > 0 && !s.mobilePoster.includes(fallbackString))
+            ? optimizeCloudinaryUrl(s.mobilePoster.trim())
+            : mobileMediaUrl.replace(/\.(mp4|webm|mov)$/i, '.jpg');
+
+          const { container, img } = getTransitionStyles(isActive, idx, currentSlide);
 
           return (
             <div
@@ -144,8 +118,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                         muted
                         loop
                         playsInline
-                        preload={isActive ? 'auto' : 'none'}
-                        poster={mobileMediaUrl}
+                        poster={validMobilePoster}
                         className="absolute inset-0 w-full h-full object-cover object-center"
                       >
                         <source src={mobileMediaUrl} type="video/mp4" />
@@ -170,8 +143,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
                         muted
                         loop
                         playsInline
-                        preload={isActive ? 'auto' : 'none'}
-                        poster={mediaUrl}
+                        poster={validDesktopPoster}
                         className="absolute inset-0 w-full h-full object-cover object-top"
                       >
                         <source src={mediaUrl} type="video/mp4" />
@@ -209,6 +181,15 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
   const optimizedMobile = optimizeCloudinaryUrl(candidateMobile);
   const isMobileImage = optimizedMobile.match(/\.(jpeg|jpg|png|webp|avif)$/i) || optimizedMobile.includes('/image/upload/');
 
+  const fallbackString = 'vishnav_devi.png';
+  const finalDesktopPoster = (poster && poster.trim().length > 0 && !poster.includes(fallbackString))
+    ? optimizeCloudinaryUrl(poster.trim())
+    : optimizedCandidate.replace(/\.(mp4|webm|mov)$/i, '.jpg');
+    
+  const finalMobilePoster = (mobilePoster && mobilePoster.trim().length > 0 && !mobilePoster.includes(fallbackString))
+    ? optimizeCloudinaryUrl(mobilePoster.trim())
+    : optimizedMobile.replace(/\.(mp4|webm|mov)$/i, '.jpg');
+
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
       {/* Mobile View */}
@@ -228,8 +209,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             muted
             loop
             playsInline
-            preload="auto"
-            poster={optimizedMobile}
+            poster={finalMobilePoster}
             className="absolute inset-0 w-full h-full object-cover object-center"
           >
             <source src={optimizedMobile} type="video/mp4" />
@@ -254,8 +234,7 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             muted
             loop
             playsInline
-            preload="auto"
-            poster={optimizedCandidate}
+            poster={finalDesktopPoster}
             className="absolute inset-0 w-full h-full object-cover object-top"
           >
             <source src={optimizedCandidate} type="video/mp4" />

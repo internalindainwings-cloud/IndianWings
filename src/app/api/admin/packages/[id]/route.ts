@@ -41,6 +41,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     if (body.highlights !== undefined) updateData.highlights = body.highlights;
     if (body.startingPrice !== undefined) updateData.startingPrice = parseInt(body.startingPrice, 10);
     if (body.originalPrice !== undefined) updateData.originalPrice = body.originalPrice ? parseInt(body.originalPrice, 10) : null;
+    if (body.priceUnit !== undefined) updateData.priceUnit = body.priceUnit;
     if (body.isFeatured !== undefined) updateData.isFeatured = Boolean(body.isFeatured);
     if (body.isActive !== undefined) updateData.isActive = Boolean(body.isActive);
     if (body.itinerary !== undefined || body.stays !== undefined || body.transports !== undefined || body.faqs !== undefined || body.cancellationPolicy !== undefined || body.overviewParagraph !== undefined) {

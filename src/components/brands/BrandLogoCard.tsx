@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import type { Brand } from '@/data/brands';
+import type { PartnerBrand } from '@prisma/client';
 
 interface BrandLogoCardProps {
-  brand: Brand;
+  brand: PartnerBrand;
 }
 
 export default function BrandLogoCard({ brand }: BrandLogoCardProps) {
@@ -24,10 +24,10 @@ export default function BrandLogoCard({ brand }: BrandLogoCardProps) {
       aria-label={brand.altText}
     >
       {/* Logo or Text Badge */}
-      {brand.logoSrc ? (
+      {brand.logoUrl ? (
         <div className="relative h-8 sm:h-10 w-24 sm:w-28 flex items-center justify-center">
           <Image
-            src={brand.logoSrc}
+            src={brand.logoUrl}
             alt={brand.altText}
             fill
             className="object-contain"

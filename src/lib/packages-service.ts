@@ -172,7 +172,7 @@ function staticToEnriched(item: PackageItem, categorySlug: string, sortOrder: nu
     sortOrder,
     itinerary,
     metaTitle: `${item.title} (${item.duration}) | Best Kashmir Packages`,
-    metaDescription: `Book ${item.title} for ${item.duration} starting at ₹${item.startingPrice.toLocaleString('en-IN')}/person. Includes ${item.inclusions.slice(0, 3).join(', ')}. 100% verified stays.`,
+    metaDescription: `Book ${item.title} for ${item.duration} starting at ₹${item.startingPrice.toLocaleString('en-IN')}/${item.priceUnit || 'per person'}. Includes ${item.inclusions.slice(0, 3).join(', ')}. 100% verified stays.`,
     keywords: [item.title, 'Kashmir tour package', ...item.destinations.map((d) => `${d} tour`), 'Kashmir itinerary'],
     canonicalUrl: `https://tourpackageskashmir.com/packages/${slug}`,
     noIndex: false,

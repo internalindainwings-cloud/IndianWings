@@ -147,7 +147,7 @@ export const DownloadItineraryModal: React.FC<DownloadItineraryModalProps> = ({
             <div className="mt-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs text-[#475569]">
               <span className="font-bold text-[#0B1F2A] block truncate">{pkg.title}</span>
               <span className="text-[#64748B] text-[11px]">
-                {pkg.duration} • ₹{pkg.startingPrice.toLocaleString('en-IN')}/person
+                {pkg.duration} • ₹{pkg.startingPrice.toLocaleString('en-IN')} / {pkg.priceUnit || 'per person'}
               </span>
             </div>
 

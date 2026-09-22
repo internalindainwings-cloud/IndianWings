@@ -115,6 +115,7 @@ export const TabPackages: React.FC = () => {
     cancellationPolicy: [...defaultCancellationPolicy],
     startingPrice: 18500,
     originalPrice: 22000,
+    priceUnit: 'per person',
     isActive: true,
     isFeatured: false,
     itinerary: [],
@@ -233,6 +234,7 @@ export const TabPackages: React.FC = () => {
       cancellationPolicy: [...defaultCancellationPolicy],
       startingPrice: 18000,
       originalPrice: 22000,
+      priceUnit: 'per person',
       isActive: true,
       isFeatured: false,
       itinerary: [
@@ -763,20 +765,20 @@ export const TabPackages: React.FC = () => {
             <table className="w-full text-left text-xs text-white/80">
               <thead className="border-b border-white/10 bg-white/[0.02] text-[10px] font-semibold uppercase tracking-wider text-white/40">
                 <tr>
-                  <th className="px-5 py-3.5">Package</th>
-                  <th className="px-5 py-3.5">Category</th>
-                  <th className="px-5 py-3.5">Duration</th>
-                  <th className="px-5 py-3.5">Starting Price</th>
-                  <th className="px-5 py-3.5">Featured</th>
-                  <th className="px-5 py-3.5">Media</th>
-                  <th className="px-5 py-3.5">Animation</th>
-                  <th className="px-5 py-3.5">Status</th>
-                  <th className="px-5 py-3.5 text-right">Actions</th>
+                  <th className="px-5 py-3.5 min-w-[280px]">Package</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Category</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Duration</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Starting Price</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Featured</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Media</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Animation</th>
+                  <th className="px-5 py-3.5 whitespace-nowrap">Status</th>
+                  <th className="px-5 py-3.5 text-right whitespace-nowrap sticky right-0 z-10 bg-[#0c222e] shadow-[-4px_0_12px_rgba(0,0,0,0.1)]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filteredPackages.map((pkg) => (
-                  <tr key={pkg.id} className="transition-colors hover:bg-white/[0.02]">
+                  <tr key={pkg.id} className="group transition-colors hover:bg-white/[0.02]">
                     {/* Title + Thumbnail */}
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
@@ -889,7 +891,7 @@ export const TabPackages: React.FC = () => {
                     </td>
 
                     {/* Actions */}
-                    <td className="px-5 py-4 text-right">
+                    <td className="px-5 py-4 text-right sticky right-0 z-10 bg-[#0c222e] group-hover:bg-[#0f2a3a] shadow-[-4px_0_12px_rgba(0,0,0,0.1)] transition-colors">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(pkg)}
@@ -1105,6 +1107,18 @@ export const TabPackages: React.FC = () => {
                         className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-[#d98f5b] focus:outline-none"
                         placeholder="18500"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-white/60 mb-1 font-medium">Price Basis</label>
+                      <select
+                        value={formData.priceUnit || 'per person'}
+                        onChange={(e) => setFormData({ ...formData, priceUnit: e.target.value })}
+                        className="w-full rounded-xl border border-white/10 bg-white/5 p-2.5 text-white focus:border-[#d98f5b] focus:outline-none"
+                      >
+                        <option value="per person">Per Person</option>
+                        <option value="per couple">Per Couple</option>
+                      </select>
                     </div>
 
                     <div>

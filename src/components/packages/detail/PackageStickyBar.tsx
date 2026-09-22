@@ -33,7 +33,7 @@ export const PackageStickyBar: React.FC<PackageStickyBarProps> = ({ pkg }) => {
             <span className="text-lg sm:text-2xl font-extrabold font-manrope text-white">
               ₹{pkg.startingPrice.toLocaleString('en-IN')}
             </span>
-            <span className="text-[11px] font-manrope text-white/60">/ person</span>
+            <span className="text-[11px] font-manrope text-white/60 capitalize">/ {pkg.priceUnit || 'per person'}</span>
           </div>
           <span className="text-[10px] text-[#d98f5b] font-medium hidden sm:inline">
             {pkg.duration} · Verified Stays & Cab Included

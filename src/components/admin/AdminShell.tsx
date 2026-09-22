@@ -38,6 +38,7 @@ const sectionLabels: Record<AdminSection, string> = {
   activity: 'Visitor Journeys',
   heatmaps: 'Screen Recordings',
   marketing: 'Ad Campaigns',
+  brands: 'Brands & Partners',
 };
 
 /* ── Panel transition variants ────────────────────────────────── */

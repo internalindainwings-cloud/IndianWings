@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Clock, ShieldCheck, MapPin } from 'lucide-react';
+import { Users, Clock, ShieldCheck } from 'lucide-react';
 
 export const HeroFeatureHighlights = () => {
   const features = [
@@ -20,12 +20,6 @@ export const HeroFeatureHighlights = () => {
       boldText: "24/7",
       lightText: "Trip Support",
       visibility: "hidden sm:flex",
-    },
-    {
-      icon: <MapPin size={22} strokeWidth={1.5} className="text-saffron shrink-0" />,
-      boldText: "Srinagar",
-      lightText: "Based Locally",
-      visibility: "hidden md:flex",
     }
   ];
 

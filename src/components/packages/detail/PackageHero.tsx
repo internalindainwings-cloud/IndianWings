@@ -309,7 +309,7 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                 <span className="text-2xl sm:text-3xl font-extrabold text-[#0B1F2A]">
                   ₹{pkg.startingPrice.toLocaleString('en-IN')}
                 </span>
-                <span className="text-xs text-slate-500 font-medium">/ person</span>
+                <span className="text-xs text-slate-500 font-medium capitalize">/ {pkg.priceUnit || 'per person'}</span>
                 {pkg.originalPrice && (
                   <span className="text-xs font-mono text-slate-400 line-through ml-1">
                     ₹{pkg.originalPrice.toLocaleString('en-IN')}

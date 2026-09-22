@@ -40,9 +40,9 @@ export type AdminSection =
   | 'gallery'
   | 'seo'
   | 'settings'
-  | 'activity'
   | 'heatmaps'
-  | 'marketing';
+  | 'marketing'
+  | 'brands';
 
 interface SubNavItem {
   id: AdminSection;
@@ -176,6 +176,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       id: 'seo',
       label: 'SEO & Search Console',
       icon: <SearchCheck className="h-[18px] w-[18px]" />,
+    },
+    {
+      id: 'brands',
+      label: 'Brands & Partners',
+      icon: <Sparkles className="h-[18px] w-[18px] text-emerald-400" />,
     },
     {
       id: 'settings',

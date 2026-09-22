@@ -130,6 +130,7 @@ model Package {
   highlights    String[]         @default([])
   startingPrice Int
   originalPrice Int?
+  priceUnit     String           @default("per person")
   isFeatured    Boolean          @default(false)
   isActive      Boolean          @default(true)
   sortOrder     Int              @default(0)
@@ -318,4 +319,19 @@ model Blog {
   @@index([isPublished])
   @@index([category])
   @@map("blogs")
+}
+
+model PartnerBrand {
+  id          String   @id @default(uuid())
+  name        String
+  logoUrl     String?
+  altText     String   @default("Partner Brand")
+  typeLabel   String   @default("HOSPITALITY PARTNER")
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("partner_brands")
 }
