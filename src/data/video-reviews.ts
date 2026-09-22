@@ -12,8 +12,8 @@ export const videoReviews: VideoReview[] = [
     name: 'MLM Group',
     city: 'Delhi',
     duration: '00:16',
-    posterUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/so_1,f_auto,q_auto/v1789745218/WhatsApp_Video_2026-09-18_at_2.22.02_AM.jpg', 
-    videoUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/v1789745218/WhatsApp_Video_2026-09-18_at_2.22.02_AM.mp4',
+    posterUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/so_1,f_auto,q_auto/v1790102607/WhatsApp_Video_2026-09-23_at_12.03.11_AM.jpg', 
+    videoUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/v1790102607/WhatsApp_Video_2026-09-23_at_12.03.11_AM.mp4',
     featured: true
   },
   {

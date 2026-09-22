@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MapPin } from 'lucide-react';
 import { useEnquiryModal } from '@/context/EnquiryModalContext';
 
 export interface HeroContentProps {
@@ -99,6 +99,12 @@ export const HeroContent: React.FC<HeroContentProps> = ({
             </Link>
           </div>
         )}
+
+        {/* Location Pin */}
+        <div className="mt-4 sm:mt-5 flex items-center gap-1.5 text-white/95 font-manrope text-sm sm:text-base font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          <MapPin size={16} className="text-[#C5A45E]" strokeWidth={2.5} />
+          <span>Srinagar, Kashmir</span>
+        </div>
 
       </div>
     </div>

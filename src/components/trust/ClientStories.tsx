@@ -4,8 +4,8 @@ import React, { useState, useRef, useEffect, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { Play, FileText, ArrowRight, ChevronLeft, ChevronRight, X, Star } from 'lucide-react';
-import { videoReviews } from '@/data/video-reviews';
-import { writtenReviews } from '@/data/written-reviews';
+import { videoReviews as fallbackVideoReviews } from '@/data/video-reviews';
+import { writtenReviews as fallbackWrittenReviews } from '@/data/written-reviews';
 
 const REVIEWS_PER_MOBILE_PAGE = 2;
 const emptySubscribe = () => () => {};
@@ -16,6 +16,45 @@ export function ClientStories() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [mobileReviewPage, setMobileReviewPage] = useState(1);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [videoReviews, setVideoReviews] = useState(fallbackVideoReviews);
+  const [writtenReviews, setWrittenReviews] = useState(fallbackWrittenReviews);
+
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.reviews) {
+          const fetchedVideos = data.reviews
+            .filter((r: any) => r.type === 'video')
+            .map((r: any) => ({
+              id: r.id,
+              quote: r.videoQuote || r.review,
+              name: r.name,
+              city: r.city,
+              duration: r.videoDuration || '00:00',
+              posterUrl: r.imageUrl || '',
+              videoUrl: r.videoUrl || '',
+              featured: r.featured
+            }));
+            
+          const fetchedWritten = data.reviews
+            .filter((r: any) => r.type === 'written')
+            .map((r: any) => ({
+              id: r.id,
+              name: r.name,
+              city: r.city,
+              review: r.review,
+              rating: r.rating || 5,
+              avatarUrl: r.avatarUrl
+            }));
+            
+          if (fetchedVideos.length > 0) setVideoReviews(fetchedVideos);
+          if (fetchedWritten.length > 0) setWrittenReviews(fetchedWritten);
+        }
+      })
+      .catch(err => console.error('Failed to fetch dynamic reviews:', err));
+  }, []);
 
   const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const selectedVideo = selectedVideoIndex !== null ? videoReviews[selectedVideoIndex] : null;
