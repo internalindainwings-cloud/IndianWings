@@ -113,26 +113,6 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set('Content-Security-Policy', cspHeader);
 
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
-  const isAdminSubdomain = hostname.startsWith('admin.');
-
-  if (!isLocalhost && !isAdminSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
-    url.pathname = '/';
-    return NextResponse.redirect(url);
-  }
-
-  let isRewrittenToAdmin = false;
-  if (isAdminSubdomain) {
-    if (pathname === '/') {
-      url.pathname = '/admin';
-      isRewrittenToAdmin = true;
-    } else if (pathname === '/login') {
-      url.pathname = '/admin/login';
-      isRewrittenToAdmin = true;
-    } else if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
-      url.pathname = '/admin';
-      isRewrittenToAdmin = true;
-    }
-  }
 
   const effectivePath = url.pathname;
 
@@ -172,17 +152,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response = isRewrittenToAdmin
-    ? NextResponse.rewrite(url, {
-      request: {
-        headers: requestHeaders,
-      },
-    })
-    : NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
   response.headers.set('Content-Security-Policy', cspHeader);
   return response;
