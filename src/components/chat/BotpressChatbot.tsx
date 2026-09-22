@@ -7,47 +7,60 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    // Only auto-open once per session
-    let hasOpened = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('bp_auto_opened') === 'true';
+    const triggerAutoOpen = (newCount: number) => {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('bp_auto_opens', newCount.toString());
+      }
+      
+      // Wait a small moment to ensure script is injected
+      setTimeout(() => {
+        try {
+          if (typeof window !== 'undefined') {
+            // @ts-ignore
+            if (window.botpress && window.botpress.open) {
+              // @ts-ignore
+              window.botpress.open();
+            } 
+            // @ts-ignore
+            else if (window.botpressWebChat) {
+              // @ts-ignore
+              window.botpressWebChat.sendEvent({ type: 'show' });
+            }
+          }
+        } catch (e) {
+          console.error('Failed to auto-open chatbot:', e);
+        }
+      }, 800);
+    };
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const loadThreshold = window.innerHeight * 0.8;
-      // Trigger when scrolling past 2.5 viewports (approx lead form/packages area)
-      const openThreshold = window.innerHeight * 2.5; 
+      
+      // Threshold 1: Lead Form (approx 1.2 viewports down)
+      const threshold1 = window.innerHeight * 1.2;
+      // Threshold 2: Packages section (approx 3 viewports down)
+      const threshold2 = window.innerHeight * 3.0; 
 
       // Load widget early
       if (scrollY > loadThreshold) {
         setShouldLoad(true);
       }
 
-      // Auto-open widget once user scrolls deep
-      if (scrollY > openThreshold && !hasOpened) {
-        hasOpened = true; 
-        if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.setItem('bp_auto_opened', 'true');
-        }
-        
-        // Wait a small moment to ensure script is injected
-        setTimeout(() => {
-          try {
-            if (typeof window !== 'undefined') {
-              // @ts-ignore
-              if (window.botpress && window.botpress.open) {
-                // @ts-ignore
-                window.botpress.open();
-              } 
-              // @ts-ignore
-              else if (window.botpressWebChat) {
-                // @ts-ignore
-                window.botpressWebChat.sendEvent({ type: 'show' });
-              }
-            }
-          } catch (e) {
-            console.error('Failed to auto-open chatbot:', e);
-          }
-        }, 1000);
+      // Check how many times we've auto-opened in this session
+      const opensCount = parseInt(
+        typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('bp_auto_opens') || '0' : '0'
+      );
+
+      // Auto-open 1st time at Lead Form
+      if (scrollY > threshold1 && opensCount === 0) {
+        triggerAutoOpen(1);
+      } 
+      // Auto-open 2nd time at Packages
+      else if (scrollY > threshold2 && opensCount === 1) {
+        triggerAutoOpen(2);
       }
+      // If opensCount is 2 or more, it will never auto-open again in this session
     };
 
     // Initial check on mount
