@@ -29,6 +29,7 @@ import {
   ImageIcon,
 } from 'lucide-react';
 import { useEnquiryModal } from '@/context/EnquiryModalContext';
+import { fetchClientDestinations } from '@/lib/client-data';
 
 interface SubNavItem {
   name: string;
@@ -112,6 +113,35 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
   const pathname = usePathname();
   const { openModal } = useEnquiryModal();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [destSubItems, setDestSubItems] = useState<SubNavItem[]>([
+    { name: 'Iconic Valleys', href: '/destinations', icon: MapPin },
+    { name: 'Alpine Meadows', href: '/destinations', icon: Snowflake },
+    { name: 'Off-Beat Kashmir', href: '/destinations', icon: Compass },
+    { name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isAction: true }
+  ]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchClientDestinations()
+      .then(data => {
+        if (!isMounted) return;
+        if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
+          const items: SubNavItem[] = data.destinations.slice(0, 5).map((d) => ({
+            name: d.name,
+            href: `/destinations/${d.slug}`,
+            icon: MapPin,
+          }));
+          items.push({ name: 'View All Destinations', href: '/destinations', icon: ArrowRight, isAction: true });
+          setDestSubItems(items);
+        }
+      })
+      .catch(() => {
+        // Keep default
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Prevent background scrolling when menu is open
   useEffect(() => {
@@ -139,11 +169,15 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
       <nav className="flex-1 mt-6">
         <ul className="flex flex-col gap-4 font-manrope">
           {mobileNavLinks.map((link, idx) => {
-            const hasChildren = Boolean(link.children && link.children.length > 0);
-            const isExpanded = expandedSection === link.name;
+            let currentChildren = link.children;
+            if (link.name === 'Destinations') {
+              currentChildren = destSubItems;
+            }
+            const hasChildren = Boolean(currentChildren && currentChildren.length > 0);
             const isCurrent =
               pathname === link.href ||
-              (hasChildren && link.children?.some((c) => pathname === c.href));
+              (hasChildren && currentChildren?.some((c) => pathname === c.href));
+            const isExpanded = expandedSection === link.name;
             const Icon = link.icon;
 
             return (
@@ -177,7 +211,7 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
 
                     {/* Collapsible Dropdown Items */}
                     <AnimatePresence>
-                      {isExpanded && (
+                      {isExpanded && currentChildren && (
                         <motion.ul
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
@@ -185,7 +219,7 @@ const MobileMenuContent = ({ onClose }: { onClose: () => void }) => {
                           transition={{ duration: 0.25, ease: 'easeInOut' }}
                           className="overflow-hidden pl-4 mt-2.5 flex flex-col gap-2.5 border-l-2 border-saffron/30 ml-2"
                         >
-                          {link.children?.map((child) => {
+                          {currentChildren.map((child) => {
                             const isChildActive = pathname === child.href;
                             const ChildIcon = child.icon;
                             return (
