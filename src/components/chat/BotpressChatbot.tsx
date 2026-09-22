@@ -7,39 +7,49 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
-    let idleId: number | null = null;
+    let hasOpened = false;
 
-    const triggerLoad = () => {
-      setShouldLoad(true);
-      cleanup();
-    };
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const loadThreshold = window.innerHeight * 0.8;
+      const openThreshold = window.innerHeight * 2.5; // Trigger auto-open deeper down the page
 
-    const cleanup = () => {
-      if (timer) clearTimeout(timer);
-      if (idleId && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
-        window.cancelIdleCallback(idleId);
+      // Load widget early
+      if (scrollY > loadThreshold) {
+        setShouldLoad(true);
       }
-      window.removeEventListener('scroll', triggerLoad);
-      window.removeEventListener('pointerdown', triggerLoad);
-      window.removeEventListener('keydown', triggerLoad);
-      window.removeEventListener('touchstart', triggerLoad);
+
+      // Auto-open widget once user scrolls past packages/leads
+      if (scrollY > openThreshold && !hasOpened) {
+        hasOpened = true; // Only do this once
+        
+        // Wait a small moment to ensure script is injected and ready if they scrolled very fast
+        setTimeout(() => {
+          try {
+            if (typeof window !== 'undefined') {
+              // @ts-ignore
+              if (window.botpress && window.botpress.open) {
+                // @ts-ignore
+                window.botpress.open();
+              } 
+              // @ts-ignore
+              else if (window.botpressWebChat) {
+                // @ts-ignore
+                window.botpressWebChat.sendEvent({ type: 'show' });
+              }
+            }
+          } catch (e) {
+            console.error('Failed to auto-open chatbot:', e);
+          }
+        }, 1000);
+      }
     };
 
-    // Trigger on first user interaction
-    window.addEventListener('scroll', triggerLoad, { passive: true, once: true });
-    window.addEventListener('pointerdown', triggerLoad, { passive: true, once: true });
-    window.addEventListener('keydown', triggerLoad, { passive: true, once: true });
-    window.addEventListener('touchstart', triggerLoad, { passive: true, once: true });
+    // Initial check on mount
+    handleScroll();
 
-    // Safe idle fallback: load after 3.5s idle if no user interaction occurred yet
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      idleId = window.requestIdleCallback(() => triggerLoad(), { timeout: 3500 });
-    } else {
-      timer = setTimeout(triggerLoad, 3500);
-    }
-
-    return cleanup;
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (

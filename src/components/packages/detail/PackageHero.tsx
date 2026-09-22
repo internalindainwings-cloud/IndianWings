@@ -129,30 +129,26 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
 
             {/* Top Floating Badges */}
             <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between gap-2 z-10 pointer-events-none">
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap pointer-events-auto">
-                <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-saffron text-midnight text-[11px] sm:text-xs font-bold shadow-md flex items-center gap-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 pointer-events-auto">
+                <span className="px-2.5 py-1 rounded-full bg-saffron text-midnight text-xs font-extrabold shadow-md flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
                   {categoryLabel}
                 </span>
-                <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] sm:text-xs font-bold border border-white/20 shadow-md">
+                <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-md">
                   {durationInfo.compact}
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-midnight text-[11px] sm:text-xs font-black shadow-md border border-white/60">
-                  <Gift className="h-3 w-3 text-midnight stroke-[2.5]" />
-                  Free Gift Inside
-                </span>
-                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-600/90 backdrop-blur-md text-white text-[11px] sm:text-xs font-bold border border-emerald-400/30 shadow-md">
+                <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-600/90 backdrop-blur-md text-white text-xs font-bold border border-emerald-400/30 shadow-md">
                   <ShieldCheck className="h-3 w-3 text-emerald-200" />
                   Private / Custom
                 </span>
               </div>
 
               {/* Trust Rating */}
-              <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full shadow-md pointer-events-auto">
-                <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-amber-500 text-amber-500" />
+              <div className="flex items-center gap-1 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md pointer-events-auto shrink-0">
+                <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
                 <span className="text-xs font-bold text-midnight">{pkg.rating}</span>
-                <span className="text-[10px] sm:text-[11px] text-slate-500 hidden sm:inline">
-                  ({pkg.reviewCount} reviews)
+                <span className="text-[11px] text-slate-500 hidden sm:inline">
+                  ({pkg.reviewCount})
                 </span>
               </div>
             </div>
@@ -244,77 +240,60 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
             </div>
           </div>
 
-          {/* ── BOTTOM HALF: Details (Sketch: space not too much) ── */}
-          <div className="shrink-0 p-3 sm:p-4 bg-white space-y-2 sm:space-y-2.5">
+          {/* ── BOTTOM HALF: Details (Spacious, Clean, Uncluttered) ── */}
+          <div className="shrink-0 p-3 sm:p-5 bg-white space-y-2.5 sm:space-y-3">
             
-            {/* Row 1: Duration, Tour Type & Best For */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs sm:text-sm text-slate-800">
-              {/* Duration: */}
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 text-[#0D57C6]" />
-                  Duration:
-                </span>
-                <span className="font-extrabold text-[#0D57C6] bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100 text-xs">
-                  {durationInfo.compact}
-                </span>
-                <span className="text-slate-500 font-medium text-[11px] hidden md:inline">
-                  ({durationInfo.full})
+            {/* Row 1: Duration, Type & Best For */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-slate-700">
+              <div className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-[#d98f5b] shrink-0" />
+                <span className="font-semibold text-slate-900">Duration:</span>
+                <span className="font-bold text-[#0B1F2A] bg-slate-100 px-2 py-0.5 rounded-md text-xs">
+                  {durationInfo.full}
                 </span>
               </div>
 
-              {/* Tour Type: */}
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-bold text-slate-900 flex items-center gap-1">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                  Tour Type:
-                </span>
-                <span className="font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-xs">
-                  Private / Custom
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                <span className="font-semibold text-slate-900">Type:</span>
+                <span className="font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 text-xs">
+                  Private Cab & Stays
                 </span>
               </div>
 
-              {/* Best For: */}
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-bold text-slate-900 flex items-center gap-1">
-                  <Users className="h-3.5 w-3.5 text-indigo-600" />
-                  Best For:
-                </span>
-                <span className="font-semibold text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 text-xs">
+              <div className="flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+                <span className="font-semibold text-slate-900">Best For:</span>
+                <span className="font-medium text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md text-xs">
                   {bestForLabel}
                 </span>
               </div>
             </div>
 
-            {/* Row 2: Primary Route & Category */}
-            <div className="flex flex-wrap items-baseline gap-2 text-xs sm:text-sm text-slate-800">
-              <span className="font-bold text-slate-900 flex items-center gap-1.5 min-w-[105px] shrink-0">
+            {/* Row 2: Primary Route */}
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 min-w-0">
+              <span className="font-semibold text-slate-900 flex items-center gap-1.5 shrink-0">
                 <MapPin className="h-3.5 w-3.5 text-saffron shrink-0" />
-                Primary Route:
+                Route:
               </span>
-              <span className="font-semibold text-slate-700 bg-slate-50 px-2.5 py-0.5 rounded-md border border-slate-200 text-xs truncate max-w-full sm:max-w-[450px]">
+              <span className="font-medium text-slate-700 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200 text-xs truncate max-w-full">
                 {primaryRoute}
-              </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50/80 border border-amber-200/80 text-[11px] font-bold text-amber-900">
-                <Sparkles className="h-2.5 w-2.5 text-amber-600" />
-                {categoryLabel}
               </span>
             </div>
 
-            {/* Row 3: Key Highlight: */}
+            {/* Row 3: Key Highlights */}
             {pkg.highlights && pkg.highlights.length > 0 && (
-              <div className="flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                <span className="font-bold text-slate-900 flex items-center gap-1.5 min-w-[105px] shrink-0">
+              <div className="flex items-start sm:items-center gap-2 text-xs sm:text-sm min-w-0">
+                <span className="font-semibold text-slate-900 flex items-center gap-1.5 shrink-0 mt-0.5 sm:mt-0">
                   <Sparkles className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                  Key Highlight:
+                  Highlights:
                 </span>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                   {pkg.highlights.map((hl, i) => (
                     <span
                       key={i}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100/90 border border-slate-200/80 text-[11px] font-medium text-slate-800"
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-50 border border-slate-200/90 text-xs font-medium text-slate-800 whitespace-nowrap shrink-0"
                     >
-                      <Sparkles className="h-2.5 w-2.5 text-amber-500 shrink-0" />
                       <span>{hl}</span>
                     </span>
                   ))}
@@ -322,29 +301,28 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
               </div>
             )}
 
-            {/* 4. Starting Price: & [Button with price] */}
-            <div className="pt-2 sm:pt-2.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
-              
-              {/* Starting Price: */}
-              <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                <span className="font-bold text-slate-900 min-w-[120px]">Starting Price:</span>
-                <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0B1F2A]">
+            {/* Row 4: Starting Price & Action Buttons */}
+            <div className="pt-2.5 sm:pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {/* Starting Price */}
+              <div className="flex items-baseline gap-2">
+                <span className="text-xs font-semibold text-slate-500">Starting from</span>
+                <span className="text-2xl sm:text-3xl font-extrabold text-[#0B1F2A]">
                   ₹{pkg.startingPrice.toLocaleString('en-IN')}
                 </span>
                 <span className="text-xs text-slate-500 font-medium">/ person</span>
                 {pkg.originalPrice && (
-                  <span className="text-xs sm:text-sm font-mono text-slate-400 line-through ml-1">
+                  <span className="text-xs font-mono text-slate-400 line-through ml-1">
                     ₹{pkg.originalPrice.toLocaleString('en-IN')}
                   </span>
                 )}
                 {discountPercent && (
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700 border border-emerald-200">
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 border border-emerald-200 ml-1">
                     Save {discountPercent}%
                   </span>
                 )}
               </div>
 
-              {/* [Button with price] (Sketch: (Button with price)) */}
+              {/* Action Buttons */}
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -355,10 +333,9 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                       source: `package_detail_hero_${pkg.slug}`,
                     })
                   }
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl bg-saffron hover:bg-amber-500 px-4 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-midnight shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 rounded-xl bg-saffron hover:bg-amber-500 px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-midnight shadow-md hover:shadow-lg transition-all active:scale-98 cursor-pointer"
                 >
-                  <span className="sm:hidden">Book / Enquire</span>
-                  <span className="hidden sm:inline">Book / Enquire • Starting ₹{pkg.startingPrice.toLocaleString('en-IN')}</span>
+                  <span>Book / Enquire</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
@@ -366,7 +343,10 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                   type="button"
                   onClick={() => {
                     const el = document.getElementById('itinerary');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    if (el) {
+                      const y = el.getBoundingClientRect().top + window.pageYOffset - 140;
+                      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+                    }
                   }}
                   className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3.5 py-2.5 sm:py-3 text-xs font-bold text-slate-700 transition-all cursor-pointer"
                   title="Scroll to Day-by-Day Itinerary"
@@ -378,17 +358,14 @@ export const PackageHero: React.FC<PackageHeroProps> = ({ pkg }) => {
                 <button
                   type="button"
                   onClick={() => setDownloadModalOpen(true)}
-                  className="flex items-center justify-center gap-1.5 rounded-xl bg-[#0B1F2A] hover:bg-[#153444] text-white border border-[#0B1F2A] px-3.5 py-2.5 sm:py-3 text-xs font-bold transition-all shadow-sm hover:shadow cursor-pointer"
-                  title="Download Itinerary PDF & Get Email Copy"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3.5 py-2.5 sm:py-3 text-xs font-bold text-slate-700 transition-all cursor-pointer"
+                  title="Download PDF Itinerary"
                 >
-                  <Download className="h-3.5 w-3.5 text-saffron" />
-                  <span className="hidden sm:inline">Download PDF</span>
-                  <span className="sm:hidden">PDF</span>
+                  <Download className="h-3.5 w-3.5 text-slate-500" />
+                  <span className="hidden sm:inline">PDF</span>
                 </button>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

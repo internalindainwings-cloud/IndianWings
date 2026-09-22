@@ -26,7 +26,7 @@ export const FloatingContactActions: React.FC = () => {
   return (
     <aside 
       aria-label="Quick contact and social links" 
-      className={`fixed left-3.5 sm:left-6 bottom-[84px] sm:bottom-[92px] min-[1140px]:bottom-8 z-40 flex flex-col gap-2.5 sm:gap-3 items-center transition-all duration-300 ease-out ${
+      className={`hidden xl:flex fixed left-6 bottom-8 z-40 flex-col gap-3 items-center transition-all duration-300 ease-out ${
         isVisible 
           ? 'opacity-100 translate-x-0 pointer-events-auto' 
           : 'opacity-0 -translate-x-6 pointer-events-none'

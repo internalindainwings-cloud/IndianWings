@@ -112,76 +112,78 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('Content-Security-Policy', cspHeader);
 
-  // Check if accessing via admin subdomain (e.g. admin.theindianwings.com or admin.localhost:3000)
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
   const isAdminSubdomain = hostname.startsWith('admin.');
 
-  // Block access to /admin or /api/admin if not on the admin subdomain (allow on localhost for local testing)
-  if ((pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) && !isAdminSubdomain && !isLocalhost) {
+  if (!isLocalhost && !isAdminSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
 
-  // If on admin subdomain and accessing root '/', rewrite to '/admin'
+  let isRewrittenToAdmin = false;
   if (isAdminSubdomain) {
-    if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
-      url.pathname = `/admin${pathname === '/' ? '' : pathname}`;
-      const response = NextResponse.rewrite(url, {
-        request: {
-          headers: requestHeaders,
-        },
-      });
-      response.headers.set('Content-Security-Policy', cspHeader);
-      return response;
+    if (pathname === '/') {
+      url.pathname = '/admin';
+      isRewrittenToAdmin = true;
+    } else if (pathname === '/login') {
+      url.pathname = '/admin/login';
+      isRewrittenToAdmin = true;
+    } else if (!pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+      url.pathname = '/admin';
+      isRewrittenToAdmin = true;
     }
   }
 
-  // Protect /admin routes (except login page & auth API)
-  if (pathname.startsWith('/admin')) {
-    const isLoginPage = pathname === '/admin/login';
+  const effectivePath = url.pathname;
+
+  if (effectivePath.startsWith('/admin')) {
+    const isLoginPage = effectivePath === '/admin/login';
     const token = request.cookies.get(COOKIE_NAME)?.value;
     const isSessionValid = await isValidAdminSession(token);
 
-    // If accessing admin pages without valid session, redirect to login
     if (!isSessionValid && !isLoginPage) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('from', pathname);
-      const response = NextResponse.redirect(loginUrl);
+      const redirectResponse = NextResponse.redirect(loginUrl);
       if (token) {
-        // Clear invalid/forged/expired cookie
-        response.cookies.delete(COOKIE_NAME);
+        redirectResponse.cookies.delete(COOKIE_NAME);
       }
-      return response;
+      return redirectResponse;
     }
 
-    // If already logged in with valid token and visiting login page, redirect to dashboard
     if (isSessionValid && isLoginPage) {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
   }
 
-  // Defense-in-depth: Protect /api/admin routes (excluding login & logout)
-  if (pathname.startsWith('/api/admin')) {
-    const isPublicAuthApi = pathname === '/api/admin/login' || pathname === '/api/admin/logout';
+  if (effectivePath.startsWith('/api/admin')) {
+    const isPublicAuthApi = effectivePath === '/api/admin/login' || effectivePath === '/api/admin/logout';
     if (!isPublicAuthApi) {
       const token = request.cookies.get(COOKIE_NAME)?.value;
       const isSessionValid = await isValidAdminSession(token);
 
       if (!isSessionValid) {
-        const response = NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        const jsonResponse = NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         if (token) {
-          response.cookies.delete(COOKIE_NAME);
+          jsonResponse.cookies.delete(COOKIE_NAME);
         }
-        return response;
+        return jsonResponse;
       }
     }
   }
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  const response = isRewrittenToAdmin
+    ? NextResponse.rewrite(url, {
+        request: {
+          headers: requestHeaders,
+        },
+      })
+    : NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+
   response.headers.set('Content-Security-Policy', cspHeader);
   return response;
 }

@@ -31,6 +31,15 @@ body {
   overflow-wrap: break-word;
 }
 
+/* Hide scrollbar for clean horizontal tab bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* h1 retains the decorative display font style */
 h1 {
   font-family: var(--font-berkshire), 'Berkshire Swash', var(--font-manrope), "Manrope", cursive, serif;

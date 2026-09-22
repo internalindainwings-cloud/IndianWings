@@ -6,22 +6,26 @@ import { Check, X } from 'lucide-react';
 interface PackageInclusionsExclusionsProps {
   inclusions: string[];
   exclusions: string[];
+  hideHeader?: boolean;
 }
 
 export const PackageInclusionsExclusions: React.FC<PackageInclusionsExclusionsProps> = ({
   inclusions,
   exclusions,
+  hideHeader = false,
 }) => {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="font-playfair text-xl sm:text-2xl font-bold text-[#0B1F2A]">
-          What’s Included & Excluded
-        </h2>
-        <p className="text-xs text-[#64748B] mt-1 font-manrope">
-          Transparent trip deliverables with zero hidden costs at destination.
-        </p>
-      </div>
+      {!hideHeader && (
+        <div>
+          <h2 className="font-playfair text-xl sm:text-2xl font-bold text-[#0B1F2A]">
+            What’s Included & Excluded
+          </h2>
+          <p className="text-xs text-[#64748B] mt-1 font-manrope">
+            Transparent trip deliverables with zero hidden costs at destination.
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {/* Inclusions Card */}

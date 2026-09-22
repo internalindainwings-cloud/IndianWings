@@ -92,18 +92,20 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
         }`
       : 'Srinagar ➔ Gulmarg ➔ Pahalgam ➔ Srinagar';
 
-  // Smooth scroll to in-page section on tab click
+  // Smooth scroll to in-page section on tab click with sticky header offset
   const handleTabChange = (tabKey: NavTab) => {
     setActiveTab(tabKey);
     if (tabKey === 'viewAll') {
       if (contentTopRef.current) {
-        contentTopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const y = contentTopRef.current.getBoundingClientRect().top + window.pageYOffset - 130;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       }
       return;
     }
     const elem = document.getElementById(tabKey);
     if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const y = elem.getBoundingClientRect().top + window.pageYOffset - 140;
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
     }
   };
 
@@ -173,14 +175,14 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
   return (
     <div ref={contentTopRef} className="container-custom py-6 sm:py-10 space-y-10 scroll-mt-20">
       {/* ── 1. SUB-NAVIGATION TAB BAR (Pinned while scrolling down) ── */}
-      <div className="sticky top-[68px] sm:top-[74px] md:top-[80px] z-40 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-md p-1.5 sm:p-2 transition-all">
+      <div className="sticky top-[68px] sm:top-[74px] md:top-[80px] z-30 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-md p-1.5 sm:p-2 transition-all">
         <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto no-scrollbar">
           <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             {/* Tab 1: Overview */}
             <button
               type="button"
               onClick={() => handleTabChange('overview')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                 activeTab === 'overview'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -193,7 +195,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('itinerary')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                 activeTab === 'itinerary'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -206,7 +208,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('stay')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                 activeTab === 'stay'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -219,7 +221,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('transport')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'transport'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -233,7 +235,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('inclusions')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'inclusions'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -247,7 +249,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('faqs')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'faqs'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -261,7 +263,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('cancellation')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'cancellation'
                   ? 'bg-[#0B1F2A] text-white shadow-sm ring-1 ring-white/20'
                   : 'text-slate-600 hover:text-[#0B1F2A] hover:bg-slate-100'
@@ -275,7 +277,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
             <button
               type="button"
               onClick={() => handleTabChange('viewAll')}
-              className={`px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-extrabold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'viewAll'
                   ? 'bg-gradient-to-r from-[#d98f5b] to-amber-600 text-white shadow-md'
                   : 'text-[#d98f5b] hover:bg-amber-50 border border-[#d98f5b]/30'
@@ -444,17 +446,17 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
                   }`}
                 >
                   {/* Day Header */}
-                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block px-3 py-1 rounded-lg bg-[#d98f5b] text-white font-extrabold text-xs tracking-wider uppercase shadow-xs">
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3 mb-3 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <span className="inline-block px-2.5 py-1 rounded-lg bg-[#d98f5b] text-white font-extrabold text-xs tracking-wider uppercase shadow-xs shrink-0">
                         Day {d.day}
                       </span>
-                      <h3 className="text-base sm:text-lg font-bold text-[#0B1F2A]">
+                      <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#0B1F2A] truncate whitespace-nowrap" title={d.title}>
                         {d.title}
                       </h3>
                     </div>
                     {d.stay && (
-                      <span className="text-xs font-semibold text-slate-500 shrink-0">
+                      <span className="text-xs font-semibold text-slate-500 shrink-0 hidden xs:inline-block sm:inline-block">
                         📍 {d.stay.split(',')[0]}
                       </span>
                     )}
@@ -798,6 +800,7 @@ export const PackageAfterHero: React.FC<PackageAfterHeroProps> = ({ pkg }) => {
         <PackageInclusionsExclusions
           inclusions={pkg.inclusions}
           exclusions={pkg.exclusions}
+          hideHeader={true}
         />
       </section>
 

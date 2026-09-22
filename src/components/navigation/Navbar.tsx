@@ -58,14 +58,14 @@ export const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden min-[1140px]:block">
+          <div className="hidden lg:block">
             <DesktopNavigation isScrolled={isScrolled} />
           </div>
 
           {/* Mobile / Tablet Hamburger Toggle */}
           <button
             type="button"
-            className="min-[1140px]:hidden relative z-50 p-2 text-warm-white hover:text-saffron transition-colors cursor-pointer"
+            className="lg:hidden relative z-50 p-2 text-warm-white hover:text-saffron transition-colors cursor-pointer"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             aria-label="Toggle menu"
           >

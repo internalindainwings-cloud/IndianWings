@@ -26,7 +26,7 @@ export const MobileBottomDock: React.FC<MobileBottomDockProps> = ({
   return (
     <aside
       aria-label="Mobile navigation dock"
-      className="fixed bottom-3.5 sm:bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[410px] min-[1140px]:hidden select-none pointer-events-auto"
+      className="fixed bottom-3.5 sm:bottom-5 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-[410px] lg:hidden select-none pointer-events-auto"
     >
       <nav 
         className="bg-midnight/95 backdrop-blur-md rounded-full border border-warm-white/15 px-2 py-1.5 shadow-[0_14px_36px_rgba(0,0,0,0.75),0_4px_14px_rgba(0,0,0,0.5)] flex items-center justify-between gap-1"

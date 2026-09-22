@@ -100,11 +100,11 @@ export const PackageItineraryTimeline: React.FC<PackageItineraryTimelineProps> =
                   onClick={() => toggleDay(day.day)}
                   className="w-full flex items-center justify-between p-4 sm:p-5 text-left bg-white hover:bg-slate-50/50 transition-colors"
                 >
-                  <div className="space-y-1 pr-4">
+                  <div className="space-y-1 pr-4 min-w-0 flex-1">
                     <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#d98f5b] font-manrope">
                       Day {day.day}
                     </span>
-                    <h3 className="font-playfair text-base sm:text-lg font-bold text-[#0B1F2A]">
+                    <h3 className="font-playfair text-base sm:text-lg font-bold text-[#0B1F2A] truncate whitespace-nowrap" title={day.title}>
                       {day.title}
                     </h3>
                   </div>

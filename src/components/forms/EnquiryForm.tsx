@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Send, CheckCircle2, Loader2, ShieldCheck } from 'lucide-react';
+import { Send, CheckCircle2, Loader2, ShieldCheck, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
 import { queueLeadLocally, removePendingLead } from '@/lib/utilities/offline-queue';
 import { getAttributionData } from '@/lib/utilities/attribution';
@@ -34,10 +34,9 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     guests: '2-4 Guests',
     tripType: defaultTripType || 'Kashmir Classic',
     message: defaultPackageTitle ? `Inquiry regarding ${defaultPackageTitle}` : '',
-    hpField: '', // Security: Honeypot bot trap
+    hpField: '',
   });
 
-  // Sync state if contextual props change
   React.useEffect(() => {
     if (defaultTripType) {
       setFormData((prev) => ({ ...prev, tripType: defaultTripType }));
@@ -52,6 +51,7 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedWhatsAppUrl, setSubmittedWhatsAppUrl] = useState('');
   const [error, setError] = useState('');
   const [hasTrackedStart, setHasTrackedStart] = useState(false);
 
@@ -70,7 +70,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Prevent duplicate rapid submissions
     if (isSubmitting) return;
 
     if (!formData.name.trim() || !formData.phone.trim() || !formData.travelDate.trim()) {
@@ -86,14 +85,12 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     setIsSubmitting(true);
     setError('');
 
-    // Security Honeypot check: If bot filled hidden field, exit gracefully
     if (formData.hpField && formData.hpField.trim() !== '') {
       setIsSubmitting(false);
       setSubmitted(true);
       return;
     }
 
-    // 1. Gather UTM attribution and click IDs
     const attribution = getAttributionData();
 
     const combinedMessage = [
@@ -115,19 +112,15 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       ...attribution,
     };
 
-    // Track telemetry milestone
     trackTelemetryEvent('MODAL_OPEN', window.location.pathname, `Enquiry Form Submit (${formData.tripType})`, {
       package: defaultPackageTitle,
       tripType: formData.tripType,
     });
 
-    // 2. [LAYER 1]: Synchronous local persistence before network request
     const pendingLead = queueLeadLocally(leadPayload);
 
-    // Track analytics event
     trackFormSubmit(source, formData.tripType);
 
-    // 3. Compose WhatsApp message
     const formattedPhone = formData.phone.trim();
     const message =
       `*New Kashmir Trip Enquiry — The Indian Wings Company*\n\n` +
@@ -144,7 +137,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
     const cleanContactPhone = siteConfig.contact.phone.replace(/[^0-9]/g, '');
     const finalWhatsAppUrl = `https://wa.me/${cleanContactPhone}?text=${encodeURIComponent(message)}`;
 
-    // 4. [LAYER 2]: Post to PostgreSQL API with 15-second timeout (allowing DB wake-up)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
@@ -159,11 +151,9 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       clearTimeout(timeoutId);
 
       if (response.ok) {
-        // Success: remove lead from pending queue
         removePendingLead(pendingLead.tempId);
       } else {
         const errJson = await response.json().catch(() => ({}));
-        console.warn('[EnquiryForm] API responded with error:', errJson);
         let errorMsg = errJson.message || errJson.error || 'Failed to submit enquiry. Please check your details.';
         if (errJson.details) {
           const firstErr = Object.values(errJson.details)[0];
@@ -174,7 +164,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
         return;
       }
     } catch (apiError: any) {
-      console.warn('[EnquiryForm] Network issue during submission:', apiError);
       if (apiError.name === 'AbortError') {
         setError('Connection timed out. Please check your connection or send your enquiry via WhatsApp below.');
         setIsSubmitting(false);
@@ -184,44 +173,54 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
       clearTimeout(timeoutId);
     }
 
-    // 5. [LAYER 3]: Trigger direct WhatsApp deep-link
-    trackWhatsAppClick(source);
-
-    if (typeof window !== 'undefined') {
-      window.open(finalWhatsAppUrl, '_blank', 'noopener,noreferrer');
-    }
-
+    setSubmittedWhatsAppUrl(finalWhatsAppUrl);
     setIsSubmitting(false);
     setSubmitted(true);
 
     if (onSuccess) {
       setTimeout(() => {
         onSuccess();
-      }, 3000);
+      }, 4000);
     }
   };
 
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 bg-[#F8F6F0] rounded-xl border border-midnight/10">
-        <div className="w-12 h-12 rounded-full bg-saffron/20 border border-saffron/40 flex items-center justify-center text-midnight mb-3.5">
-          <CheckCircle2 size={24} className="text-midnight" />
+      <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 bg-[#F8F6F0] rounded-xl border border-midnight/10 animate-in fade-in duration-300">
+        <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-600 mb-3.5 shadow-sm">
+          <CheckCircle2 size={24} className="text-emerald-600" />
         </div>
         <h3 className="font-playfair text-xl sm:text-2xl font-bold text-midnight mb-2">
           Thank You, {formData.name}!
         </h3>
         <p className="font-manrope text-[14px] text-midnight/75 max-w-md mb-4 leading-relaxed">
-          Your Kashmir inquiry has been safely received. WhatsApp is opening so our destination specialist can review your trip and share your custom itinerary within 15 minutes.
+          Your Kashmir trip enquiry has been safely received. Our destination specialist is reviewing your travel requirements and will connect with you shortly with your custom itinerary and transparent quote.
         </p>
 
-        <div className="flex items-center gap-1.5 text-xs text-midnight/60 font-medium mb-4">
+        <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-medium mb-5 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200">
           <ShieldCheck size={14} className="text-emerald-600" />
-          <span>Lead secured & priority queued</span>
+          <span>Inquiry secured & queued for priority response</span>
         </div>
+
+        {submittedWhatsAppUrl && (
+          <div className="mb-4">
+            <a
+              href={submittedWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick(source)}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
+            >
+              <MessageSquare size={15} />
+              <span>Chat on WhatsApp Directly (Optional)</span>
+            </a>
+          </div>
+        )}
 
         <button
           onClick={() => {
             setSubmitted(false);
+            setSubmittedWhatsAppUrl('');
             setFormData({
               name: '',
               phone: '',
@@ -258,7 +257,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           </div>
         )}
 
-        {/* Security: Invisible Honeypot field for bot protection */}
         <div className="hidden" aria-hidden="true">
           <label htmlFor="enquiry-hp">Do not fill this field</label>
           <input
@@ -272,7 +270,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           />
         </div>
 
-        {/* Row 1: Name & Phone */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
           <div>
             <label
@@ -315,7 +312,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Email & Travel Date */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
           <div>
             <label
@@ -358,7 +354,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           </div>
         </div>
 
-        {/* Row 3: No. of Nights & Number of Travellers */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${isCompact ? 'gap-2.5 sm:gap-3' : 'gap-4'}`}>
           <div>
             <label
@@ -402,7 +397,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
           </div>
         </div>
 
-        {/* Row 4: Trip Preference */}
         <div>
           <label
             htmlFor="enquiry-trip"
@@ -457,7 +451,6 @@ export const EnquiryForm: React.FC<EnquiryFormProps> = ({
         )}
       </div>
 
-      {/* Submit Button & Disclaimer Group */}
       <div className={`mt-auto ${touchBottom ? 'pt-2.5 sm:pt-3' : 'pt-3 sm:pt-4 flex flex-col gap-1.5'}`}>
         {touchBottom ? (
           <>

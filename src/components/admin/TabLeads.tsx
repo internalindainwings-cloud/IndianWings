@@ -14,6 +14,7 @@ export interface LeadRecord {
   message?: string | null;
   source: string;
   utmSource?: string | null;
+  utmMedium?: string | null;
   utmCampaign?: string | null;
   status: string;
   createdAt: string;
@@ -205,7 +206,9 @@ export const TabLeads: React.FC<TabLeadsProps> = ({ leads, onRefresh, isRefreshi
                     {/* Source */}
                     <td className="px-5 py-4">
                       <span className="inline-block rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-[11px] text-white/70">
-                        {lead.utmSource ? `Ad: ${lead.utmSource}` : lead.source}
+                        {lead.utmSource
+                          ? `${lead.utmSource}${lead.utmMedium ? ` / ${lead.utmMedium}` : ''}`
+                          : lead.source}
                       </span>
                       {lead.utmCampaign && (
                         <div className="mt-0.5 text-[10px] text-white/40">{lead.utmCampaign}</div>
