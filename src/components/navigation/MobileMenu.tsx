@@ -26,6 +26,7 @@ import {
   ShoppingBag,
   CheckSquare,
   LucideIcon,
+  ImageIcon,
 } from 'lucide-react';
 import { useEnquiryModal } from '@/context/EnquiryModalContext';
 
@@ -99,6 +100,11 @@ const mobileNavLinks: NavItem[] = [
       { name: 'Shopping List', href: '/bucket-list/shopping', icon: ShoppingBag },
       { name: 'Things to Do', href: '/bucket-list/things-to-do', icon: CheckSquare },
     ]
+  },
+  {
+    name: 'Gallery',
+    href: '/gallery',
+    icon: ImageIcon,
   },
 ];
 

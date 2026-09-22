@@ -32,8 +32,8 @@ export const videoReviews: VideoReview[] = [
     name: 'Sneha & Friends',
     city: 'Bangalore',
     duration: '01:57',
-    posterUrl: '/images/reviews/poster_sneha.jpg',
-    videoUrl: '/videos/review_demo.mp4',
+    posterUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/so_1,f_auto,q_auto/v1790102418/Video_Project_2.jpg',
+    videoUrl: 'https://res.cloudinary.com/wmwdypan/video/upload/v1790102418/Video_Project_2.mp4',
     featured: false
   }
 ];
