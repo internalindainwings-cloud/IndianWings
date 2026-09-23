@@ -919,10 +919,10 @@ export const TabPackages: React.FC = () => {
 
       {/* ── Package Edit / Create Drawer Modal ── */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="relative w-full max-w-4xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-8 overflow-hidden">
+          <div className="relative w-full max-w-4xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl max-h-full flex flex-col overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02]">
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02] shrink-0">
               <div>
                 <h3 className="font-playfair text-lg font-bold text-white">
                   {modalMode === 'create' ? 'Create New Kashmir Tour Package' : `Edit: ${formData.title}`}
@@ -1051,7 +1051,7 @@ export const TabPackages: React.FC = () => {
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSavePackage} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+            <form onSubmit={handleSavePackage} className="p-6 space-y-6 overflow-y-auto flex-1">
               {/* ── TAB 1: BASIC DETAILS ── */}
               {activeTab === 'basic' && (
                 <div className="space-y-4 text-xs">
@@ -2167,7 +2167,7 @@ export const TabPackages: React.FC = () => {
 
       {/* ── Create Category Modal ── */}
       {isCatModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-8 overflow-hidden">
           <div className="relative w-full max-w-md rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl p-6 space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h3 className="font-playfair text-base font-bold text-white">Create New Package Category</h3>

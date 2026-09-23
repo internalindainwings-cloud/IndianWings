@@ -476,7 +476,7 @@ export const TabAllUsers: React.FC = () => {
       {/* 5. User Details Modal / Drawer */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in font-manrope">
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#081E23] border border-[#C5A45E]/30 p-6 shadow-2xl space-y-6">
+          <div className="relative w-full max-w-2xl overflow-y-auto flex-1 rounded-2xl bg-[#081E23] border border-[#C5A45E]/30 p-6 shadow-2xl space-y-6">
             {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-3">

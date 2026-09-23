@@ -713,9 +713,9 @@ export const TabGallery: React.FC = () => {
 
       {/* ── Category Management Modal ── */}
       {isCategoryModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden my-8 p-6 space-y-6">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-8 overflow-hidden">
+          <div className="relative w-full max-w-xl max-h-full flex flex-col rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden">
+            <div className="p-6 flex items-center justify-between border-b border-white/10 shrink-0">
               <div>
                 <h3 className="font-playfair text-lg font-bold text-white flex items-center gap-2">
                   <Layers className="text-saffron h-5 w-5" />
@@ -734,6 +734,7 @@ export const TabGallery: React.FC = () => {
               </button>
             </div>
 
+            <div className="p-6 space-y-6 overflow-y-auto flex-1">
             {/* Add Category Form */}
             <form onSubmit={handleCreateCategory} className="space-y-3 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
               <span className="text-xs font-bold text-white block">Add New Category</span>
@@ -798,8 +799,9 @@ export const TabGallery: React.FC = () => {
                 })}
               </div>
             </div>
+            </div>
 
-            <div className="border-t border-white/10 pt-4 flex justify-end">
+            <div className="p-6 border-t border-white/10 shrink-0 flex justify-end">
               <button
                 type="button"
                 onClick={() => setIsCategoryModalOpen(false)}
@@ -814,9 +816,9 @@ export const TabGallery: React.FC = () => {
 
       {/* ── Add / Edit Modal Form ── */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden my-8">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-8 overflow-hidden">
+          <div className="relative w-full max-w-2xl max-h-full flex flex-col rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02] shrink-0">
               <div>
                 <h3 className="font-playfair text-lg font-bold text-white">
                   {modalMode === 'create' ? 'Upload & Add New Media' : `Edit: ${formData.title}`}
@@ -834,7 +836,7 @@ export const TabGallery: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSave} className="p-6 space-y-4 overflow-y-auto flex-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Title */}
                 <div className="space-y-1.5 sm:col-span-2">
@@ -1002,14 +1004,14 @@ export const TabGallery: React.FC = () => {
       {/* ── Quick Live Preview Modal ── */}
       {previewItem && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-8 overflow-hidden"
           onClick={() => setPreviewItem(null)}
         >
           <div
-            className="relative max-w-4xl w-full rounded-2xl overflow-hidden bg-[#0A1620] border border-white/15 shadow-2xl"
+            className="relative max-w-4xl w-full max-h-full flex flex-col rounded-2xl overflow-hidden bg-[#0A1620] border border-white/15 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 bg-midnight/80">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 bg-midnight/80 shrink-0">
               <span className="text-white text-xs font-bold truncate">{previewItem.title}</span>
               <button
                 type="button"
@@ -1020,7 +1022,7 @@ export const TabGallery: React.FC = () => {
               </button>
             </div>
 
-            <div className="relative min-h-[300px] max-h-[70vh] bg-black flex items-center justify-center overflow-hidden">
+            <div className="relative flex-1 bg-black flex items-center justify-center overflow-hidden min-h-[300px]">
               {previewItem.type === 'video' ? (
                 <video
                   src={optimizeCloudinaryUrl(previewItem.url)}

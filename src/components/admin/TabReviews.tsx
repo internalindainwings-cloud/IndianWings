@@ -306,9 +306,9 @@ export const TabReviews: React.FC = () => {
 
       {/* ── Modal Form ── */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl overflow-hidden my-8">
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-8 overflow-hidden">
+          <div className="relative w-full max-w-2xl rounded-3xl border border-white/15 bg-[#0B1F2A] shadow-2xl max-h-full flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-white/[0.02] shrink-0">
               <div>
                 <h3 className="font-playfair text-lg font-bold text-white">
                   {modalMode === 'create' ? 'Add Customer Testimonial' : `Edit: ${formData.name}`}
@@ -323,7 +323,7 @@ export const TabReviews: React.FC = () => {
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+            <form onSubmit={handleSave} className="p-6 space-y-4 overflow-y-auto flex-1 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-white/60 mb-1 font-medium">Customer Name *</label>
