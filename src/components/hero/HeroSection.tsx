@@ -39,7 +39,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
       })
     : rawSlides;
 
-  const activeSlides = slides.length > 0 ? slides : rawSlides;
+  const activeSlides = (slides.length > 0 ? slides : rawSlides).slice(0, 15);
 
   // Reset slide index if resize causes out of bounds
   useEffect(() => {
