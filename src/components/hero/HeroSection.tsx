@@ -143,16 +143,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
             </div>
           )}
 
-          {/* Desktop Slide Indicator Numbers */}
-          {activeSlides.length > 1 && (
-            <div className="hidden lg:block">
-              <HeroSlideIndicator 
-                totalSlides={activeSlides.length} 
-                currentSlide={currentSlide} 
-                onChangeSlide={setCurrentSlide} 
-              />
-            </div>
-          )}
+
         </div>
 
         {/* In Original Mode: Action Bar docked right at bottom edge inside hero */}

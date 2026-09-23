@@ -24,13 +24,7 @@ export const HeroSlideIndicator: React.FC<HeroSlideIndicatorProps> = ({
             className="flex items-center gap-3 group"
             aria-label={`Go to slide ${idx + 1}`}
           >
-            <span 
-              className={`font-manrope text-xs font-semibold transition-colors duration-300 ${
-                isActive ? 'text-[#C5A45E]' : 'text-warm-white/50 group-hover:text-warm-white'
-              }`}
-            >
-              {numberStr}
-            </span>
+
             <span 
               className={`block transition-all duration-300 ${
                 isActive ? 'w-8 h-[2px] bg-[#C5A45E]' : 'w-4 h-px bg-warm-white/30 group-hover:bg-warm-white/60 group-hover:w-6'
