@@ -45,6 +45,10 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
             ? s.videoSrc.trim()
             : (s.poster && s.poster.trim().length > 0)
             ? s.poster.trim()
+            : (s.mobilePoster && s.mobilePoster.trim().length > 0)
+            ? s.mobilePoster.trim()
+            : (s.mobileVideoSrc && s.mobileVideoSrc.trim().length > 0)
+            ? s.mobileVideoSrc.trim()
             : DEFAULT_DESKTOP_MEDIA;
 
           // Desktop Media URL
@@ -169,6 +173,10 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
     ? src.trim()
     : (poster && poster.trim().length > 0)
     ? poster.trim()
+    : (mobilePoster && mobilePoster.trim().length > 0)
+    ? mobilePoster.trim()
+    : (mobileSrc && mobileSrc.trim().length > 0)
+    ? mobileSrc.trim()
     : DEFAULT_DESKTOP_MEDIA;
   const optimizedCandidate = optimizeCloudinaryUrl(candidateDesktop);
   const isDesktopImage = optimizedCandidate.match(/\.(jpeg|jpg|png|webp|avif)$/i) || optimizedCandidate.includes('/image/upload/');

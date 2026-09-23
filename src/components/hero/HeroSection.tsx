@@ -15,22 +15,50 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialConfig }) => {
   const config = initialConfig || defaultHeroConfig;
+  const rawSlides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
+  const slides = mounted 
+    ? rawSlides.filter(s => {
+        if (isMobile) {
+          return (s.mobileVideoSrc && s.mobileVideoSrc.trim()) || (s.mobilePoster && s.mobilePoster.trim());
+        } else {
+          return (s.videoSrc && s.videoSrc.trim()) || (s.poster && s.poster.trim());
+        }
+      })
+    : rawSlides;
 
-  const slides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
-  const slide = slides[currentSlide % slides.length] || slides[0];
+  const activeSlides = slides.length > 0 ? slides : rawSlides;
+
+  // Reset slide index if resize causes out of bounds
+  useEffect(() => {
+    if (currentSlide >= activeSlides.length) {
+      setCurrentSlide(0);
+    }
+  }, [activeSlides.length, currentSlide]);
+
+  const slide = activeSlides[currentSlide % activeSlides.length] || activeSlides[0];
 
 
   const nextSlide = () => {
-    if (slides.length <= 1) return;
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    if (activeSlides.length <= 1) return;
+    setCurrentSlide((prev) => (prev + 1) % activeSlides.length);
   };
 
   const prevSlide = () => {
-    if (slides.length <= 1) return;
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    if (activeSlides.length <= 1) return;
+    setCurrentSlide((prev) => (prev - 1 + activeSlides.length) % activeSlides.length);
   };
 
   const isDynamicDesktop = config.desktopLayoutMode !== 'original';
@@ -46,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
       >
         {/* Background stays absolutely positioned with smooth multi-slide transitions */}
         <HeroVideoBackground 
-          slides={slides}
+          slides={activeSlides}
           currentSlide={currentSlide}
 
           src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
@@ -56,7 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         />
         
         {/* Navigation Arrows */}
-        {slides.length > 1 && (
+        {activeSlides.length > 1 && (
           <>
             <button
               type="button"
@@ -97,11 +125,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           />
           
           {/* Mobile Slide Indicator Dots */}
-          {slides.length > 1 && (
+          {activeSlides.length > 1 && (
             <div className={`lg:hidden flex items-center justify-start gap-1.5 px-4 sm:px-8 z-20 ${
               isDynamicDesktop ? 'mt-4' : 'mt-3'
             }`}>
-              {slides.map((_, idx) => (
+              {activeSlides.map((_, idx) => (
                 <button
                   key={idx}
                   type="button"
@@ -116,10 +144,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
           )}
 
           {/* Desktop Slide Indicator Numbers */}
-          {slides.length > 1 && (
+          {activeSlides.length > 1 && (
             <div className="hidden lg:block">
               <HeroSlideIndicator 
-                totalSlides={slides.length} 
+                totalSlides={activeSlides.length} 
                 currentSlide={currentSlide} 
                 onChangeSlide={setCurrentSlide} 
               />
