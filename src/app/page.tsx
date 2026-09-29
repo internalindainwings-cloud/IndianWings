@@ -86,7 +86,7 @@ export default async function Home() {
         '@id': `${siteUrl}/#organization`,
         name: 'The Indian Wings Company',
         url: siteUrl,
-        logo: settings.logoUrl || `${siteUrl}https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png`,
+        logo: settings.logoUrl || 'https://res.cloudinary.com/wmwdypan/image/upload/v1789666008/vishnav_devi.png',
         description: 'Premier travel agency specializing in handcrafted Kashmir holiday itineraries, verified houseboat stays, and private mountain transport.',
         telephone: settings.phone || '+919811808387',
         email: settings.email || 'info@theindianwingscompany.com',
