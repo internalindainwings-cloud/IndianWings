@@ -33,6 +33,20 @@ export const ActivityCardsGrid: React.FC = () => {
   const [activitiesList, setActivitiesList] = useState<AdventureActivityItem[]>(ADVENTURE_ACTIVITIES);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('category') || params.get('cat');
+      if (catParam) {
+        const lower = catParam.toLowerCase();
+        if (lower.includes('snow') || lower.includes('winter')) setActiveCategory('Snow & Winter');
+        else if (lower.includes('water') || lower.includes('rafting')) setActiveCategory('Water Sports');
+        else if (lower.includes('aerial') || lower.includes('flying') || lower.includes('paragliding')) setActiveCategory('Aerial & Flying');
+        else if (lower.includes('trail') || lower.includes('off-road') || lower.includes('atv')) setActiveCategory('Trails & Off-Road');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
     async function load() {
       try {
@@ -51,9 +65,18 @@ export const ActivityCardsGrid: React.FC = () => {
     };
   }, []);
 
+  const normalizeCat = (cat: string) => {
+    const c = cat.toLowerCase();
+    if (c.includes('snow') || c.includes('winter')) return 'snow';
+    if (c.includes('water') || c.includes('rafting')) return 'water';
+    if (c.includes('aerial') || c.includes('flying') || c.includes('paragliding')) return 'aerial';
+    if (c.includes('trail') || c.includes('off-road') || c.includes('atv')) return 'trail';
+    return c;
+  };
+
   const filteredActivities = activeCategory === 'All'
     ? activitiesList
-    : activitiesList.filter((act) => act.category === activeCategory);
+    : activitiesList.filter((act) => normalizeCat(act.category) === normalizeCat(activeCategory));
 
   return (
     <section id="activities-grid" className="w-full bg-background py-12 sm:py-16 border-b border-black/[0.08] scroll-mt-24">

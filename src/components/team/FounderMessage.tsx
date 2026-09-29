@@ -1,18 +1,21 @@
 import React from 'react';
-import Image from 'next/image';
 import { Phone, MessageCircle } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
-
+import { FounderPortraitSlider, DEFAULT_FOUNDER_IMAGES } from './FounderPortraitSlider';
 
 interface FounderMessageProps {
   imageSrc?: string;
+  images?: string[];
 }
 
 export function FounderMessage({
-  imageSrc = 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789917437/founder_new.jpg',
+  imageSrc,
+  images,
 }: FounderMessageProps) {
   const cleanPhone = siteConfig.contact.phone.replace(/[^0-9]/g, '');
   const cleanWhatsapp = (siteConfig.contact.whatsapp || '917827743041').replace(/[^0-9]/g, '');
+
+  const displayImages = images || (imageSrc ? [imageSrc, ...DEFAULT_FOUNDER_IMAGES.filter(img => img !== imageSrc)] : DEFAULT_FOUNDER_IMAGES);
 
   return (
     <section
@@ -25,16 +28,13 @@ export function FounderMessage({
         {/* Editorial Personal Note Layout */}
         <div className="bg-white rounded-2xl p-6 sm:p-8 lg:p-10 border border-black/8 shadow-xs flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 lg:gap-10">
           
-          {/* Portrait Photo (Natural, Real, Framed) */}
-          <div className="relative w-44 h-60 sm:w-52 sm:h-72 rounded-xl overflow-hidden border border-black/10 shadow-sm shrink-0 bg-slate-100">
-            <Image
-              src={imageSrc}
-              alt="Founders & Leadership Team — The Indian Wings Company"
-              fill
-              className="object-cover object-top"
-              sizes="(max-width: 640px) 176px, 208px"
-            />
-          </div>
+          {/* Portrait Photo Carousel (Natural, Real, Framed) */}
+          <FounderPortraitSlider
+            images={displayImages}
+            alt="Founders & Leadership Team — The Indian Wings Company"
+            className="w-44 h-60 sm:w-52 sm:h-72 shrink-0"
+            sizes="(max-width: 640px) 176px, 208px"
+          />
 
           {/* Authentic Human Content (Letter from the Founder) */}
           <div className="flex flex-col justify-between flex-grow space-y-3.5 text-left">

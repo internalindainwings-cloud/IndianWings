@@ -85,10 +85,10 @@ const mobileNavLinks: NavItem[] = [
     href: '/activities',
     icon: Mountain,
     children: [
-      { name: 'Snow & Winter Sports', href: '/activities#activities-grid', icon: Snowflake },
-      { name: 'Water Sports', href: '/activities#activities-grid', icon: Waves },
-      { name: 'Aerial & Paragliding', href: '/activities#activities-grid', icon: Wind },
-      { name: 'Trails & Off-Road ATV', href: '/activities#activities-grid', icon: Compass },
+      { name: 'Snow & Winter Sports', href: '/activities?category=Snow+%26+Winter#activities-grid', icon: Snowflake },
+      { name: 'Water Sports', href: '/activities?category=Water+Sports#activities-grid', icon: Waves },
+      { name: 'Aerial & Paragliding', href: '/activities?category=Aerial+%26+Flying#activities-grid', icon: Wind },
+      { name: 'Trails & Off-Road ATV', href: '/activities?category=Trails+%26+Off-Road#activities-grid', icon: Compass },
       { name: 'View All Adventures', href: '/activities', icon: ArrowRight, isAction: true },
     ]
   },

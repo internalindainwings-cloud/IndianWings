@@ -13,9 +13,40 @@ export async function cleanupMockActivities(): Promise<void> {
   return;
 }
 
+let hasCheckedActivitiesSeed = false;
+
 export async function ensureActivitiesSeeded(): Promise<void> {
-  // Auto-seeding mock activities is disabled to keep UI & DB dynamic and clean
-  return;
+  if (hasCheckedActivitiesSeed) return;
+  try {
+    const count = await prisma.activity.count();
+    if (count === 0 && ADVENTURE_ACTIVITIES.length > 0) {
+      for (let i = 0; i < ADVENTURE_ACTIVITIES.length; i++) {
+        const item = ADVENTURE_ACTIVITIES[i];
+        await prisma.activity.upsert({
+          where: { slug: item.id },
+          create: {
+            name: item.name,
+            slug: item.id,
+            location: item.location,
+            category: item.category,
+            duration: item.duration,
+            difficulty: item.difficulty,
+            season: item.season,
+            imageUrl: item.imageUrl,
+            tags: item.tags,
+            badge: item.badge || null,
+            priceFrom: item.id.includes('skiing') ? 4500 : item.id.includes('safari') ? 4200 : item.id.includes('paragliding') ? 3500 : item.id.includes('trout') ? 3200 : item.id.includes('trek') ? 2900 : item.id.includes('balloon') ? 2800 : item.id.includes('snowmobile') ? 2500 : item.id.includes('gondola') || item.id.includes('atv') ? 2200 : item.id.includes('rafting') ? 1800 : 1200,
+            isActive: true,
+            sortOrder: i + 1,
+          },
+          update: {},
+        });
+      }
+    }
+    hasCheckedActivitiesSeed = true;
+  } catch (err) {
+    console.warn('[ActivitiesService] ensureActivitiesSeeded error:', err);
+  }
 }
 
 export async function getAllActivities(includeDrafts = false): Promise<EnrichedActivity[]> {

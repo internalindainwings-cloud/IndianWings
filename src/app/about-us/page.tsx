@@ -20,6 +20,7 @@ import {
 import { siteConfig } from '@/config/site-config';
 import { AboutCtaButtons } from './AboutCtaButtons';
 import { safeJsonLd } from '@/lib/utilities/safe-json-ld';
+import { FounderPortraitSlider } from '@/components/team/FounderPortraitSlider';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
@@ -309,18 +310,13 @@ export default async function AboutUsPage() {
         <div className="bg-[#FAF9F5] rounded-3xl p-6 sm:p-10 lg:p-12 border border-black/8 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             
-            {/* Founder Portrait */}
+            {/* Founder Portrait Carousel */}
             <div className="lg:col-span-4 flex justify-center">
-              <div className="relative w-56 h-72 sm:w-64 sm:h-84 rounded-2xl overflow-hidden border-2 border-midnight/10 shadow-xl bg-slate-100">
-                <Image
-                  src="https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto/v1789917437/founder_new.jpg"
-                  alt="Mrs. Komal Rai — Founder & Managing Director"
-                  fill
-                  className="object-cover object-top"
-                  sizes="(max-width: 640px) 224px, 256px"
-                  loading="lazy"
-                />
-              </div>
+              <FounderPortraitSlider
+                alt="Mrs. Komal Rai — Founder & Managing Director"
+                className="w-56 h-72 sm:w-64 sm:h-84 shadow-xl border-2 border-midnight/10"
+                sizes="(max-width: 640px) 224px, 256px"
+              />
             </div>
 
             {/* Founder Message Content */}

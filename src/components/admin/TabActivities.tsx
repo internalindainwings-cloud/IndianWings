@@ -69,6 +69,15 @@ export const TabActivities: React.FC = () => {
 
   const categories = ['ALL', 'Snow & Winter', 'Water Sports', 'Aerial & Flying', 'Trails & Off-Road'];
 
+  const normalizeCat = (cat: string) => {
+    const c = cat.toLowerCase();
+    if (c.includes('snow') || c.includes('winter')) return 'snow';
+    if (c.includes('water') || c.includes('rafting')) return 'water';
+    if (c.includes('aerial') || c.includes('flying') || c.includes('paragliding')) return 'aerial';
+    if (c.includes('trail') || c.includes('off-road') || c.includes('atv')) return 'trail';
+    return c;
+  };
+
   const filteredActivities = useMemo(() => {
     return activities.filter((a) => {
       const matchesSearch =
@@ -78,7 +87,7 @@ export const TabActivities: React.FC = () => {
 
       const matchesCat =
         selectedCategory === 'ALL' ||
-        a.category.toLowerCase() === selectedCategory.toLowerCase();
+        normalizeCat(a.category) === normalizeCat(selectedCategory);
 
       return matchesSearch && matchesCat;
     });
