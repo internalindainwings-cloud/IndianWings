@@ -336,3 +336,37 @@ model PartnerBrand {
   @@index([isActive])
   @@map("partner_brands")
 }
+
+model GalleryItem {
+  id            String   @id @default(uuid())
+  title         String
+  type          String   @default("image")
+  url           String
+  posterUrl     String?
+  category      String   @default("all")
+  categoryLabel String?
+  location      String   @default("Kashmir Valley")
+  duration      String?
+  caption       String?
+  isFeatured    Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([category])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@map("gallery_items")
+}
+
+model GalleryCategory {
+  id        String   @id
+  name      String
+  icon      String?  @default("🏷️")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("gallery_categories")
+}
+

@@ -6,6 +6,7 @@ import path from 'path';
 import type { GalleryItem } from '@/lib/gallery-service';
 import { getAllGalleryItems } from '@/lib/gallery-service';
 import { isAuthenticatedAdmin } from '@/lib/security/admin-auth';
+import { prisma } from '@/lib/database/prisma';
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'src', 'data', 'gallery-items.json');
 
@@ -278,8 +279,46 @@ export async function POST() {
       }
     }
 
+    for (const item of newItems) {
+      try {
+        await prisma.galleryItem.upsert({
+          where: { id: item.id },
+          create: {
+            id: item.id,
+            title: item.title,
+            type: item.type,
+            url: item.url,
+            posterUrl: item.posterUrl,
+            category: item.category,
+            categoryLabel: item.categoryLabel,
+            location: item.location,
+            duration: item.duration || '',
+            caption: item.caption || '',
+            isFeatured: item.isFeatured,
+            isActive: item.isActive,
+            createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+          },
+          update: {
+            title: item.title,
+            type: item.type,
+            url: item.url,
+            posterUrl: item.posterUrl,
+            category: item.category,
+            categoryLabel: item.categoryLabel,
+            location: item.location,
+          },
+        });
+      } catch (dbErr) {
+        console.warn(`[SyncCloudinary] DB upsert failed for ${item.id}:`, dbErr);
+      }
+    }
+
     const merged = [...newItems, ...existingItems];
-    await fs.writeFile(DATA_FILE_PATH, JSON.stringify(merged, null, 2), 'utf-8');
+    try {
+      await fs.writeFile(DATA_FILE_PATH, JSON.stringify(merged, null, 2), 'utf-8');
+    } catch {
+      // Silently ignore EROFS in serverless environments
+    }
 
     try {
       revalidateTag('gallery', 'max');
