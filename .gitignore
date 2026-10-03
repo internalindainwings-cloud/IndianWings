@@ -47,6 +47,8 @@ next-env.d.ts
 # backups & scratch data
 backup_*.json
 recover.json
+lighthouse-report*.json
+lh-*.json
 
 # uploaded assets
 public/uploads/*

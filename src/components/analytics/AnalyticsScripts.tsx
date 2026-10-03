@@ -13,25 +13,47 @@ interface AnalyticsScriptsProps {
 
 export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => {
   const pathname = usePathname();
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const clarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
+  const rawGaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const gaId = rawGaId && !rawGaId.includes('XXXX') && rawGaId.startsWith('G-') ? rawGaId : undefined;
+  const rawClarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
+  const clarityId = rawClarityId && !rawClarityId.includes('XXXX') && !rawClarityId.includes('your_') && rawClarityId.trim().length > 3 ? rawClarityId : undefined;
 
   useEffect(() => {
     // Skip tracking for admin portal navigation to avoid skewing consumer analytics
-    if (pathname && pathname.startsWith('/admin')) return;
+    if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) return;
 
-    // 1. Capture UTM tags into session storage on first landing
-    initAttribution();
+    let cleanupOffline: (() => void) | undefined;
+    let cleanupTelemetry: (() => void) | undefined;
 
-    // 2. Register auto-sync listener for offline / low-network queued leads
-    const cleanupOffline = initOfflineSyncListener();
+    const startBackgroundTracking = () => {
+      // 1. Capture UTM tags into session storage on first landing
+      initAttribution();
 
-    // 3. Register First-Party visitor telemetry tracker (scroll milestones & exit beacons)
-    const cleanupTelemetry = initTelemetryTracker();
+      // 2. Register auto-sync listener for offline / low-network queued leads
+      cleanupOffline = initOfflineSyncListener();
+
+      // 3. Register First-Party visitor telemetry tracker (scroll milestones & exit beacons)
+      cleanupTelemetry = initTelemetryTracker();
+    };
+
+    let idleId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(startBackgroundTracking, { timeout: 2000 });
+    } else if (typeof window !== 'undefined') {
+      timerId = setTimeout(startBackgroundTracking, 1500);
+    }
 
     return () => {
-      cleanupOffline();
-      cleanupTelemetry();
+      if (idleId !== null && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timerId !== null) {
+        clearTimeout(timerId);
+      }
+      cleanupOffline?.();
+      cleanupTelemetry?.();
     };
   }, []);
 

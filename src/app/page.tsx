@@ -4,10 +4,6 @@ import nextDynamic from "next/dynamic";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { getHeroConfig } from "@/lib/hero-service";
 import { LeadFormSection } from "@/components/forms/LeadFormSection";
-import WhyTravelWithUsSection from "@/components/trust/WhyTravelWithUsSection";
-import { PackagesSection } from "@/components/packages/PackagesSection";
-import { SeasonalPackagesSection } from "@/components/packages/SeasonalPackagesSection";
-import { OffBeatPackagesSection } from "@/components/packages/OffBeatPackagesSection";
 import { DestinationsSection } from "@/components/destinations/DestinationsSection";
 import { BrandsSection } from "@/components/brands/BrandsSection";
 import { FounderMessage } from "@/components/team/FounderMessage";
@@ -15,6 +11,42 @@ import { getAllPackages } from "@/lib/packages-service";
 import { getAllDestinations } from "@/lib/destinations-service";
 import { safeJsonLd } from "@/lib/utilities/safe-json-ld";
 import { optimizeCloudinaryUrl } from "@/lib/utilities/cloudinary";
+
+const WhyTravelWithUsSection = nextDynamic(
+  () => import('@/components/trust/WhyTravelWithUsSection'),
+  {
+    loading: () => (
+      <section className="bg-white w-full overflow-hidden pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 relative border-b border-black/[0.08] min-h-[460px]" />
+    ),
+  }
+);
+
+const PackagesSection = nextDynamic(
+  () => import('@/components/packages/PackagesSection').then((m) => ({ default: m.PackagesSection })),
+  {
+    loading: () => (
+      <section id="packages" className="w-full bg-white pt-5 sm:pt-7 lg:pt-8 pb-12 sm:pb-16 relative overflow-hidden min-h-[580px]" />
+    ),
+  }
+);
+
+const SeasonalPackagesSection = nextDynamic(
+  () => import('@/components/packages/SeasonalPackagesSection').then((m) => ({ default: m.SeasonalPackagesSection })),
+  {
+    loading: () => (
+      <section id="seasonal-packages" className="w-full bg-[#FAF9F5] py-12 sm:py-16 border-t border-black/8 min-h-[580px]" />
+    ),
+  }
+);
+
+const OffBeatPackagesSection = nextDynamic(
+  () => import('@/components/packages/OffBeatPackagesSection').then((m) => ({ default: m.OffBeatPackagesSection })),
+  {
+    loading: () => (
+      <section id="offbeat-packages" className="w-full bg-white py-12 sm:py-16 border-t border-black/8 min-h-[580px]" />
+    ),
+  }
+);
 
 const HomeGallerySection = nextDynamic(
   () => import('@/components/gallery/HomeGallerySection').then((m) => ({ default: m.HomeGallerySection })),

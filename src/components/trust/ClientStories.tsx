@@ -1,59 +1,92 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useSyncExternalStore } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { Play, FileText, ArrowRight, ChevronLeft, ChevronRight, X, Star } from 'lucide-react';
 import { videoReviews as fallbackVideoReviews } from '@/data/video-reviews';
 import { writtenReviews as fallbackWrittenReviews } from '@/data/written-reviews';
 
-const REVIEWS_PER_MOBILE_PAGE = 2;
+interface RawReview {
+  id?: string;
+  type?: string;
+  name?: string;
+  city?: string;
+  videoQuote?: string;
+  review?: string;
+  videoDuration?: string;
+  videoUrl?: string;
+  imageUrl?: string;
+  featured?: boolean;
+  rating?: number;
+  avatarUrl?: string;
+}
+
 const emptySubscribe = () => () => {};
 
 export function ClientStories() {
   const [activeTab, setActiveTab] = useState<'video' | 'written'>('video');
   const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [mobileReviewPage, setMobileReviewPage] = useState(1);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const [videoReviews, setVideoReviews] = useState(fallbackVideoReviews);
   const [writtenReviews, setWrittenReviews] = useState(fallbackWrittenReviews);
 
   useEffect(() => {
-    fetch('/api/reviews')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.reviews) {
-          const fetchedVideos = data.reviews
-            .filter((r: any) => r.type === 'video')
-            .map((r: any) => ({
-              id: r.id,
-              quote: r.videoQuote || r.review,
-              name: r.name,
-              city: r.city,
-              duration: r.videoDuration || '00:00',
-              posterUrl: (r.videoUrl && r.videoUrl.trim() !== '') ? r.videoUrl.replace(/\.(mp4|webm|mov)$/i, '.jpg') : (r.imageUrl || ''),
-              videoUrl: r.videoUrl || '',
-              featured: r.featured
-            }));
-            
-          const fetchedWritten = data.reviews
-            .filter((r: any) => r.type === 'written')
-            .map((r: any) => ({
-              id: r.id,
-              name: r.name,
-              city: r.city,
-              review: r.review,
-              rating: r.rating || 5,
-              avatarUrl: r.avatarUrl
-            }));
-            
-          if (fetchedVideos.length > 0) setVideoReviews(fetchedVideos);
-          if (fetchedWritten.length > 0) setWrittenReviews(fetchedWritten);
-        }
-      })
-      .catch(err => console.error('Failed to fetch dynamic reviews:', err));
+    const loadDynamicReviews = () => {
+      fetch('/api/reviews')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && Array.isArray(data.reviews)) {
+            const rawReviews: RawReview[] = data.reviews;
+            const fetchedVideos = rawReviews
+              .filter((r) => r.type === 'video')
+              .map((r) => ({
+                id: r.id || '',
+                quote: r.videoQuote || r.review || '',
+                name: r.name || '',
+                city: r.city || '',
+                duration: r.videoDuration || '00:00',
+                posterUrl: (r.videoUrl && r.videoUrl.trim() !== '') ? r.videoUrl.replace(/\.(mp4|webm|mov)$/i, '.jpg') : (r.imageUrl || ''),
+                videoUrl: r.videoUrl || '',
+                featured: Boolean(r.featured)
+              }));
+              
+            const fetchedWritten = rawReviews
+              .filter((r) => r.type === 'written')
+              .map((r) => ({
+                id: r.id || '',
+                name: r.name || '',
+                city: r.city || '',
+                review: r.review || '',
+                rating: r.rating || 5,
+                avatarUrl: r.avatarUrl
+              }));
+              
+            if (fetchedVideos.length > 0) setVideoReviews(fetchedVideos);
+            if (fetchedWritten.length > 0) setWrittenReviews(fetchedWritten);
+          }
+        })
+        .catch(err => console.error('Failed to fetch dynamic reviews:', err));
+    };
+
+    let idleId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(loadDynamicReviews, { timeout: 3500 });
+    } else if (typeof window !== 'undefined') {
+      timerId = setTimeout(loadDynamicReviews, 2500);
+    }
+
+    return () => {
+      if (idleId !== null && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timerId !== null) {
+        clearTimeout(timerId);
+      }
+    };
   }, []);
 
   const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
@@ -94,7 +127,7 @@ export function ClientStories() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedVideoIndex]);
+  }, [selectedVideoIndex, videoReviews.length]);
 
   return (
     <div className="space-y-5 sm:space-y-6 lg:space-y-7 w-full">
@@ -166,6 +199,7 @@ export function ClientStories() {
               src={review.posterUrl}
               alt={`Travel review by ${review.name}`}
               fill
+              loading="lazy"
               className="object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
               sizes="(max-width: 768px) 100vw, 33vw"
             />
@@ -229,7 +263,7 @@ export function ClientStories() {
             className="flex gap-3 sm:gap-4 w-max animate-marquee-ltr hover:[animation-play-state:paused] py-1.5"
             aria-hidden="true"
           >
-            {[...writtenReviews, ...writtenReviews, ...writtenReviews, ...writtenReviews].map((review, idx) => (
+            {[...writtenReviews, ...writtenReviews].map((review, idx) => (
               <div
                 key={`${review.id}-${idx}`}
                 className="w-[270px] sm:w-[290px] md:w-[310px] shrink-0 bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-black/[0.08] flex flex-col justify-between hover:shadow-md hover:border-black/20 hover:-translate-y-1 transition-all duration-300 select-none cursor-pointer"
@@ -239,7 +273,7 @@ export function ClientStories() {
                   <div className="flex items-center justify-between gap-2 mb-2.5">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div className="relative w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-full overflow-hidden shrink-0 bg-slate-100 border border-black/10">
-                        {review.avatarUrl ? (
+                        {review.avatarUrl && (review.avatarUrl.startsWith('http://') || review.avatarUrl.startsWith('https://')) ? (
                           <Image
                             src={review.avatarUrl}
                             alt={review.name}

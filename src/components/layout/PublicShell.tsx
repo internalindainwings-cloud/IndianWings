@@ -4,20 +4,36 @@ import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { Navbar } from '@/components/navigation/Navbar';
-import { Footer } from '@/components/layout/Footer';
-import { FloatingContactActions } from '@/components/common/FloatingContactActions';
 import { EnquiryModalProvider } from '@/context/EnquiryModalContext';
 import { SiteSettingsProvider } from '@/context/SiteSettingsContext';
-import { BotpressChatbot } from '@/components/chat/BotpressChatbot';
+import type { SiteSettingsData } from '@/lib/settings-service';
+
+const Footer = dynamic(
+  () => import('@/components/layout/Footer').then((m) => ({ default: m.Footer })),
+  { ssr: true }
+);
+
+const FloatingContactActions = dynamic(
+  () => import('@/components/common/FloatingContactActions').then((m) => ({ default: m.FloatingContactActions })),
+  { ssr: false }
+);
+
+const BotpressChatbot = dynamic(
+  () => import('@/components/chat/BotpressChatbot').then((m) => ({ default: m.BotpressChatbot })),
+  { ssr: false }
+);
 
 const EnquiryModal = dynamic(
   () => import('@/components/forms/EnquiryModal').then((m) => ({ default: m.EnquiryModal })),
   { ssr: false }
 );
 
-
-
-export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; isAdminOverride?: boolean; initialSettings?: any }> = ({ children, nonce, isAdminOverride, initialSettings }) => {
+export const PublicShell: React.FC<{
+  children: React.ReactNode;
+  nonce?: string;
+  isAdminOverride?: boolean;
+  initialSettings?: Partial<SiteSettingsData> | null;
+}> = ({ children, nonce, isAdminOverride, initialSettings }) => {
   const pathname = usePathname();
   const isAdmin = isAdminOverride || (pathname ? pathname.startsWith('/admin') : false);
 
@@ -40,7 +56,7 @@ export const PublicShell: React.FC<{ children: React.ReactNode; nonce?: string; 
   }
 
   return (
-    <SiteSettingsProvider initialSettings={initialSettings}>
+    <SiteSettingsProvider initialSettings={initialSettings || undefined}>
       <EnquiryModalProvider>
         <Navbar />
         <main className="flex-1">{children}</main>

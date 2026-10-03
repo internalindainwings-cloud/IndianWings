@@ -19,11 +19,12 @@ function getTransitionStyles(
   idx: number,
   currentSlide: number
 ): { container: string; img: string } {
+  const isInitialActive = idx === 0 && currentSlide === 0;
   return {
-    container: `transition-opacity duration-1000 ease-in-out ${
+    container: `${isInitialActive ? '' : 'transition-opacity duration-1000 ease-in-out '}${
       isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
     }`,
-    img: 'scale-[1.02]',
+    img: isInitialActive ? '' : 'scale-[1.02]',
   };
 }
 
@@ -41,6 +42,9 @@ export const HeroVideoBackground: React.FC<HeroVideoBackgroundProps> = ({
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-midnight">
         {slides.map((s, idx) => {
           const isActive = idx === currentSlide;
+          // Keep DOM lean: only render the active slide and adjacent pre-load slides (max 2-3 slides) instead of all 15 simultaneously
+          const isRelevant = idx === currentSlide || idx === (currentSlide + 1) % slides.length || (currentSlide > 0 && idx === currentSlide - 1);
+          if (!isRelevant) return null;
           const rawMediaUrl = (s.videoSrc && s.videoSrc.trim().length > 0)
             ? s.videoSrc.trim()
             : (s.poster && s.poster.trim().length > 0)

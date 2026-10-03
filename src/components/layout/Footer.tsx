@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Phone, MapPin, ArrowRight, CheckCircle2, Heart } from 'lucide-react';
 import { siteConfig } from '@/config/site-config';
-import { useEnquiryModal } from '@/context/EnquiryModalContext';
 import { useSiteSettings } from '@/context/SiteSettingsContext';
 import { fetchClientDestinations, fetchClientPackages } from '@/lib/client-data';
 
@@ -53,7 +52,6 @@ interface FooterLinkItem {
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
-  const { openModal } = useEnquiryModal();
   const settings = useSiteSettings();
 
   const [destinationLinks, setDestinationLinks] = useState<FooterLinkItem[]>([
@@ -65,54 +63,71 @@ export const Footer: React.FC = () => {
     { label: 'Adventure Activities & Sports', href: '/activities' },
   ]);
 
-  // Fetch available destinations and packages dynamically
+  // Fetch available destinations and packages dynamically after critical page render
   React.useEffect(() => {
     let isMounted = true;
 
-    // 1. Fetch Destinations
-    fetchClientDestinations()
-      .then((data) => {
-        if (!isMounted) return;
-        if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
-          const links: FooterLinkItem[] = data.destinations.slice(0, 5).map((d) => ({
-            label: d.tagline ? `${d.name} (${d.tagline})` : d.name,
-            href: `/destinations/${d.slug}`,
-          }));
-          links.push({ label: 'Explore All Destinations →', href: '/destinations' });
-          setDestinationLinks(links);
-        } else {
-          setDestinationLinks([
-            { label: 'Explore All Destinations →', href: '/destinations' },
-          ]);
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to fetch destinations for footer:', err);
-      });
+    const loadFooterLinks = () => {
+      // 1. Fetch Destinations
+      fetchClientDestinations()
+        .then((data) => {
+          if (!isMounted) return;
+          if (data.success && Array.isArray(data.destinations) && data.destinations.length > 0) {
+            const links: FooterLinkItem[] = data.destinations.slice(0, 5).map((d) => ({
+              label: d.tagline ? `${d.name} (${d.tagline})` : d.name,
+              href: `/destinations/${d.slug}`,
+            }));
+            links.push({ label: 'Explore All Destinations →', href: '/destinations' });
+            setDestinationLinks(links);
+          } else {
+            setDestinationLinks([
+              { label: 'Explore All Destinations →', href: '/destinations' },
+            ]);
+          }
+        })
+        .catch((err) => {
+          console.warn('Failed to fetch destinations for footer:', err);
+        });
 
-    // 2. Fetch Packages
-    fetchClientPackages()
-      .then((data) => {
-        if (!isMounted) return;
-        if (data.success && Array.isArray(data.packages) && data.packages.length > 0) {
-          const links: FooterLinkItem[] = data.packages.slice(0, 3).map((p) => ({
-            label: p.title.length > 36 ? `${p.title.slice(0, 36)}...` : p.title,
-            href: `/packages/${p.slug}`,
-          }));
-          links.push(
-            { label: 'Verified Luxury Fleet & Cabs', href: '/transport' },
-            { label: 'Adventure Activities (Gondola, Rafting)', href: '/activities' },
-            { label: 'Explore All Packages →', href: '/packages' }
-          );
-          setPackageLinks(links);
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to fetch packages for footer:', err);
-      });
+      // 2. Fetch Packages
+      fetchClientPackages()
+        .then((data) => {
+          if (!isMounted) return;
+          if (data.success && Array.isArray(data.packages) && data.packages.length > 0) {
+            const links: FooterLinkItem[] = data.packages.slice(0, 3).map((p) => ({
+              label: p.title.length > 36 ? `${p.title.slice(0, 36)}...` : p.title,
+              href: `/packages/${p.slug}`,
+            }));
+            links.push(
+              { label: 'Verified Luxury Fleet & Cabs', href: '/transport' },
+              { label: 'Adventure Activities (Gondola, Rafting)', href: '/activities' },
+              { label: 'Explore All Packages →', href: '/packages' }
+            );
+            setPackageLinks(links);
+          }
+        })
+        .catch((err) => {
+          console.warn('Failed to fetch packages for footer:', err);
+        });
+    };
+
+    let idleId: number | null = null;
+    let timerId: NodeJS.Timeout | null = null;
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(loadFooterLinks, { timeout: 3500 });
+    } else if (typeof window !== 'undefined') {
+      timerId = setTimeout(loadFooterLinks, 2000);
+    }
 
     return () => {
       isMounted = false;
+      if (idleId !== null && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timerId !== null) {
+        clearTimeout(timerId);
+      }
     };
   }, []);
 

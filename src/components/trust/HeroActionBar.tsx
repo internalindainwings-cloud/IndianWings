@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { Users, Award, Star, ShieldCheck, Heart, Sparkles } from 'lucide-react';
+import { Users, Award, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import type { HeroTrustPill } from '@/data/hero-defaults';
 
 interface HeroActionBarProps {

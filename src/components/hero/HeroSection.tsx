@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { HeroVideoBackground } from './HeroVideoBackground';
 import { HeroContent } from './HeroContent';
-import { HeroSlideIndicator } from './HeroSlideIndicator';
 import { HeroActionBar } from '../trust/HeroActionBar';
 import type { HeroHomepageConfig } from '@/data/hero-defaults';
 import { defaultHeroConfig } from '@/data/hero-defaults';
@@ -15,40 +14,13 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialConfig }) => {
   const config = initialConfig || defaultHeroConfig;
+  // Stabilized slides: render active slides identically on SSR and client without mount re-render
   const rawSlides = config.slides && config.slides.length > 0 ? config.slides : defaultHeroConfig.slides;
-
-  const [isMobile, setIsMobile] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const activeSlides = rawSlides.slice(0, 15);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const slides = mounted 
-    ? rawSlides.filter(s => {
-        if (isMobile) {
-          return (s.mobileVideoSrc && s.mobileVideoSrc.trim()) || (s.mobilePoster && s.mobilePoster.trim());
-        } else {
-          return (s.videoSrc && s.videoSrc.trim()) || (s.poster && s.poster.trim());
-        }
-      })
-    : rawSlides;
-
-  const activeSlides = (slides.length > 0 ? slides : rawSlides).slice(0, 15);
-
-  // Reset slide index if resize causes out of bounds
-  useEffect(() => {
-    if (currentSlide >= activeSlides.length) {
-      setCurrentSlide(0);
-    }
-  }, [activeSlides.length, currentSlide]);
-
-  const slide = activeSlides[currentSlide % activeSlides.length] || activeSlides[0];
+  const safeSlideIndex = currentSlide < activeSlides.length ? currentSlide : 0;
+  const slide = activeSlides[safeSlideIndex] || activeSlides[0];
 
 
   const nextSlide = () => {
@@ -75,7 +47,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
         {/* Background stays absolutely positioned with smooth multi-slide transitions */}
         <HeroVideoBackground 
           slides={activeSlides}
-          currentSlide={currentSlide}
+          currentSlide={safeSlideIndex}
 
           src={slide.videoSrc || slide.poster || config.videoUrl || config.posterUrl} 
           poster={slide.poster || config.posterUrl}
@@ -135,7 +107,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ heroConfig: initialCon
                   type="button"
                   onClick={() => setCurrentSlide(idx)}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    currentSlide === idx ? 'w-6 bg-[#C5A45E]' : 'w-2 bg-white/40'
+                    safeSlideIndex === idx ? 'w-6 bg-[#C5A45E]' : 'w-2 bg-white/40'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
