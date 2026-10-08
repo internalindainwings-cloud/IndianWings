@@ -14,9 +14,12 @@ interface AnalyticsScriptsProps {
 export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => {
   const pathname = usePathname();
   const rawGaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const gaId = rawGaId && !rawGaId.includes('XXXX') && rawGaId.startsWith('G-') ? rawGaId : undefined;
+  const gaId = rawGaId && !rawGaId.includes('XXXX') && rawGaId.startsWith('G-') ? rawGaId.trim() : undefined;
+  const rawAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const adsId = rawAdsId && !rawAdsId.includes('XXXX') && rawAdsId.startsWith('AW-') ? rawAdsId.trim() : undefined;
+  const primaryGoogleTagId = adsId || gaId;
   const rawClarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
-  const clarityId = rawClarityId && !rawClarityId.includes('XXXX') && !rawClarityId.includes('your_') && rawClarityId.trim().length > 3 ? rawClarityId : undefined;
+  const clarityId = rawClarityId && !rawClarityId.includes('XXXX') && !rawClarityId.includes('your_') && rawClarityId.trim().length > 3 ? rawClarityId.trim() : undefined;
 
   useEffect(() => {
     // Skip tracking for admin portal navigation to avoid skewing consumer analytics
@@ -66,22 +69,21 @@ export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => 
 
   return (
     <>
-      {/* Google Analytics 4 */}
-      {gaId && (
+      {/* Unified Google Tag (gtag.js) for Google Analytics 4 & Google Ads */}
+      {primaryGoogleTagId && (
         <>
           <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            src={`https://www.googletagmanager.com/gtag/js?id=${primaryGoogleTagId}`}
             strategy="lazyOnload"
             nonce={nonce}
           />
-          <Script id="google-analytics" strategy="lazyOnload" nonce={nonce}>
+          <Script id="google-tags" strategy="lazyOnload" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${gaId}', {
-                page_path: window.location.pathname,
-              });
+              ${gaId ? `gtag('config', '${gaId}', { page_path: window.location.pathname });` : ''}
+              ${adsId ? `gtag('config', '${adsId}');` : ''}
             `}
           </Script>
         </>
