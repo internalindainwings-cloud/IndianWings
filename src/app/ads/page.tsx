@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { LandingHeroSection } from '@/components/landing/LandingHeroSection';
-import { LandingPackagesSection } from '@/components/landing/LandingPackagesSection';
+import { LandingPackagesSection, cleanPackageTitle } from '@/components/landing/LandingPackagesSection';
 import { LandingTrustStrip } from '@/components/landing/LandingTrustStrip';
 import { LandingFinalCta } from '@/components/landing/LandingFinalCta';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -28,6 +28,20 @@ export const metadata: Metadata = {
 export default async function AdsLandingPage() {
   const packages = await getAllPackages(false);
 
+  // Extract clean package titles matching the packages displayed on the page
+  const packageTitles: string[] = [];
+  if (packages && packages.length > 0) {
+    packages.forEach((pkg) => {
+      const clean = cleanPackageTitle(pkg.title);
+      if (clean && !packageTitles.includes(clean)) {
+        packageTitles.push(clean);
+      }
+    });
+  }
+  if (!packageTitles.includes('Customized Itinerary')) {
+    packageTitles.push('Customized Itinerary');
+  }
+
   return (
     <>
       {/* High-priority responsive image preloads hoisted to document head for instant LCP discovery */}
@@ -46,13 +60,13 @@ export default async function AdsLandingPage() {
         fetchPriority="high"
       />
 
-      <LandingHeroSection />
+      <LandingHeroSection packageOptions={packageTitles} />
       <LandingPackagesSection packages={packages} />
       <LandingTrustStrip />
       <LandingFinalCta />
       <LandingFooter />
       <LandingWhatsAppButton />
-      <LandingExitIntentModal />
+      <LandingExitIntentModal packageOptions={packageTitles} />
     </>
   );
 }

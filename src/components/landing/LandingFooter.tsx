@@ -56,7 +56,6 @@ const FOOTER_SECTIONS = [
       { label: 'Gulmarg (Gondola & Snow Peaks)', href: `${MAIN_DOMAIN}/destinations/gulmarg` },
       { label: 'Pahalgam (Betaab & Aru Valleys)', href: `${MAIN_DOMAIN}/destinations/pahalgam` },
       { label: 'Sonamarg (Thajiwas Glacier)', href: `${MAIN_DOMAIN}/destinations/sonamarg` },
-      { label: 'Doodhpathri (Valley of Milk)', href: `${MAIN_DOMAIN}/destinations/doodhpathri` },
       { label: 'Explore All Destinations →', href: `${MAIN_DOMAIN}/destinations` },
     ],
   },
@@ -86,7 +85,7 @@ const FOOTER_SECTIONS = [
     links: [
       { label: 'About Us', href: `${MAIN_DOMAIN}/about-us` },
       { label: 'Why Travel With Us', href: '#why-us' },
-      { label: 'Client Stories & Reviews', href: '#reviews' },
+      { label: 'Client Stories & Reviews', href: `${MAIN_DOMAIN}/#reviews` },
       { label: 'Safety & Hospitality Standards', href: `${MAIN_DOMAIN}/activities#safety` },
       { label: 'Registered Srinagar Office', href: `${MAIN_DOMAIN}/about-us#office` },
     ],

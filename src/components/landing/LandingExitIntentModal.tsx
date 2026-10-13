@@ -38,7 +38,9 @@ const isMobileDevice = (): boolean => {
   return isMobileUA || (hasTouch && window.innerWidth < 1024);
 };
 
-export const LandingExitIntentModal: React.FC = () => {
+export const LandingExitIntentModal: React.FC<{
+  packageOptions?: string[];
+}> = ({ packageOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasTriggeredRef = useRef(false);
   const modalContainerRef = useRef<HTMLDivElement>(null);
@@ -388,6 +390,7 @@ export const LandingExitIntentModal: React.FC = () => {
           <LandingEnquiryForm
             source="ads_exit_intent_popup"
             hideHeader={true}
+            packageOptions={packageOptions}
             className="w-full bg-[#122986] rounded-xl p-2.5 sm:p-3 border border-white/15 shadow-md"
             onSuccess={() => {
               // Mark session complete when form submits successfully

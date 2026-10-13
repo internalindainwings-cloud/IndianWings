@@ -3,7 +3,7 @@ import ClientStories from './ClientStories';
 
 export default function WhyTravelWithUsSection() {
   return (
-    <section className="bg-white w-full overflow-hidden pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 relative border-b border-black/[0.08]">
+    <section id="reviews" className="bg-white w-full overflow-hidden pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-6 relative border-b border-black/[0.08] scroll-mt-20">
       {/* Main Content Container */}
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
         {/* Client Stories Toggle + Video/Written Carousel */}

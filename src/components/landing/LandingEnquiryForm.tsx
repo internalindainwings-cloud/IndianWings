@@ -29,12 +29,18 @@ const GUEST_OPTIONS = [
   '8+ Travellers',
 ];
 
-const TRIP_PREFERENCES = [
-  'Kashmir Classic Holiday',
-  'Honeymoon & Romantic',
-  'Family Luxury Special',
-  'Houseboat & Dal Lake',
-  'Adventure & Snow Trek',
+export const DEFAULT_PACKAGE_OPTIONS = [
+  'Family Tour Package',
+  'Honeymoon Special Package',
+  'Pocket-Friendly Tour Package',
+  'Small Family Tour Package',
+  'Big Family Tour Package',
+  'Senior Citizen Group Tour',
+  'Friends Group Tour Package',
+  'Corporate Tour Package',
+  'Gurez Valley Tour',
+  'Kashmir Winter Escape',
+  'Vaishno Devi Tour Package',
   'Customized Itinerary',
 ];
 
@@ -51,19 +57,24 @@ export const LandingEnquiryForm: React.FC<{
   className?: string;
   onSuccess?: () => void;
   hideHeader?: boolean;
+  packageOptions?: string[];
+  defaultPackage?: string;
 }> = ({
   source = 'ads_tourpackageskashmir',
   className,
   onSuccess,
   hideHeader = false,
+  packageOptions = DEFAULT_PACKAGE_OPTIONS,
+  defaultPackage,
 }) => {
+  const options = packageOptions && packageOptions.length > 0 ? packageOptions : DEFAULT_PACKAGE_OPTIONS;
   const [formData, setFormData] = useState({
     name: '',
     countryCode: '+91',
     phoneNumber: '',
     travelDate: '',
     guests: GUEST_OPTIONS[1], // Default: 2-4 Travellers
-    tripType: TRIP_PREFERENCES[0],
+    tripType: defaultPackage || options[0],
     hpField: '',
   });
 
@@ -367,10 +378,10 @@ export const LandingEnquiryForm: React.FC<{
           </div>
         </div>
 
-        {/* 5. Travel Preference */}
+        {/* 5. Package Selection */}
         <div>
           <label htmlFor="compact-trip" className="block text-[11.5px] font-bold text-white mb-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
-            Trip Preference
+            Select Package
           </label>
           <select
             id="compact-trip"
@@ -379,9 +390,9 @@ export const LandingEnquiryForm: React.FC<{
             onChange={handleChange}
             className="w-full h-8 sm:h-8.5 px-2 bg-white rounded-[4px] border-none text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#ffd024] cursor-pointer"
           >
-            {TRIP_PREFERENCES.map((pref) => (
-              <option key={pref} value={pref}>
-                {pref}
+            {options.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
               </option>
             ))}
           </select>

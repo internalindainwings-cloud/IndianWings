@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { videoReviews } from '@/data/video-reviews';
 
-const GOOGLE_MAPS_URL = 'https://maps.google.com/?q=Khanyar+Chowk+Srinagar+Jammu+and+Kashmir+190003';
+const GOOGLE_REVIEWS_URL = 'https://share.google/2EQ0vcZXbpOLsCAAI';
 
 // 9 Concise Trust / Benefit Items for the 3x3 Mobile Dashboard Grid
 const TRUST_ITEMS = [
@@ -130,7 +130,7 @@ export const LandingTrustStrip: React.FC = () => {
           {/* Google Reviews Badge Pill */}
           <div className="inline-flex items-center gap-2 mb-3">
             <a
-              href={GOOGLE_MAPS_URL}
+              href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 transition-all shadow-xs group hover:scale-[1.02]"
@@ -157,22 +157,40 @@ export const LandingTrustStrip: React.FC = () => {
         {/* ── 2. 9 TRUST TABS (VISIBLE ON DESKTOP & MOBILE IN ETRIPTO ROYAL BLUE #122986) ── */}
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5 md:gap-4 max-w-md sm:max-w-2xl lg:max-w-3xl mx-auto">
           {TRUST_ITEMS.map((item) => (
-            <div
-              key={item.id}
-              className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#122986]/[0.05] hover:bg-[#122986]/[0.10] border border-[#122986]/20 hover:border-[#122986]/45 flex flex-col items-center justify-center text-center gap-2 sm:gap-2.5 transition-all shadow-xs group"
-            >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#122986] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
-                {renderTrustIcon(item.icon)}
+            item.id === 'google-review' ? (
+              <a
+                key={item.id}
+                href={GOOGLE_REVIEWS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#122986]/[0.05] hover:bg-[#122986]/[0.10] border border-[#122986]/20 hover:border-[#122986]/45 flex flex-col items-center justify-center text-center gap-2 sm:gap-2.5 transition-all shadow-xs group cursor-pointer"
+                title="View Google Reviews"
+              >
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#122986] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                  {renderTrustIcon(item.icon)}
+                </div>
+                <span className="text-[11px] min-[360px]:text-[12px] sm:text-[13px] md:text-sm font-bold text-[#122986] tracking-tight truncate max-w-full leading-tight">
+                  {item.title}
+                </span>
+              </a>
+            ) : (
+              <div
+                key={item.id}
+                className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#122986]/[0.05] hover:bg-[#122986]/[0.10] border border-[#122986]/20 hover:border-[#122986]/45 flex flex-col items-center justify-center text-center gap-2 sm:gap-2.5 transition-all shadow-xs group"
+              >
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#122986] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-110 transition-transform">
+                  {renderTrustIcon(item.icon)}
+                </div>
+                <span className="text-[11px] min-[360px]:text-[12px] sm:text-[13px] md:text-sm font-bold text-[#122986] tracking-tight truncate max-w-full leading-tight">
+                  {item.title}
+                </span>
               </div>
-              <span className="text-[11px] min-[360px]:text-[12px] sm:text-[13px] md:text-sm font-bold text-[#122986] tracking-tight truncate max-w-full leading-tight">
-                {item.title}
-              </span>
-            </div>
+            )
           ))}
         </div>
 
         {/* ── 3. EXACT WANDERKASHMIR BENTO GALLERY FOR VIDEO STORIES & GUEST MOMENTS ── */}
-        <div className="mt-5 sm:mt-7 pt-4 sm:pt-5 border-t border-slate-100">
+        <div id="reviews" className="mt-5 sm:mt-7 pt-4 sm:pt-5 border-t border-slate-100 scroll-mt-20">
           <div className="text-center mb-4 sm:mb-5">
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#B48827]">
               Real Travellers, Real Experiences

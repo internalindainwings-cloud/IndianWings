@@ -16,7 +16,9 @@ import { LandingEnquiryForm } from './LandingEnquiryForm';
 const BG_DESKTOP = 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto:good,w_1600/v1791799153/bg.jpg';
 const BG_MOBILE = 'https://res.cloudinary.com/wmwdypan/image/upload/f_auto,q_auto:eco,w_750/v1791799153/bg.jpg';
 
-export const LandingHeroSection: React.FC = () => {
+export const LandingHeroSection: React.FC<{
+  packageOptions?: string[];
+}> = ({ packageOptions }) => {
   return (
     <div className="relative w-full landing-hero-container flex flex-col overflow-hidden text-white bg-transparent">
       {/* Full-bleed responsive background image (Optimized Cloudinary delivery) */}
@@ -59,7 +61,7 @@ export const LandingHeroSection: React.FC = () => {
 
           {/* Lead Form Column */}
           <div className="w-full lg:col-span-5 flex justify-end sm:justify-center lg:justify-end items-end shrink-0 pr-1 sm:pr-0 pb-1 sm:pb-2 lg:pb-0">
-            <LandingEnquiryForm source="ads_tourpackageskashmir" />
+            <LandingEnquiryForm source="ads_tourpackageskashmir" packageOptions={packageOptions} />
           </div>
         </div>
       </main>
