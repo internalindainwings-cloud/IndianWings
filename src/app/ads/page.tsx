@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { LandingHeroSection } from '@/components/landing/LandingHeroSection';
-import { LandingPackagesSection, cleanPackageTitle } from '@/components/landing/LandingPackagesSection';
+import { LandingPackagesSection } from '@/components/landing/LandingPackagesSection';
+import { cleanPackageTitle, DEFAULT_PACKAGE_OPTIONS } from '@/lib/utilities/package-title';
 import { LandingTrustStrip } from '@/components/landing/LandingTrustStrip';
 import { LandingFinalCta } from '@/components/landing/LandingFinalCta';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -26,11 +27,16 @@ export const metadata: Metadata = {
 };
 
 export default async function AdsLandingPage() {
-  const packages = await getAllPackages(false);
+  let packages: any[] = [];
+  try {
+    packages = await getAllPackages(false);
+  } catch (err) {
+    console.error('Failed to fetch packages for ads page:', err);
+  }
 
   // Extract clean package titles matching the packages displayed on the page
   const packageTitles: string[] = [];
-  if (packages && packages.length > 0) {
+  if (packages && Array.isArray(packages) && packages.length > 0) {
     packages.forEach((pkg) => {
       const clean = cleanPackageTitle(pkg.title);
       if (clean && !packageTitles.includes(clean)) {
@@ -38,7 +44,9 @@ export default async function AdsLandingPage() {
       }
     });
   }
-  if (!packageTitles.includes('Customized Itinerary')) {
+  if (packageTitles.length === 0) {
+    packageTitles.push(...DEFAULT_PACKAGE_OPTIONS);
+  } else if (!packageTitles.includes('Customized Itinerary')) {
     packageTitles.push('Customized Itinerary');
   }
 
