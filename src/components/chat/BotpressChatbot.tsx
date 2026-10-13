@@ -36,16 +36,12 @@ export const BotpressChatbot: React.FC<{ nonce?: string }> = ({ nonce }) => {
         attempts++;
         try {
           if (typeof window !== 'undefined') {
-            // @ts-ignore
-            if (window.botpress && window.botpress.open) {
-              // @ts-ignore
-              window.botpress.open();
+            const win = window as any;
+            if (win.botpress && win.botpress.open) {
+              win.botpress.open();
               clearInterval(interval);
-            } 
-            // @ts-ignore
-            else if (window.botpressWebChat) {
-              // @ts-ignore
-              window.botpressWebChat.sendEvent({ type: 'show' });
+            } else if (win.botpressWebChat) {
+              win.botpressWebChat.sendEvent({ type: 'show' });
               clearInterval(interval);
             }
           }

@@ -3,7 +3,7 @@
 ## 1. Project Overview
 - **Project name**: The Indian Wings Company
 - **Purpose**: Luxury travel agency and destination management platform specializing in the Kashmir Valley. Delivers a cinematic, mobile-first booking experience tailored for high-intent domestic and international travelers.
-- **Main website**: https://theindianwings.com
+- **Main website**: https://tourpackageskashmir.com
 - **Current project status**: Production Release Ready (v2.0)
 - **Repository/project structure overview**: Monorepo structure with Next.js App Router for frontend/admin UI and a standalone Express Node.js application in `backend/` for the REST API.
 
@@ -35,13 +35,13 @@ For a comprehensive, up-to-date inventory of all implemented features across the
 ## 3. System Architecture
 ```
                           [ GoDaddy DNS ]
-                         theindianwings.com
+                      tourpackageskashmir.com
                                  │
                 ┌────────────────┴────────────────┐
                 ▼                                 ▼
           [ Vercel ]                        [ Render ]
        Next.js 16 App Router             Express Node.js REST API
-   (https://theindianwings.com)        (https://tiwc-api.onrender.com)
+   (https://tourpackageskashmir.com)   (https://tiwc-api.onrender.com)
                 │                                 │
                 │                         ┌───────┴───────┐
                 ▼                         ▼               ▼
@@ -136,7 +136,7 @@ For a comprehensive, up-to-date inventory of all implemented features across the
   - `style-src` retains `'unsafe-inline'` to support Framer Motion and Next.js dynamic styling (acceptable tradeoff).
 
 ## 13. Admin Panel
-- **Access**: Securely isolated at `https://theindianwings.com/admin/login`.
+- **Access**: Securely isolated at `https://tourpackageskashmir.com/admin/login` (or `dashboard.tourpackageskashmir.com`).
 - **Authentication**: Password-protected, yielding an HMAC-SHA256 session cookie.
 - **Capabilities**:
   - Overview metrics (Leads today, Conversion rates).
@@ -162,7 +162,8 @@ For a comprehensive, up-to-date inventory of all implemented features across the
   - Internal link silo structure building.
 
 ## 16. Production / Deployment
-- **Domain**: `theindianwings.com` (GoDaddy DNS -> Vercel Anycast IP).
+- **Domain**: `tourpackageskashmir.com` (GoDaddy DNS -> Vercel Anycast IP).
+- **Google Ads Landing Page**: `https://adds.tourpackageskashmir.com/` (subdomain rewrite via Next.js middleware).
 - **Vercel**: Next.js App Router hosting, connecting to the Render backend via `NEXT_PUBLIC_BACKEND_URL`.
 - **Render**: Node.js Express API hosting, running `npm start`.
 - **Neon & Upstash**: Pooled serverless DB and distributed cache.

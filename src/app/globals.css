@@ -395,3 +395,178 @@ h1, h2, h3, h4, h5, h6 {
 .font-display {
   font-family: var(--font-manrope), "Manrope", sans-serif;
 }
+
+/* ── Thrillophilia Shimmer Light Flares (Guaranteed Mobile & Desktop GPU Compositor) ── */
+@keyframes thrilloTopGlide {
+  0% {
+    transform: translate3d(-60px, 0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(calc(50vw - 14px), 0, 0);
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(calc(100vw + 60px), 0, 0);
+    opacity: 0;
+  }
+}
+
+.thrillo-top-flare {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  animation: thrilloTopGlide 3.4s ease-in-out infinite !important;
+  will-change: transform, opacity;
+}
+
+@keyframes thrilloBtnGlide {
+  0% {
+    left: -50px;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  50% {
+    left: calc(50% - 11px);
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    left: calc(100% + 40px);
+    opacity: 0;
+  }
+}
+
+.thrillo-btn-flare {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  animation: thrilloBtnGlide 2.6s ease-in-out infinite !important;
+  will-change: left, opacity;
+}
+
+@keyframes thrilloModalGlide {
+  0% {
+    left: -50px;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+  }
+  50% {
+    left: calc(50% - 12px);
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    left: calc(100% + 50px);
+    opacity: 0;
+  }
+}
+
+.thrillo-modal-flare {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  animation: thrilloModalGlide 3s ease-in-out infinite !important;
+  will-change: left, opacity;
+}
+
+/* ── Landing Hero: Stable Viewport & Image (Fixes dynamic address-bar resize zoom on scroll) ── */
+.landing-hero-container {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-height: 100vh;
+  max-height: 100svh;
+  contain: paint layout;
+}
+
+.landing-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ── Floating WhatsApp Button ── */
+.floating-whatsapp-thumb {
+  position: fixed !important;
+  right: calc(10px + env(safe-area-inset-right, 0px)) !important;
+  /* Mobile thumb-reach: right-side, vertically center of screen */
+  bottom: clamp(160px, calc(40vh), 210px) !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* DEFAULT: visible so it shows even before JS hydrates */
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
+  transition: opacity 200ms ease, transform 200ms ease, visibility 200ms ease;
+  will-change: opacity, transform, visibility;
+}
+
+/* Mobile (<640px): JS can hide on hero by adding .wa-hero-hidden */
+@media (max-width: 639px) {
+  .floating-whatsapp-thumb.wa-hero-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: scale(0.85) !important;
+  }
+}
+
+/* Hide floating WhatsApp button when exit-intent modal is active */
+body.exit-intent-modal-open .floating-whatsapp-thumb {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Desktop (>=640px): Always visible, standard corner */
+@media (min-width: 640px) {
+  .floating-whatsapp-thumb {
+    right: 24px !important;
+    bottom: 32px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+}
+
+

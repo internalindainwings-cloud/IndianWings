@@ -3,8 +3,10 @@
  * Handles: Session generation, scroll milestones, dwell time, navigation, and zero-loss exit beacons.
  */
 
+import { getAttributionData } from './attribution';
+
 export interface TelemetryEvent {
-  eventType: 'PAGE_VIEW' | 'SCROLL_DEPTH' | 'CARD_CLICK' | 'MODAL_OPEN' | 'EXIT';
+  eventType: 'PAGE_VIEW' | 'SCROLL_DEPTH' | 'CARD_CLICK' | 'MODAL_OPEN' | 'EXIT' | 'WHATSAPP_CLICK' | 'CALL_CLICK';
   route: string;
   label?: string;
   durationSpent?: number;
@@ -94,9 +96,14 @@ export function flushEvents(useBeacon: boolean = false) {
   const eventsToSend = [...eventBuffer];
   eventBuffer = [];
 
+  const attribution = typeof window !== 'undefined' ? getAttributionData() : null;
+
   const payload = JSON.stringify({
     visitorId: getVisitorId(),
     sessionId: getSessionId(),
+    utmSource: attribution?.utmSource || null,
+    utmCampaign: attribution?.utmCampaign || null,
+    referrer: attribution?.referrer || null,
     events: eventsToSend,
   });
 
@@ -116,6 +123,30 @@ export function flushEvents(useBeacon: boolean = false) {
       }
     });
   }
+}
+
+/**
+ * First-Party tracking for WhatsApp CTA clicks
+ */
+export function trackWhatsAppTelemetryClick(source: string, destination?: string) {
+  const currentRoute = typeof window !== 'undefined' ? window.location.pathname : '/';
+  trackTelemetryEvent('WHATSAPP_CLICK', currentRoute, `WhatsApp CTA Click (${source})`, {
+    source,
+    destination: destination || 'Direct Concierge',
+  });
+  flushEvents();
+}
+
+/**
+ * First-Party tracking for Telephone / Call CTA clicks
+ */
+export function trackCallTelemetryClick(source: string, phone?: string) {
+  const currentRoute = typeof window !== 'undefined' ? window.location.pathname : '/';
+  trackTelemetryEvent('CALL_CLICK', currentRoute, `Call CTA Click (${source})`, {
+    source,
+    phone: phone || '+91 98118 08387',
+  });
+  flushEvents();
 }
 
 /**

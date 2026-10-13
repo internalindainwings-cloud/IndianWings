@@ -32,10 +32,12 @@ export const PublicShell: React.FC<{
   children: React.ReactNode;
   nonce?: string;
   isAdminOverride?: boolean;
+  isAdsOverride?: boolean;
   initialSettings?: Partial<SiteSettingsData> | null;
-}> = ({ children, nonce, isAdminOverride, initialSettings }) => {
+}> = ({ children, nonce, isAdminOverride, isAdsOverride, initialSettings }) => {
   const pathname = usePathname();
   const isAdmin = isAdminOverride || (pathname ? pathname.startsWith('/admin') : false);
+  const isAdsLanding = isAdsOverride || (pathname ? pathname.startsWith('/ads') : false);
 
   useEffect(() => {
     // Ensure clean application of client-chosen original theme: #0F4C54 (High Alpine Cyan) & #F59E0B (Mughal Marigold) on all devices
@@ -53,6 +55,15 @@ export const PublicShell: React.FC<{
   // Complete isolation: When accessing admin portal, do not render consumer navigation, footer, or floating buttons
   if (isAdmin) {
     return <main className="min-h-screen w-full bg-[#081E23] text-white">{children}</main>;
+  }
+
+  // Complete isolation: Dedicated ads landing page renders only its own focused hero
+  if (isAdsLanding) {
+    return (
+      <SiteSettingsProvider initialSettings={initialSettings || undefined}>
+        <main className="min-h-screen w-full">{children}</main>
+      </SiteSettingsProvider>
+    );
   }
 
   return (

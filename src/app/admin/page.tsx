@@ -34,6 +34,16 @@ interface AdminData {
     conversionRate: string;
     avgDurationSeconds: number;
   };
+  trackingOverview?: {
+    landingPageVisits: number;
+    leadSubmissions: number;
+    adsLeads: number;
+    whatsAppClicks: number;
+    callClicks: number;
+    uniqueVisitorsCount: number;
+    leadsBySource: Record<string, number>;
+    leadsByCampaign: Array<{ name: string; count: number }>;
+  };
   leads: LeadRecord[];
   sessions: UserSessionRecord[];
   campaigns: CampaignRecord[];
@@ -181,6 +191,7 @@ function AdminDashboardContent() {
         return (
           <TabLeads
             leads={data?.leads || []}
+            trackingOverview={data?.trackingOverview}
             onRefresh={() => fetchData(true)}
             isRefreshing={isRefreshing}
           />

@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Malformed JSON payload' }, { status: 400 });
     }
 
-    const { visitorId, sessionId, events } = data;
+    const { visitorId, sessionId, events, utmSource, utmCampaign, referrer } = data;
 
     // 3. Input Validation
     if (
@@ -93,12 +93,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 6. Upsert the UserSession record
+    // 6. Upsert the UserSession record with attribution enrichment
     const session = await prisma.userSession.upsert({
       where: { id: sessionId },
       update: {
         endedAt: new Date(),
         durationSeconds: { increment: addedDwell },
+        ...(typeof utmSource === 'string' && utmSource ? { utmSource: utmSource.slice(0, 100) } : {}),
+        ...(typeof utmCampaign === 'string' && utmCampaign ? { utmCampaign: utmCampaign.slice(0, 150) } : {}),
+        ...(typeof referrer === 'string' && referrer ? { referrer: referrer.slice(0, 300) } : {}),
       },
       create: {
         id: sessionId,
@@ -106,6 +109,9 @@ export async function POST(request: NextRequest) {
         device,
         browser,
         ipAddress,
+        utmSource: typeof utmSource === 'string' && utmSource ? utmSource.slice(0, 100) : null,
+        utmCampaign: typeof utmCampaign === 'string' && utmCampaign ? utmCampaign.slice(0, 150) : null,
+        referrer: typeof referrer === 'string' && referrer ? referrer.slice(0, 300) : null,
         startedAt: new Date(),
         endedAt: new Date(),
         durationSeconds: addedDwell,

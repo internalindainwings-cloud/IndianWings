@@ -18,9 +18,15 @@ export async function POST(req: NextRequest) {
         const originUrl = new URL(origin);
         const isLocal = originUrl.hostname === 'localhost' || originUrl.hostname === '127.0.0.1';
         const isSameHost = originUrl.host === host;
+        const configuredHost = siteUrl ? new URL(siteUrl).hostname : 'tourpackageskashmir.com';
+        const isAllowedDomain =
+          originUrl.hostname === 'tourpackageskashmir.com' ||
+          originUrl.hostname.endsWith('.tourpackageskashmir.com') ||
+          originUrl.hostname === configuredHost ||
+          originUrl.hostname.endsWith(`.${configuredHost}`);
         const isAllowedSite = siteUrl ? new URL(siteUrl).origin === originUrl.origin : false;
 
-        if (!isSameHost && !isAllowedSite && !isLocal) {
+        if (!isSameHost && !isAllowedSite && !isAllowedDomain && !isLocal) {
           return NextResponse.json(
             { error: 'Forbidden', message: 'Untrusted request origin' },
             { status: 403 }
@@ -131,6 +137,7 @@ export async function POST(req: NextRequest) {
         gclid: data.gclid || null,
         fbclid: data.fbclid || null,
         referrer: data.referrer || null,
+        landingPage: data.landingPage || null,
         visitorId: data.visitorId || null,
         ipAddress,
         userAgent,
@@ -218,6 +225,13 @@ export async function GET(req: NextRequest) {
         utmSource: true,
         utmMedium: true,
         utmCampaign: true,
+        utmTerm: true,
+        utmContent: true,
+        gclid: true,
+        fbclid: true,
+        referrer: true,
+        landingPage: true,
+        visitorId: true,
         createdAt: true,
       },
     });

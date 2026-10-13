@@ -59,7 +59,7 @@ async function isValidAdminSession(token: string | undefined): Promise<boolean> 
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
-  const hostname = request.headers.get('host') || '';
+  const hostname = request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
   const pathname = url.pathname;
 
   // Generate cryptographically secure per-request nonce
@@ -120,6 +120,7 @@ export async function middleware(request: NextRequest) {
 
   const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
   const isDashboardSubdomain = hostname.startsWith('dashboard.');
+  const isAddsSubdomain = hostname.startsWith('adds.');
 
   // Block access to /admin on the main website domain for security and separation
   if (!isLocalhost && !isDashboardSubdomain && (pathname.startsWith('/admin') || pathname.startsWith('/api/admin'))) {
@@ -128,6 +129,7 @@ export async function middleware(request: NextRequest) {
   }
 
   let isRewrittenToAdmin = false;
+  let isRewrittenToAds = false;
   
   // If user visits dashboard.tourpackageskashmir.com, seamlessly route them to the admin panel
   if (isDashboardSubdomain) {
@@ -143,7 +145,19 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Route adds.tourpackageskashmir.com to the dedicated Google Ads landing page
+  if (isAddsSubdomain) {
+    if (pathname === '/') {
+      url.pathname = '/ads';
+      isRewrittenToAds = true;
+    }
+  }
+
   const effectivePath = url.pathname;
+
+  if (effectivePath.startsWith('/ads')) {
+    requestHeaders.set('x-is-ads', 'true');
+  }
 
   if (effectivePath.startsWith('/admin')) {
     requestHeaders.set('x-is-admin', 'true');
@@ -182,7 +196,9 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const response = isRewrittenToAdmin
+  const shouldRewrite = isRewrittenToAdmin || isRewrittenToAds;
+
+  const response = shouldRewrite
     ? NextResponse.rewrite(url, {
       request: {
         headers: requestHeaders,

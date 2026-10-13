@@ -79,6 +79,7 @@ export default async function RootLayout({
   const headersList = await headers();
   const nonce = headersList.get('x-nonce') ?? undefined;
   const isAdmin = headersList.get('x-is-admin') === 'true';
+  const isAds = headersList.get('x-is-ads') === 'true';
   const settings = await getSiteSettings();
 
   return (
@@ -91,7 +92,7 @@ export default async function RootLayout({
       }}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        <PublicShell nonce={nonce} isAdminOverride={isAdmin} initialSettings={settings}>{children}</PublicShell>
+        <PublicShell nonce={nonce} isAdminOverride={isAdmin} isAdsOverride={isAds} initialSettings={settings}>{children}</PublicShell>
         <AnalyticsScripts nonce={nonce} />
         <SecurityScripts />
       </body>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, Check, X, GripVertical, Image as ImageIcon } from 'lucide-react';
 
 interface PartnerBrand {
@@ -21,11 +21,7 @@ export default function TabBrands() {
   const [currentBrand, setCurrentBrand] = useState<Partial<PartnerBrand> | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    fetchBrands();
-  }, []);
-
-  const fetchBrands = async () => {
+  const fetchBrands = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/brands');
       const data = await res.json();
@@ -34,12 +30,16 @@ export default function TabBrands() {
       } else {
         setError(data.error || 'Failed to load brands');
       }
-    } catch (err) {
+    } catch {
       setError('Error fetching brands');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchBrands();
+  }, [fetchBrands]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

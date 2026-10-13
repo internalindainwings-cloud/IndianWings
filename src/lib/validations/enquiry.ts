@@ -73,6 +73,7 @@ export const enquirySchema = z.object({
   gclid: z.string().max(150).optional().nullable().transform((v) => (v ? sanitizeString(v) : null)),
   fbclid: z.string().max(150).optional().nullable().transform((v) => (v ? sanitizeString(v) : null)),
   referrer: z.string().max(300).optional().nullable().transform((v) => (v ? sanitizeString(v) : null)),
+  landingPage: z.string().max(300).optional().nullable().transform((v) => (v ? sanitizeString(v) : null)),
 }).strict();
 
 export type EnquiryInput = z.infer<typeof enquirySchema>;

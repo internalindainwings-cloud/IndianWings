@@ -34,6 +34,7 @@ model Enquiry {
   gclid       String?
   fbclid      String?
   referrer    String?
+  landingPage String?
   visitorId   String?
 
   // Lifecycle & Metadata

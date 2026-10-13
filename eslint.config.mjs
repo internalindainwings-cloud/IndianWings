@@ -8,6 +8,9 @@ const eslintConfig = defineConfig([
   {
     rules: {
       "react-hooks/set-state-in-effect": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/ban-ts-comment": "warn",
+      "react/no-unescaped-entities": "warn",
     },
   },
   // Override default ignores of eslint-config-next.
