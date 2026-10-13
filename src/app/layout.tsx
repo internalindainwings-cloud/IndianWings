@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Manrope } from "next/font/google";
+import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { PublicShell } from "@/components/layout/PublicShell";
 import { AnalyticsScripts } from "@/components/analytics/AnalyticsScripts";
@@ -12,6 +12,15 @@ const manrope = Manrope({
   weight: ["300", "400", "500", "600", "700", "800"],
   style: ["normal"],
   display: "swap",
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  style: ["normal"],
+  display: "swap",
+  preload: true,
 });
 
 
@@ -85,7 +94,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} h-full antialiased`}
+      className={`${manrope.variable} ${playfair.variable} h-full antialiased`}
       style={{
         ['--color-midnight' as string]: '#0F4C54',
         ['--color-saffron' as string]: '#F59E0B',

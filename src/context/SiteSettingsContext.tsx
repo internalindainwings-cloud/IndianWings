@@ -37,6 +37,11 @@ export const SiteSettingsProvider: React.FC<{ children: React.ReactNode; initial
   const [settings, setSettings] = useState<SiteSettingsState>({ ...defaultState, ...initialSettings });
 
   useEffect(() => {
+    // Skip redundant client fetch if initialSettings were already supplied by SSR
+    if (initialSettings && (initialSettings.phone || initialSettings.logoUrl !== undefined)) {
+      return;
+    }
+
     let mounted = true;
     async function load() {
       try {

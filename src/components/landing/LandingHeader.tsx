@@ -16,8 +16,11 @@ import { trackCallClick, trackWhatsAppClick } from '@/lib/utilities/analytics';
 export const LandingHeader: React.FC = () => {
   const settings = useSiteSettings();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const hasCustomLogo = Boolean(settings?.logoUrl && !settings.logoUrl.includes('vishnav_devi'));
-  const validLogoSrc = hasCustomLogo && settings?.logoUrl ? settings.logoUrl : '';
+  const hasCustomLogo = Boolean(settings?.logoUrl && settings.logoUrl.trim().length > 0);
+  const rawLogoSrc = hasCustomLogo && settings?.logoUrl ? settings.logoUrl : '';
+  const validLogoSrc = rawLogoSrc.includes('res.cloudinary.com') && !rawLogoSrc.includes('f_auto')
+    ? rawLogoSrc.replace('/image/upload/', '/image/upload/f_auto,q_auto,w_240/')
+    : rawLogoSrc;
 
   // Live countdown timer state (matching Thrillophilia sale timer)
   const [timeLeft, setTimeLeft] = useState({ days: 8, hrs: 2, min: 26 });
@@ -108,6 +111,8 @@ export const LandingHeader: React.FC = () => {
               <img
                 src={validLogoSrc}
                 alt="The Indian Wings Company"
+                width={144}
+                height={36}
                 className="h-7 sm:h-8 md:h-9 w-auto object-contain drop-shadow-md origin-left"
                 loading="eager"
                 decoding="async"

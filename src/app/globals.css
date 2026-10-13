@@ -46,6 +46,10 @@ h1 {
   font-family: var(--font-manrope), "Manrope", sans-serif;
 }
 
+.font-playfair {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
 /* Global Typography: Clean Manrope for all standard content */
 h2, h3, h4, h5, h6,
 p,
@@ -520,18 +524,10 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Floating WhatsApp Button ── */
 .floating-whatsapp-thumb {
   position: fixed !important;
-  right: calc(10px + env(safe-area-inset-right, 0px)) !important;
-  /* Mobile thumb-reach: right-side, vertically center of screen */
-  bottom: clamp(160px, calc(40vh), 210px) !important;
   z-index: 999999 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  /* DEFAULT: visible so it shows even before JS hydrates */
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: scale(1);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
@@ -540,24 +536,27 @@ h1, h2, h3, h4, h5, h6 {
   will-change: opacity, transform, visibility;
 }
 
-/* Mobile (<640px): JS can hide on hero by adding .wa-hero-hidden */
+/* Mobile (<640px): Hidden by default on hero to prevent initial load blink/flicker */
 @media (max-width: 639px) {
-  .floating-whatsapp-thumb.wa-hero-hidden {
+  .floating-whatsapp-thumb {
+    right: calc(10px + env(safe-area-inset-right, 0px)) !important;
+    bottom: clamp(160px, calc(40vh), 210px) !important;
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
     transform: scale(0.85) !important;
   }
+
+  /* Smoothly fade in when scrolled past mobile hero section */
+  .floating-whatsapp-thumb.wa-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: scale(1) !important;
+  }
 }
 
-/* Hide floating WhatsApp button when exit-intent modal is active */
-body.exit-intent-modal-open .floating-whatsapp-thumb {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  visibility: hidden !important;
-}
-
-/* Desktop (>=640px): Always visible, standard corner */
+/* Desktop (>=640px): Always visible at standard corner */
 @media (min-width: 640px) {
   .floating-whatsapp-thumb {
     right: 24px !important;
@@ -567,6 +566,13 @@ body.exit-intent-modal-open .floating-whatsapp-thumb {
     pointer-events: auto !important;
     transform: none !important;
   }
+}
+
+/* Hide floating WhatsApp button when exit-intent modal is active */
+body.exit-intent-modal-open .floating-whatsapp-thumb {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 

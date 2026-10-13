@@ -23,7 +23,7 @@ export const LandingWhatsAppButton: React.FC = () => {
     const check = () => {
       // Desktop: always visible via CSS, skip
       if (window.innerWidth >= 640) {
-        btn.classList.remove('wa-hero-hidden');
+        btn.classList.remove('wa-visible');
         return;
       }
 
@@ -33,25 +33,21 @@ export const LandingWhatsAppButton: React.FC = () => {
         ? firstCard.getBoundingClientRect().top < window.innerHeight
         : false;
 
-      // Hide only on hero (top of page, not scrolled)
+      // Show smoothly only after scrolling past hero (scrollY > 80px) or when first card enters viewport
       if (scrollY > 80 || cardPassed) {
-        btn.classList.remove('wa-hero-hidden');
+        btn.classList.add('wa-visible');
       } else {
-        btn.classList.add('wa-hero-hidden');
+        btn.classList.remove('wa-visible');
       }
     };
 
-    // Run once immediately — hides on hero
+    // Run once on mount (handles page refreshed while already scrolled down)
     check();
-    const t1 = setTimeout(check, 200);
-    const t2 = setTimeout(check, 600);
 
     window.addEventListener('scroll', check, { passive: true });
     window.addEventListener('resize', check, { passive: true });
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
       window.removeEventListener('scroll', check);
       window.removeEventListener('resize', check);
     };

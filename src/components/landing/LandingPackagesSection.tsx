@@ -51,6 +51,17 @@ export const cleanPackageTitle = (rawTitle: string): string => {
   return title;
 };
 
+export const getOptimizedCardImage = (rawUrl: string): string => {
+  if (!rawUrl) return '/images/gallery/shikara-dal-lake.jpg';
+  if (rawUrl.includes('res.cloudinary.com') && rawUrl.includes('/upload/')) {
+    if (rawUrl.includes('/upload/f_auto') || rawUrl.includes('/upload/w_')) {
+      return rawUrl;
+    }
+    return rawUrl.replace('/upload/', '/upload/f_auto,q_auto:good,w_640/');
+  }
+  return rawUrl;
+};
+
 export const LandingPackagesSection: React.FC<LandingPackagesSectionProps> = ({
   packages = [],
 }) => {
@@ -142,9 +153,10 @@ export const LandingPackagesSection: React.FC<LandingPackagesSectionProps> = ({
                 displayTitle === 'Pocket-Friendly Tour Package' ||
                 /pocket-friendly|kam kharch/i.test(pkg.title) ||
                 /pocket-friendly|kam-kharch/i.test(pkg.slug);
-              const cardImage = isPocketFriendly
+              const rawCardImage = isPocketFriendly
                 ? 'https://res.cloudinary.com/wmwdypan/image/upload/v1791816042/new.jpg'
                 : (pkg.imageUrl || '/images/gallery/shikara-dal-lake.jpg');
+              const cardImage = getOptimizedCardImage(rawCardImage);
 
               return (
                 <div
@@ -159,6 +171,9 @@ export const LandingPackagesSection: React.FC<LandingPackagesSectionProps> = ({
                       alt={displayTitle}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
+                      decoding="async"
+                      width={640}
+                      height={400}
                     />
                   </div>
 
