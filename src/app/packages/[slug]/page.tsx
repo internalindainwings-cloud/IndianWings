@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PackageDetailPageProps): Prom
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
   const canonical = pkg.canonicalUrl || `${siteUrl}/packages/${pkg.slug}`;
   const title = pkg.metaTitle || `${pkg.title} (${pkg.duration}) | The Indian Wings Company`;
   const description =
@@ -91,7 +91,7 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
   const pageUrl = `${siteUrl}/packages/${pkg.slug}`;
 
   /* ── 4. Structured Data Schemas (JSON-LD) ────────────────────── */

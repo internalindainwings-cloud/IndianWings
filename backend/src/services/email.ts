@@ -41,7 +41,7 @@ export async function sendItineraryEmail({
   const formattedPrice = `₹${startingPrice.toLocaleString('en-IN')}`;
   const routeString = destinations.length > 0 ? destinations.join(' ➔ ') : 'Srinagar & Beyond';
 
-  const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
   const itineraryHtml = itinerary
     .map(

@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
   const canonical = `${siteUrl}/blog/${blog.slug}`;
   const title = blog.metaTitle || `${blog.title} | The Indian Wings Company`;
   const description = blog.metaDescription || blog.excerpt;
@@ -71,7 +71,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
   const articleUrl = `${siteUrl}/blog/${blog.slug}`;
 
   const settings = await getSiteSettings();

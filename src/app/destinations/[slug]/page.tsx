@@ -22,7 +22,7 @@ export async function generateStaticParams() {
   }));
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
 
 export async function generateMetadata({ params }: DestinationDetailPageProps): Promise<Metadata> {
   const { slug } = await params;

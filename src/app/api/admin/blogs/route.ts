@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       metaDescription, 
       slug: customSlug, 
       category = 'SEO', 
-      featuredImage = 'https://theindianwings.com/placeholder.jpg',
+      featuredImage = 'https://tourpackageskashmir.com/placeholder.jpg',
       authorName = 'The Indian Wings' 
     } = data;
 

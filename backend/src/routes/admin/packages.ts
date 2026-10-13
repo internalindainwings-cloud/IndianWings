@@ -64,7 +64,7 @@ router.post('/', requireAdmin, async (req: Request, res: Response) => {
     const existing = await prisma.package.findUnique({ where: { slug } });
     if (existing) slug = `${slug}-${Date.now().toString().slice(-4)}`;
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theindianwings.com';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tourpackageskashmir.com';
     const newPackage = await prisma.package.create({
       data: {
         slug,
