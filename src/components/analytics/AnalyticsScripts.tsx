@@ -15,8 +15,8 @@ export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => 
   const pathname = usePathname();
   const rawGaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const gaId = rawGaId && !rawGaId.includes('XXXX') && rawGaId.startsWith('G-') ? rawGaId.trim() : undefined;
-  const rawAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-  const adsId = rawAdsId && !rawAdsId.includes('XXXX') && rawAdsId.startsWith('AW-') ? rawAdsId.trim() : undefined;
+  const rawAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-18496899509';
+  const adsId = rawAdsId && !rawAdsId.includes('XXXX') && rawAdsId.startsWith('AW-') ? rawAdsId.trim() : 'AW-18496899509';
   const primaryGoogleTagId = adsId || gaId;
   const rawClarityId = process.env.NEXT_PUBLIC_CLARITY_ID;
   const clarityId = rawClarityId && !rawClarityId.includes('XXXX') && !rawClarityId.includes('your_') && rawClarityId.trim().length > 3 ? rawClarityId.trim() : undefined;
@@ -74,10 +74,10 @@ export const AnalyticsScripts: React.FC<AnalyticsScriptsProps> = ({ nonce }) => 
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${primaryGoogleTagId}`}
-            strategy="lazyOnload"
+            strategy="afterInteractive"
             nonce={nonce}
           />
-          <Script id="google-tags" strategy="lazyOnload" nonce={nonce}>
+          <Script id="google-tags" strategy="afterInteractive" nonce={nonce}>
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}

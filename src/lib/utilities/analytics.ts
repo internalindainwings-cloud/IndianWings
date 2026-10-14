@@ -124,8 +124,8 @@ export function trackLeadConversion(params: {
   });
 
   // 2. Google Ads specific conversion event (if AW- tag and conversion label are provided in env)
-  const rawAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
-  const adsId = rawAdsId && !rawAdsId.includes('XXXX') && rawAdsId.startsWith('AW-') ? rawAdsId.trim() : undefined;
+  const rawAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID || 'AW-18496899509';
+  const adsId = rawAdsId && !rawAdsId.includes('XXXX') && rawAdsId.startsWith('AW-') ? rawAdsId.trim() : 'AW-18496899509';
   const rawConversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL;
   const conversionLabel = rawConversionLabel && !rawConversionLabel.includes('XXXX') ? rawConversionLabel.trim() : undefined;
 
